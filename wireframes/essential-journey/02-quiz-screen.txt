@@ -1,0 +1,50 @@
+╔══════════════════════════════════════╗
+║  ←  THE RAMAYANA           ⏱️ 2:34   ║
+╠══════════════════════════════════════╣
+║                                      ║
+║  Question 5 of 10                    ║
+║  ▓▓▓▓▓░░░░░ 50%                      ║
+║                                      ║
+║  ────────────────────────────────────  ║
+║                                      ║
+║  Who did Hanuman encounter at        ║
+║  the entrance to Lanka?              ║
+║                                      ║
+║  ────────────────────────────────────  ║
+║                                      ║
+║  ┌────────────────────────────────┐  ║
+║  │                                │  ║
+║  │  A) Vibhishana                 │  ║
+║  │                                │  ║
+║  └────────────────────────────────┘  ║
+║                                      ║
+║  ┌────────────────────────────────┐  ║
+║  │                                │  ║
+║  │  B) Lankini (Guardian Spirit)  │  ║
+║  │                                │  ║
+║  └────────────────────────────────┘  ║
+║                                      ║
+║  ┌────────────────────────────────┐  ║
+║  │                                │  ║
+║  │  C) Ravana                     │  ║
+║  │                                │  ║
+║  └────────────────────────────────┘  ║
+║                                      ║
+║  ┌────────────────────────────────┐  ║
+║  │                                │  ║
+║  │  D) Indrajit                   │  ║
+║  │                                │  ║
+║  └────────────────────────────────┘  ║
+║                                      ║
+║                                      ║
+║           [Submit Answer]            ║
+║                                      ║
+╚══════════════════════════════════════╝
+
+DESIGN ELEMENTS:
+• Clean, distraction-free layout
+• Large, easy-to-tap answer options
+• Clear progress indication
+• Timer for engagement tracking
+• Proper spacing for readability
+• Single action focus (Submit)

@@ -1,0 +1,67 @@
+╔══════════════════════════════════════╗
+║        EPIC QUIZ COLOR EXAMPLES      ║
+╚══════════════════════════════════════╝
+
+🎨 SAFFRON TONES (Wisdom & Learning):
+┌─────────────────────────────────────┐
+│ Primary Saffron  #D4700A  ██████████ │
+│ Light Saffron    #F5B041  ██████████ │  
+│ Soft Saffron     #FCE4B6  ██████████ │
+│ Deep Saffron     #B7590A  ██████████ │
+└─────────────────────────────────────┘
+
+🌿 GREEN TONES (Growth & Progress):
+┌─────────────────────────────────────┐
+│ Primary Green    #2E7D32  ██████████ │
+│ Light Green      #66BB6A  ██████████ │
+│ Soft Green       #C8E6C9  ██████████ │
+│ Deep Green       #1B5E20  ██████████ │
+└─────────────────────────────────────┘
+
+🔷 BLUE TONES (Knowledge & Depth):
+┌─────────────────────────────────────┐
+│ Primary Blue     #1565C0  ██████████ │
+│ Light Blue       #42A5F5  ██████████ │
+│ Soft Blue        #BBDEFB  ██████████ │
+│ Deep Blue        #0D47A1  ██████████ │
+└─────────────────────────────────────┘
+
+⚫ NEUTRAL TONES:
+┌─────────────────────────────────────┐
+│ Charcoal         #2C2C2C  ██████████ │
+│ Dark Gray        #4A4A4A  ██████████ │
+│ Medium Gray      #757575  ██████████ │
+│ Light Gray       #E0E0E0  ██████████ │
+│ Soft Gray        #F5F5F5  ██████████ │
+│ White            #FFFFFF  ██████████ │
+└─────────────────────────────────────┘
+
+📱 EXAMPLE USAGE IN UI:
+
+Home Screen Colors:
+- Background: Soft Gray (#F5F5F5)
+- Cards: White (#FFFFFF) 
+- Progress: Soft Green (#C8E6C9) fill
+- Epic Title: Primary Saffron (#D4700A)
+- Streak: Light Green (#66BB6A)
+
+Quiz Screen Colors:
+- Background: White (#FFFFFF)
+- Question Text: Charcoal (#2C2C2C)
+- Answer Options: Light Gray (#E0E0E0) borders
+- Selected: Light Blue (#42A5F5) background
+- Correct: Light Green (#66BB6A) background
+- Timer: Deep Blue (#0D47A1)
+
+Cultural Content Colors:
+- Sanskrit Quote: Deep Blue (#0D47A1)
+- Translation: Dark Gray (#4A4A4A) italic
+- Context Box: Soft Saffron (#FCE4B6) background
+- Cultural Notes: Deep Saffron (#B7590A) text
+
+This palette is:
+✅ Culturally respectful and sophisticated
+✅ Accessible with proper contrast ratios  
+✅ Modern and professional appearance
+✅ Muted enough to not overwhelm content
+✅ Rich enough to create visual hierarchy

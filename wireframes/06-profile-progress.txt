@@ -1,0 +1,48 @@
+╔══════════════════════════════════════╗
+║  ←  YOUR LEARNING JOURNEY      📊   ║
+╠══════════════════════════════════════╣
+║                                      ║
+║  👤 Learning Scholar                 ║
+║  🔥 Streak: 12 days                  ║
+║  📅 Joined: 45 days ago              ║
+║                                      ║
+║  ────────────────────────────────────  ║
+║                                      ║
+║  📈 Overall Progress:                ║
+║                                      ║
+║  🕉️ Ramayana         ▓▓▓▓▓▓▓░░░ 74%  ║
+║  🏛️ Mahabharata     ░░░░░░░░░░  0%   ║
+║  🏺 Odyssey         ░░░░░░░░░░  0%   ║
+║                                      ║
+║  ────────────────────────────────────  ║
+║                                      ║
+║  🏆 Achievements (8/25):             ║
+║                                      ║
+║  🎖️ First Quiz Complete             ║
+║  🌟 5-Day Streak                     ║
+║  👑 Characters Master                ║
+║  🎭 Cultural Explorer                ║
+║  📚 Deep Dive Enthusiast             ║
+║  ⚡ Speed Learner                    ║
+║  🎯 Accuracy Expert                  ║
+║  🔥 Week Warrior                     ║
+║                                      ║
+║  ────────────────────────────────────  ║
+║                                      ║
+║  📊 Learning Stats:                  ║
+║  • Total Questions: 342              ║
+║  • Accuracy Rate: 78%                ║
+║  • Avg Quiz Time: 4m 32s             ║
+║  • Favorite Category: Characters     ║
+║                                      ║
+║  [⚙️ Settings] [📤 Share Progress]   ║
+║                                      ║
+╚══════════════════════════════════════╝
+
+KEY FEATURES:
+- Personal learning identity
+- Multi-epic progress tracking
+- Achievement collection display
+- Detailed learning analytics
+- Social sharing capabilities
+- Clear hierarchy of progress

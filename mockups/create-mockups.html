@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epic Quiz App - Visual Mockups</title>
+    <style>
+        /* Design System Colors */
+        :root {
+            --primary-saffron: #D4700A;
+            --light-saffron: #F5B041;
+            --soft-saffron: #FCE4B6;
+            --deep-saffron: #B7590A;
+            
+            --primary-green: #2E7D32;
+            --light-green: #66BB6A;
+            --soft-green: #C8E6C9;
+            --deep-green: #1B5E20;
+            
+            --primary-blue: #1565C0;
+            --light-blue: #42A5F5;
+            --soft-blue: #BBDEFB;
+            --deep-blue: #0D47A1;
+            
+            --charcoal: #2C2C2C;
+            --dark-gray: #4A4A4A;
+            --medium-gray: #757575;
+            --light-gray: #E0E0E0;
+            --soft-gray: #F5F5F5;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: var(--soft-gray);
+        }
+
+        .mockup-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .phone-mockup {
+            width: 375px;
+            height: 812px;
+            background: var(--white);
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            background: var(--soft-gray);
+            padding: 0;
+        }
+
+        .status-bar {
+            height: 44px;
+            background: var(--white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .header {
+            background: var(--white);
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--charcoal);
+        }
+
+        .content {
+            padding: 20px;
+            height: calc(100% - 120px);
+            overflow-y: auto;
+        }
+
+        .epic-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 1px solid var(--light-gray);
+        }
+
+        .epic-card h3 {
+            margin: 0 0 8px 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary-saffron);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .epic-description {
+            color: var(--dark-gray);
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .difficulty {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: var(--medium-gray);
+            margin-bottom: 12px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--light-gray);
+            border-radius: 4px;
+            margin-bottom: 8px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-green);
+            border-radius: 4px;
+        }
+
+        .question-count {
+            font-size: 12px;
+            color: var(--medium-gray);
+            margin-bottom: 16px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: var(--primary-saffron);
+            color: var(--white);
+            border: none;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-secondary {
+            width: 100%;
+            background: var(--primary-blue);
+            color: var(--white);
+            border: none;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-locked {
+            width: 100%;
+            background: var(--light-gray);
+            color: var(--medium-gray);
+            border: none;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: not-allowed;
+        }
+
+        .quiz-progress {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .quiz-progress h2 {
+            margin: 0 0 8px 0;
+            font-size: 16px;
+            color: var(--medium-gray);
+        }
+
+        .question-text {
+            font-size: 18px;
+            color: var(--charcoal);
+            margin: 24px 0;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        .answer-option {
+            background: var(--white);
+            border: 2px solid var(--light-gray);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-height: 56px;
+            display: flex;
+            align-items: center;
+        }
+
+        .answer-option:hover {
+            border-color: var(--primary-blue);
+            background: var(--soft-blue);
+        }
+
+        .answer-option.correct {
+            border-color: var(--light-green);
+            background: var(--soft-green);
+        }
+
+        .answer-option.incorrect {
+            border-color: #E57373;
+            background: #FFEBEE;
+        }
+
+        .timer {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+
+        .results-score {
+            text-align: center;
+            background: var(--white);
+            border-radius: 12px;
+            padding: 30px 20px;
+            margin-bottom: 24px;
+        }
+
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: conic-gradient(var(--light-green) 288deg, var(--light-gray) 288deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px auto;
+            position: relative;
+        }
+
+        .score-inner {
+            width: 90px;
+            height: 90px;
+            background: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--charcoal);
+        }
+
+        .mockup-title {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--medium-gray);
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center; color: var(--charcoal); margin-bottom: 40px;">Epic Quiz App - Visual Mockups</h1>
+    
+    <div class="mockup-container">
+        <!-- Epic Library Screen -->
+        <div>
+            <div class="mockup-title">Epic Library</div>
+            <div class="phone-mockup">
+                <div class="screen">
+                    <div class="status-bar">
+                        <span>9:41</span>
+                        <span>📶 🔋</span>
+                    </div>
+                    
+                    <div class="header">
+                        <h1>📚 Epic Library</h1>
+                    </div>
+                    
+                    <div class="content">
+                        <p style="text-align: center; color: var(--medium-gray); margin-bottom: 24px;">Discover Classical Literature</p>
+                        
+                        <div class="epic-card">
+                            <h3>🕉️ THE RAMAYANA</h3>
+                            <div class="epic-description">Ancient Indian Epic</div>
+                            <div class="difficulty">🌟 Beginner Friendly</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 70%;"></div>
+                            </div>
+                            <div class="question-count">342 Questions Available</div>
+                            <button class="btn-primary">📖 Start Learning</button>
+                        </div>
+                        
+                        <div class="epic-card">
+                            <h3>🏛️ THE MAHABHARATA</h3>
+                            <div class="epic-description">Ancient Indian Epic</div>
+                            <div class="difficulty">⚡ Advanced Level</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%;"></div>
+                            </div>
+                            <div class="question-count">Coming Soon</div>
+                            <button class="btn-locked">🔒 Unlock with Ramayana</button>
+                        </div>
+                        
+                        <div class="epic-card">
+                            <h3>🏺 THE ODYSSEY</h3>
+                            <div class="epic-description">Ancient Greek Epic</div>
+                            <div class="difficulty">🌟 Intermediate Level</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%;"></div>
+                            </div>
+                            <div class="question-count">Future Release</div>
+                            <button class="btn-locked">🚧 Coming Soon</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div>
+            <div class="mockup-title">Quiz Screen</div>
+            <div class="phone-mockup">
+                <div class="screen">
+                    <div class="status-bar">
+                        <span>9:41</span>
+                        <span>📶 🔋</span>
+                    </div>
+                    
+                    <div class="header">
+                        <span style="font-size: 20px;">←</span>
+                        <h1>THE RAMAYANA</h1>
+                        <div class="timer">⏱️ 2:34</div>
+                    </div>
+                    
+                    <div class="content">
+                        <div class="quiz-progress">
+                            <h2>Question 5 of 10</h2>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 50%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="question-text">
+                            Who did Hanuman encounter at the entrance to Lanka?
+                        </div>
+                        
+                        <div class="answer-option">
+                            A) Vibhishana
+                        </div>
+                        
+                        <div class="answer-option">
+                            B) Lankini (Guardian Spirit)
+                        </div>
+                        
+                        <div class="answer-option">
+                            C) Ravana
+                        </div>
+                        
+                        <div class="answer-option">
+                            D) Indrajit
+                        </div>
+                        
+                        <button class="btn-primary" style="margin-top: 24px;">Submit Answer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div>
+            <div class="mockup-title">Quiz Results</div>
+            <div class="phone-mockup">
+                <div class="screen">
+                    <div class="status-bar">
+                        <span>9:41</span>
+                        <span>📶 🔋</span>
+                    </div>
+                    
+                    <div class="header">
+                        <h1>🎉 Quiz Complete!</h1>
+                    </div>
+                    
+                    <div class="content">
+                        <div class="results-score">
+                            <div class="score-circle">
+                                <div class="score-inner">80%</div>
+                            </div>
+                            <div style="font-size: 18px; font-weight: 600; color: var(--charcoal);">Great Work!</div>
+                            <div style="font-size: 14px; color: var(--medium-gray);">8 out of 10 correct</div>
+                        </div>
+                        
+                        <div style="background: var(--white); border-radius: 12px; padding: 20px; margin-bottom: 16px;">
+                            <h3 style="margin: 0 0 12px 0; color: var(--charcoal);">📊 Your Performance</h3>
+                            <div style="font-size: 14px; color: var(--medium-gray); margin-bottom: 8px;">✅ Correct (8 questions)</div>
+                            <div style="font-size: 14px; color: var(--medium-gray);">❌ Review Needed (2 questions)</div>
+                        </div>
+                        
+                        <button class="btn-secondary" style="margin-bottom: 12px;">📖 Review Wrong Answers</button>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn-primary" style="flex: 1;">🎯 New Quiz</button>
+                            <button class="btn-primary" style="flex: 1; background: var(--medium-gray);">🏠 Library</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Explanation Screen -->
+        <div>
+            <div class="mockup-title">Answer Explanation</div>
+            <div class="phone-mockup">
+                <div class="screen">
+                    <div class="status-bar">
+                        <span>9:41</span>
+                        <span>📶 🔋</span>
+                    </div>
+                    
+                    <div class="header">
+                        <span style="font-size: 20px;">←</span>
+                        <h1>Question Review</h1>
+                        <span style="font-size: 16px; color: var(--medium-gray);">6/10</span>
+                    </div>
+                    
+                    <div class="content">
+                        <div class="question-text" style="text-align: left;">
+                            Who formed the monkey army that helped Rama?
+                        </div>
+                        
+                        <div class="answer-option">A) Hanuman</div>
+                        <div class="answer-option correct">B) Sugriva ✅</div>
+                        <div class="answer-option incorrect">C) Angada ❌ Your Answer</div>
+                        <div class="answer-option">D) Jambavan</div>
+                        
+                        <div style="background: var(--soft-saffron); border-radius: 8px; padding: 16px; margin: 24px 0;">
+                            <h4 style="margin: 0 0 8px 0; color: var(--deep-saffron);">💡 Explanation:</h4>
+                            <p style="margin: 0; font-size: 16px; line-height: 1.5; color: var(--charcoal);">
+                                Sugriva was the rightful king of the monkeys who allied with Rama after Rama helped him defeat his brother Vali. In gratitude, Sugriva provided his entire monkey army to help rescue Sita.
+                            </p>
+                        </div>
+                        
+                        <button class="btn-secondary" style="margin-bottom: 16px;">🏛️ Learn More About This Story</button>
+                        
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn-primary" style="flex: 1; background: var(--medium-gray);">← Previous</button>
+                            <button class="btn-primary" style="flex: 1;">Next →</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Deep Dive Screen -->
+        <div>
+            <div class="mockup-title">Deep Dive Content</div>
+            <div class="phone-mockup">
+                <div class="screen">
+                    <div class="status-bar">
+                        <span>9:41</span>
+                        <span>📶 🔋</span>
+                    </div>
+                    
+                    <div class="header">
+                        <span style="font-size: 20px;">←</span>
+                        <h1 style="font-size: 16px;">Sugriva's Alliance</h1>
+                    </div>
+                    
+                    <div class="content">
+                        <h2 style="color: var(--primary-saffron); margin-bottom: 16px;">🤝 The Alliance of Kings</h2>
+                        
+                        <div style="background: var(--white); border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+                            <h4 style="margin: 0 0 8px 0; color: var(--charcoal);">📖 The Complete Story:</h4>
+                            <p style="margin: 0; font-size: 14px; line-height: 1.5; color: var(--dark-gray);">
+                                When Rama and Lakshmana were searching for Sita, they met Sugriva, who had been exiled by his brother Vali. Rama agreed to help Sugriva regain his throne in exchange for assistance in finding Sita.
+                            </p>
+                        </div>
+                        
+                        <div style="background: var(--white); border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+                            <h4 style="margin: 0 0 8px 0; color: var(--deep-saffron);">🎭 Cultural Significance:</h4>
+                            <p style="margin: 0; font-size: 14px; line-height: 1.5; color: var(--dark-gray);">
+                                This alliance represents the Hindu ideal of dharma (righteous duty) - both Rama and Sugriva fulfilled their promises despite personal cost.
+                            </p>
+                        </div>
+                        
+                        <div style="background: var(--white); border-radius: 8px; padding: 16px; margin-bottom: 24px;">
+                            <h4 style="margin: 0 0 8px 0; color: var(--deep-green);">🌍 Similar Stories:</h4>
+                            <p style="margin: 0; font-size: 14px; color: var(--dark-gray);">
+                                • David & Jonathan (Biblical)<br>
+                                • Achilles & Patroclus (Greek)
+                            </p>
+                        </div>
+                        
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn-primary" style="flex: 1; background: var(--medium-gray);">🔖 Bookmark</button>
+                            <button class="btn-primary" style="flex: 1; background: var(--medium-gray);">📤 Share</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 40px; color: var(--medium-gray);">
+        <p>Epic Quiz App - Visual Design System Mockups</p>
+        <p>Sophisticated Cultural Colors • Mobile-First Design • Educational Focus</p>
+    </div>
+</body>
+</html>

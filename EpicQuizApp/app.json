@@ -18,6 +18,7 @@
     "android": {
       "package": "com.epicquizapp.app"
     },
+    "jsEngine": "hermes",
     "web": {},
     "scheme": "epic-quiz-app",
     "platforms": ["ios", "android", "web"]

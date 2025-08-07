@@ -1,23 +1,64 @@
 /**
- * Epic Quiz App - Main Application Entry Point
+ * Epic Quiz App - With Epic Library Screen
  */
 
 import React from 'react';
-import { StatusBar } from 'react-native';
-import { Provider } from 'react-redux';
-import { store } from './src/store';
-import AppNavigator from './src/navigation/AppNavigator';
-import { theme } from './src/constants';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import EpicLibraryScreen from './EpicLibraryScreen';
+import QuizScreen from './QuizScreen';
+import QuizResultsScreen from './QuizResultsScreen';
 
-const App: React.FC = () => {
+const Stack = createNativeStackNavigator();
+
+const App = () => {
   return (
-    <Provider store={store}>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor={theme.colors.white}
-      />
-      <AppNavigator />
-    </Provider>
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="EpicLibrary"
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: '#ffffff',
+          },
+          headerTintColor: '#333333',
+          headerTitleStyle: {
+            fontWeight: '600',
+            fontSize: 18,
+          },
+          headerShadowVisible: false,
+          contentStyle: {
+            backgroundColor: '#ffffff',
+          },
+        }}
+      >
+        <Stack.Screen
+          name="EpicLibrary"
+          component={EpicLibraryScreen}
+          options={{
+            title: '📚 Epic Library',
+          }}
+        />
+        
+        <Stack.Screen
+          name="Quiz"
+          component={QuizScreen}
+          options={{
+            title: '🕉️ THE RAMAYANA',
+            headerBackTitleVisible: false,
+          }}
+        />
+        
+        <Stack.Screen
+          name="QuizResults"
+          component={QuizResultsScreen}
+          options={{
+            title: '🎉 Quiz Complete!',
+            headerBackTitleVisible: false,
+            gestureEnabled: false,
+          }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 

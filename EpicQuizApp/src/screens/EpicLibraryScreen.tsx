@@ -16,12 +16,13 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
-import { Epic } from '../types/api';
+import { Epic, QuizPackage } from '../types/api';
 import { EpicCard } from '../components/epic';
 import { theme, Typography, ComponentSpacing, Spacing } from '../constants';
 
 // Mock data imports
 import { mockEpics, mockUserProgress } from '../data/mockEpics';
+import { getMockQuiz } from '../data/mockQuizData';
 
 type EpicLibraryNavigationProp = NativeStackNavigationProp<RootStackParamList, 'EpicLibrary'>;
 
@@ -60,7 +61,7 @@ const EpicLibraryScreen: React.FC = () => {
     fetchEpics();
   }, []);
 
-  const handleEpicPress = (epic: Epic) => {
+  const handleEpicPress = async (epic: Epic) => {
     if (!epic.is_available || epic.question_count === 0) {
       // Show appropriate message for unavailable epics
       if (epic.id === 'mahabharata') {
@@ -79,7 +80,7 @@ const EpicLibraryScreen: React.FC = () => {
       return;
     }
 
-    // For available epics, simulate quiz generation and navigate
+    // For available epics, generate quiz and navigate
     Alert.alert(
       '🎯 Start Quiz',
       `Ready to test your knowledge of ${epic.title}?`,
@@ -88,19 +89,32 @@ const EpicLibraryScreen: React.FC = () => {
         {
           text: 'Start Learning',
           style: 'default',
-          onPress: () => {
-            // TODO: Replace with real quiz generation
-            // navigation.navigate('Quiz', {
-            //   epic,
-            //   quizPackage: generatedQuiz
-            // });
-            
-            // For now, show coming soon message
-            Alert.alert(
-              '🚧 Coming Soon',
-              'Quiz interface is being built! The complete learning experience will be available soon.',
-              [{ text: 'OK', style: 'default' }]
-            );
+          onPress: async () => {
+            try {
+              // TODO: Replace with real quiz generation API call
+              // const response = await apiService.generateQuiz(epic.id, 10);
+              // if (response.success) {
+              //   navigation.navigate('Quiz', {
+              //     epic,
+              //     quizPackage: response.data
+              //   });
+              // }
+
+              // For now, use mock quiz generation
+              const quizPackage = getMockQuiz(epic.id, 10);
+              
+              navigation.navigate('Quiz', {
+                epic,
+                quizPackage,
+              });
+            } catch (error) {
+              console.error('Failed to generate quiz:', error);
+              Alert.alert(
+                'Error',
+                'Failed to generate quiz. Please try again.',
+                [{ text: 'OK', style: 'default' }]
+              );
+            }
           }
         }
       ]

@@ -12,47 +12,127 @@ import {
   SafeAreaView
 } from 'react-native';
 
-// Enhanced quiz data with explanations
+// Real Ramayana quiz data with Sanskrit integration - mirrors backend content
 const questionsWithExplanations = [
   {
     id: 1,
+    category: 'characters',
+    difficulty: 'easy',
     text: "Who is the main protagonist of the Ramayana?",
-    options: ["Krishna", "Rama", "Arjuna", "Hanuman"],
-    correctAnswer: 1,
-    explanation: "Rama is the seventh avatar of Vishnu and the main protagonist of the Ramayana. He represents the ideal man (Purushottama) and demonstrates perfect adherence to dharma (righteousness).",
-    culturalContext: "Rama is revered across India as Maryada Purushottama - the perfect man who never strayed from the path of righteousness, even in the most difficult circumstances."
+    options: ["Rama", "Krishna", "Arjuna", "Hanuman"],
+    correctAnswer: 0,
+    explanation: "Rama is the seventh avatar of Vishnu and the central hero of the Ramayana epic.",
+    sanskritQuote: "रामो विग्रहवान्धर्मः",
+    translation: "Rama is righteousness personified",
+    culturalContext: "Rama represents the ideal of dharmic kingship in Hindu tradition, embodying perfect balance of power and righteousness."
   },
   {
     id: 2,
-    text: "What is Rama's wife's name?",
-    options: ["Radha", "Sita", "Rukmini", "Draupadi"],
+    category: 'characters',
+    difficulty: 'medium',
+    text: "What is Hanuman's most famous feat in the Ramayana?",
+    options: ["Lifting a mountain", "Crossing the ocean to Lanka", "Defeating Ravana", "Building a bridge"],
     correctAnswer: 1,
-    explanation: "Sita is Rama's devoted wife, considered an incarnation of Goddess Lakshmi. She represents the ideal of feminine virtue, devotion, and purity in Hindu tradition.",
-    culturalContext: "Sita's unwavering devotion to Rama, even during her captivity in Lanka, makes her a symbol of marital fidelity and strength in Indian culture."
+    explanation: "Hanuman's leap across the ocean to Lanka to find Sita is one of the most celebrated acts of devotion and strength.",
+    sanskritQuote: "हनुमान् समुद्रं लङ्घयति",
+    translation: "Hanuman leaps across the ocean",
+    culturalContext: "This represents the power of devotion to transcend natural limitations - bhakti granting supernatural abilities."
   },
   {
     id: 3,
-    text: "Who is Rama's loyal companion and devotee?",
-    options: ["Hanuman", "Lakshmana", "Bharata", "Shatrughna"],
-    correctAnswer: 0,
-    explanation: "Hanuman, the monkey deity, is Rama's most devoted follower. His unwavering loyalty, courage, and strength make him one of the most beloved characters in the Ramayana.",
-    culturalContext: "Hanuman represents the ideal devotee (bhakta) and is worshipped across India for his strength, courage, and devotion. Tuesday is considered especially auspicious for Hanuman worship."
+    category: 'characters', 
+    difficulty: 'hard',
+    text: "Who among Rama's brothers chose to accompany him in exile?",
+    options: ["Bharata", "Lakshmana", "Shatrughna", "All three brothers"],
+    correctAnswer: 1,
+    explanation: "Lakshmana voluntarily accompanied Rama and Sita into exile, demonstrating unwavering brotherly loyalty.",
+    sanskritQuote: "लक्ष्मणो रामानुगतः",
+    translation: "Lakshmana followed Rama",
+    culturalContext: "This exemplifies the ideal of family duty and selfless sacrifice in Indian tradition."
   },
   {
     id: 4,
-    text: "What weapon does Rama use to defeat Ravana?",
-    options: ["Sudarshan Chakra", "Brahmastra", "Bow and Arrow", "Trishul"],
-    correctAnswer: 2,
-    explanation: "Rama uses his divine bow and arrows to defeat Ravana. His mastery of archery symbolizes precision, focus, and the triumph of good over evil.",
-    culturalContext: "The bow (Kodanda) is Rama's signature weapon. Archery in ancient India was not just a martial skill but a spiritual discipline requiring focus and righteousness."
+    category: 'events',
+    difficulty: 'easy', 
+    text: "How long was Rama's exile period?",
+    options: ["12 years", "14 years", "16 years", "18 years"],
+    correctAnswer: 1,
+    explanation: "Rama was exiled for 14 years as decreed by King Dasharatha to fulfill Kaikeyi's boon.",
+    sanskritQuote: "चतुर्दश वर्षाणि वने वासः",
+    translation: "Fourteen years of dwelling in the forest",
+    culturalContext: "The exile represents the vanaprastha (forest dweller) stage, where one renounces worldly pleasures for spiritual growth."
   },
   {
     id: 5,
-    text: "Who is the demon king of Lanka?",
-    options: ["Kumbhakarna", "Ravana", "Meghnad", "Surpanakha"],
+    category: 'events',
+    difficulty: 'medium',
+    text: "What caused Sita to cross Lakshmana's protective line?",
+    options: ["A beautiful deer", "A crying child", "A beggar seeking alms", "Ravana in disguise"],
+    correctAnswer: 2,
+    explanation: "Sita crossed the Lakshmana Rekha to give alms to what she thought was a holy beggar, but was actually Ravana in disguise.",
+    sanskritQuote: "भिक्षार्थे लक्ष्मणरेखां सीता लङ्घयति",
+    translation: "Sita crosses Lakshmana's line for the sake of charity",
+    culturalContext: "This demonstrates the conflict between dharmic duty (charity) and practical safety, showing how evil can exploit virtue."
+  },
+  {
+    id: 6,
+    category: 'events',
+    difficulty: 'hard',
+    text: "What was the final test Sita had to undergo after being rescued?",
+    options: ["Trial by fire (Agni Pariksha)", "Trial by water", "Trial by combat", "Trial by meditation"],
+    correctAnswer: 0,
+    explanation: "Sita underwent Agni Pariksha (trial by fire) to prove her purity after her captivity in Lanka.",
+    sanskritQuote: "अग्निपरीक्षा सीतायाः",
+    translation: "Sita's trial by fire",
+    culturalContext: "This reflects ancient concepts of honor and social expectations, though modern interpretations question such gender-based trials."
+  },
+  {
+    id: 7,
+    category: 'themes',
+    difficulty: 'medium',
+    text: "What is the central theme that Rama's character represents?",
+    options: ["Love", "Dharma (righteousness)", "Power", "Wisdom"],
     correctAnswer: 1,
-    explanation: "Ravana, the ten-headed demon king of Lanka, is the primary antagonist. Despite his knowledge and power, his ego and desires led to his downfall, teaching us about the dangers of unchecked pride.",
-    culturalContext: "Ravana was a great scholar of the Vedas and a powerful king, showing that knowledge without righteousness can lead to destruction. His ten heads symbolize the ten negative qualities that humans must overcome."
+    explanation: "Rama is considered the ideal man (Purushottama) who always follows dharma despite personal cost.",
+    sanskritQuote: "धर्मे च अर्थे च कामे च मोक्षे च भरतर्षभ",
+    translation: "In dharma, wealth, desire, and liberation, O best of Bharatas",
+    culturalContext: "Dharma represents moral duty and cosmic order, the foundation of Hindu ethical philosophy."
+  },
+  {
+    id: 8,
+    category: 'themes',
+    difficulty: 'hard',
+    text: "What does Hanuman's character primarily symbolize?",
+    options: ["Strength", "Devotion (Bhakti)", "Intelligence", "Courage"],
+    correctAnswer: 1,
+    explanation: "Hanuman embodies perfect devotion (bhakti) and selfless service to the divine.",
+    sanskritQuote: "राम काज किन्हे बिना मोहि कहाँ विश्राम",
+    translation: "Without accomplishing Rama's work, where is rest for me?",
+    culturalContext: "Hanuman represents the ideal devotee whose love for the divine grants supernatural powers and eternal joy."
+  },
+  {
+    id: 9,
+    category: 'culture',
+    difficulty: 'medium', 
+    text: "What does the name 'Ramayana' literally mean?",
+    options: ["Story of Rama", "Journey of Rama", "Rama's way/path", "Rama's victory"],
+    correctAnswer: 2,
+    explanation: "Ramayana means 'Rama's way' or 'Rama's journey,' referring to both his physical and spiritual path.",
+    sanskritQuote: "रामायणं महाकाव्यम्",
+    translation: "The Ramayana is a great epic poem",
+    culturalContext: "The epic serves as both historical narrative and spiritual guide, showing the path of righteous living."
+  },
+  {
+    id: 10,
+    category: 'culture',
+    difficulty: 'hard',
+    text: "Who is traditionally credited as the author of the Ramayana?",
+    options: ["Vyasa", "Valmiki", "Kalidasa", "Tulsidas"],
+    correctAnswer: 1,
+    explanation: "Sage Valmiki is revered as the Adi Kavi (first poet) and author of the original Sanskrit Ramayana.",
+    sanskritQuote: "आदिकाविर्वाल्मीकिः",
+    translation: "Valmiki, the first poet", 
+    culturalContext: "Valmiki's transformation from bandit to sage poet demonstrates the power of spiritual redemption and divine grace."
   }
 ];
 
@@ -162,9 +242,18 @@ const ExplanationScreen = ({ route, navigation }) => {
           <Text style={styles.explanationText}>{questionData.explanation}</Text>
         </View>
 
+        {/* Sanskrit Quote Section */}
+        {questionData.sanskritQuote && (
+          <View style={styles.sanskritContainer}>
+            <Text style={styles.sanskritTitle}>🕉️ Sanskrit Quote</Text>
+            <Text style={styles.sanskritText}>{questionData.sanskritQuote}</Text>
+            <Text style={styles.translationText}>"{questionData.translation}"</Text>
+          </View>
+        )}
+
         {/* Cultural Context Section */}
         <View style={styles.culturalContainer}>
-          <Text style={styles.culturalTitle}>🕉️ Cultural Context</Text>
+          <Text style={styles.culturalTitle}>🏛️ Cultural Context</Text>
           <Text style={styles.culturalText}>{questionData.culturalContext}</Text>
         </View>
 
@@ -320,6 +409,36 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#333333',
     lineHeight: 22,
+  },
+  sanskritContainer: {
+    backgroundColor: '#FFF8E1',
+    borderRadius: 12,
+    padding: 20,
+    marginBottom: 16,
+    borderLeftWidth: 4,
+    borderLeftColor: '#D4700A',
+    alignItems: 'center',
+  },
+  sanskritTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#D4700A',
+    marginBottom: 12,
+  },
+  sanskritText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#D4700A',
+    marginBottom: 8,
+    textAlign: 'center',
+    fontFamily: 'serif',
+  },
+  translationText: {
+    fontSize: 16,
+    color: '#333333',
+    fontStyle: 'italic',
+    textAlign: 'center',
+    lineHeight: 24,
   },
   navigationContainer: {
     flexDirection: 'row',

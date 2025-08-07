@@ -28,6 +28,10 @@ const QuizResultsScreen = ({ route, navigation }) => {
     return '#D32F2F';
   };
 
+  const handleReviewAnswers = () => {
+    navigation.navigate('Explanation', { answers });
+  };
+
   const handleNewQuiz = () => {
     navigation.popToTop();
   };
@@ -97,6 +101,16 @@ const QuizResultsScreen = ({ route, navigation }) => {
 
         {/* Action Buttons */}
         <View style={styles.actionsContainer}>
+          {/* Show review button if there are wrong answers */}
+          {correctCount < totalQuestions && (
+            <TouchableOpacity
+              style={styles.reviewButton}
+              onPress={handleReviewAnswers}
+            >
+              <Text style={styles.reviewButtonText}>📖 Review Wrong Answers</Text>
+            </TouchableOpacity>
+          )}
+          
           <TouchableOpacity
             style={styles.primaryButton}
             onPress={handleNewQuiz}
@@ -225,6 +239,18 @@ const styles = StyleSheet.create({
   },
   actionsContainer: {
     marginBottom: 20,
+  },
+  reviewButton: {
+    backgroundColor: '#1565C0',
+    paddingVertical: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  reviewButtonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#ffffff',
   },
   primaryButton: {
     backgroundColor: '#D4700A',

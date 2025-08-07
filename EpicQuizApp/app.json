@@ -21,6 +21,6 @@
     "jsEngine": "hermes",
     "web": {},
     "scheme": "epic-quiz-app",
-    "platforms": ["ios", "android", "web"]
+    "platforms": ["ios", "android"]
   }
 }

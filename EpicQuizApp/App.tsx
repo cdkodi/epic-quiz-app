@@ -8,6 +8,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import EpicLibraryScreen from './EpicLibraryScreen';
 import QuizScreen from './QuizScreen';
 import QuizResultsScreen from './QuizResultsScreen';
+import ExplanationScreen from './ExplanationScreen';
+import DeepDiveScreen from './DeepDiveScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -55,6 +57,24 @@ const App = () => {
             title: '🎉 Quiz Complete!',
             headerBackTitleVisible: false,
             gestureEnabled: false,
+          }}
+        />
+        
+        <Stack.Screen
+          name="Explanation"
+          component={ExplanationScreen}
+          options={{
+            title: '📖 Answer Review',
+            headerBackTitleVisible: false,
+          }}
+        />
+        
+        <Stack.Screen
+          name="DeepDive"
+          component={DeepDiveScreen}
+          options={{
+            title: '🔍 Deep Dive',
+            headerBackTitleVisible: false,
           }}
         />
       </Stack.Navigator>

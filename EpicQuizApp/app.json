@@ -1,4 +1,25 @@
 {
-  "name": "EpicQuizApp",
-  "displayName": "EpicQuizApp"
+  "expo": {
+    "name": "Epic Quiz App",
+    "slug": "epic-quiz-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.epicquizapp.app"
+    },
+    "android": {
+      "package": "com.epicquizapp.app"
+    },
+    "web": {},
+    "scheme": "epic-quiz-app",
+    "platforms": ["ios", "android", "web"]
+  }
 }

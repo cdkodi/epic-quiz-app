@@ -1,8 +1,51 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Epic Quiz App 📚
 
-# Getting Started
+A multi-epic quiz mobile app focused on classical literature, starting with the Ramayana. Built with React Native and converted to Expo for easy development and preview.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## 🎯 Current Status
+
+**✅ Implemented Screens:**
+- **Epic Library Screen** - Browse available literature with progress tracking
+- **Quiz Screen** - Interactive 10-question quiz with timer and scoring  
+- **Quiz Results Screen** - Animated score visualization and performance breakdown
+
+**🚧 Next Steps:**
+- Explanation Screen - Review wrong answers with cultural context
+- Deep Dive Screen - Rich educational content
+
+## 📱 Preview the App (Expo)
+
+### Option 1: Mobile Device Preview
+1. Install [Expo Go](https://expo.dev/client) on your iOS/Android device
+2. Start the development server:
+   ```bash
+   npm start
+   ```
+3. Scan the QR code with your phone camera (iOS) or Expo Go app (Android)
+4. The app will load instantly on your device!
+
+### Option 2: Web Preview
+```bash
+npm run web
+```
+Then open http://localhost:19006 in your browser
+
+### Option 3: Simulator (requires Xcode/Android Studio)
+```bash
+npm run ios     # iOS Simulator  
+npm run android # Android Emulator
+```
+
+## 🎨 User Flow
+
+The complete implemented flow:
+1. **Epic Library** → Select "THE RAMAYANA"
+2. **Quiz Screen** → Answer 10 cultural questions with timer
+3. **Quiz Results** → View animated score with performance breakdown
+
+## 🛠 Development
+
+This project was converted from React Native CLI to Expo for easier development and preview.
 
 ## Step 1: Start Metro
 

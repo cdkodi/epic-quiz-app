@@ -62,10 +62,10 @@ router.get('/:questionId/deep-dive',
             related_topics_count: deepDiveContent.related_topics?.length || 0,
             
             // Estimated reading time (based on content length)
-            estimated_reading_minutes: this.calculateReadingTime(deepDiveContent),
+            estimated_reading_minutes: calculateReadingTime(deepDiveContent),
             
             // Learning level assessment
-            content_depth: this.assessContentDepth(deepDiveContent)
+            content_depth: assessContentDepth(deepDiveContent)
           },
           
           // Cross-epic discovery features
@@ -78,7 +78,7 @@ router.get('/:questionId/deep-dive',
             })) || [],
             
             // Suggestions for further exploration
-            explore_next: this.generateExplorationSuggestions(deepDiveContent)
+            explore_next: generateExplorationSuggestions(deepDiveContent)
           }
         },
         meta: {

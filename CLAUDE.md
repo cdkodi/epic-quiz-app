@@ -332,3 +332,53 @@ epic-quiz-app/
 │   └── package.json
 └── CLAUDE.md              # This file
 ```
+
+## Development Workflow & UI Testing
+
+### CRITICAL: File Structure Issue Prevention
+
+**⚠️ IMPORTANT**: The project has DUPLICATE screen files:
+- **OLD**: Root directory `.js` files (QuizScreen.js, EpicLibraryScreen.js, etc.)
+- **NEW**: TypeScript files in `src/screens/` directory
+
+**Always ensure App.tsx imports from `src/screens/` for UI changes to appear!**
+
+### UI Development Best Practices
+
+#### Making UI Changes
+1. **Edit TypeScript files** in `src/screens/` and `src/components/` directories
+2. **Verify App.tsx imports** use `./src/screens/` paths, not root directory
+3. **Clear Expo cache** after significant changes: `npx expo start --clear`
+4. **Reload app** by pressing `r` in Expo terminal or shaking device
+
+#### Troubleshooting UI Updates Not Appearing
+```bash
+# 1. Check if App.tsx imports correct files
+grep -n "import.*Screen" App.tsx
+# Should show: ./src/screens/QuizScreen not ./QuizScreen
+
+# 2. Kill and restart Expo with cache clear
+pkill -f expo
+npx expo start --clear
+
+# 3. Hard reload in app
+# Press 'R' in Expo terminal or shake device twice
+```
+
+#### Component Organization Rules
+- **Screens**: Always in `src/screens/` (TypeScript)
+- **Components**: Always in `src/components/` with proper subfolder organization
+- **Never edit root .js files** - they are legacy and should be removed
+- **Always test imports** before implementing UI changes
+
+### Quick Development Commands (EpicQuizApp/)
+```bash
+# Start development (most common)
+npx expo start --clear
+
+# TypeScript check
+npx tsc --noEmit
+
+# Force hard refresh if changes don't appear
+pkill -f expo && npx expo start --clear
+```

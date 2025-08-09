@@ -6,7 +6,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../types/navigation';
-import { theme, Typography, ComponentSpacing } from '../constants';
+import { theme, Typography, ComponentSpacing, Spacing } from '../constants';
 
 type ExplanationScreenRouteProp = RouteProp<RootStackParamList, 'Explanation'>;
 
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   title: {
     ...Typography.h1,
     color: theme.text.primary,
-    marginBottom: ComponentSpacing.m,
+    marginBottom: Spacing.m,
     textAlign: 'center',
   },
   
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     ...Typography.body,
     color: theme.text.secondary,
     textAlign: 'center',
-    marginBottom: ComponentSpacing.s,
+    marginBottom: Spacing.s,
   },
 });
 

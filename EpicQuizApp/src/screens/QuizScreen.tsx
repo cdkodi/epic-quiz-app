@@ -3,14 +3,16 @@
  * Matches HTML mockup design exactly with realistic quiz data
  */
 
-import React, { useEffect, useState, useCallback } from 'react';
+import * as React from 'react';
+const { useEffect, useState, useCallback } = React;
 import { 
   View, 
   Text, 
   StyleSheet, 
   SafeAreaView, 
   Alert,
-  BackHandler
+  BackHandler,
+  ViewStyle
 } from 'react-native';
 import { RouteProp, useFocusEffect } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
@@ -251,24 +253,15 @@ const QuizScreen: React.FC<QuizScreenProps> = ({ route }) => {
         />
       </View>
 
-      {/* Action Buttons */}
+      {/* Action Button */}
       <View style={styles.actionsContainer}>
-        <View style={styles.buttonRow}>
-          <Button
-            title="Skip Question"
-            onPress={handleSkipQuestion}
-            variant="secondary"
-            style={[styles.button, styles.skipButton]}
-          />
-          
-          <Button
-            title="Submit Answer"
-            onPress={handleSubmitAnswer}
-            variant="primary"
-            style={[styles.button, styles.submitButton]}
-            disabled={selectedAnswer === null}
-          />
-        </View>
+        <Button
+          title={selectedAnswer !== null ? "Next →" : "Select an answer"}
+          onPress={selectedAnswer !== null ? handleSubmitAnswer : undefined}
+          variant="success"
+          style={styles.actionButton}
+          disabled={selectedAnswer === null}
+        />
       </View>
     </SafeAreaView>
   );
@@ -277,7 +270,7 @@ const QuizScreen: React.FC<QuizScreenProps> = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.backgrounds.primary,
+    backgroundColor: theme.colors.white,
   },
 
   loadingContainer: {
@@ -312,27 +305,13 @@ const styles = StyleSheet.create({
   actionsContainer: {
     paddingHorizontal: ComponentSpacing.screenHorizontal,
     paddingBottom: ComponentSpacing.screenVertical,
-    backgroundColor: theme.backgrounds.card,
-    borderTopWidth: 1,
-    borderTopColor: theme.colors.lightGray,
+    paddingTop: Spacing.l,
   },
 
-  buttonRow: {
-    flexDirection: 'row',
-    gap: Spacing.s,
-  },
-
-  button: {
-    flex: 1,
-  },
-
-  skipButton: {
-    backgroundColor: theme.colors.mediumGray,
-  },
-
-  submitButton: {
-    // Use default primary button style
-  },
+  actionButton: {
+    width: '100%',
+    minHeight: 56,
+  } as ViewStyle,
 });
 
 export default QuizScreen;

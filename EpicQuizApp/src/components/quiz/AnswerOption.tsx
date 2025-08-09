@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ViewStyle } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, ViewStyle, View } from 'react-native';
 import { theme, Typography, ComponentSpacing, BorderRadius, Spacing } from '../../constants';
 
 interface AnswerOptionProps {
@@ -52,65 +52,134 @@ const AnswerOption: React.FC<AnswerOptionProps> = ({
       disabled={disabled}
       activeOpacity={0.7}
     >
-      <Text style={getTextStyle()}>
-        {getOptionLabel(index)}) {option}
+      <View style={[styles.letterBadge, isSelected && styles.selectedBadge]}>
+        <Text style={[styles.letterText, isSelected && styles.selectedLetterText]}>
+          {getOptionLabel(index)}
+        </Text>
+      </View>
+      <Text style={[getTextStyle(), styles.optionTextContent]}>
+        {option}
       </Text>
+      <View style={styles.selectionIndicator}>
+        {isSelected ? (
+          <Text style={styles.checkmark}>✓</Text>
+        ) : (
+          <View style={styles.emptyCircle} />
+        )}
+      </View>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   option: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: theme.backgrounds.card,
-    borderWidth: 2,
-    borderColor: theme.colors.lightGray,
-    borderRadius: BorderRadius.medium,
-    padding: Spacing.m,
-    marginBottom: Spacing.s,
-    minHeight: ComponentSpacing.minTouchTarget + 12, // Extra height for readability
-    justifyContent: 'center',
+    borderRadius: BorderRadius.large,
+    padding: ComponentSpacing.cardPadding,
+    marginBottom: Spacing.m,
+    minHeight: ComponentSpacing.minTouchTarget + 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   
   optionSelected: {
-    backgroundColor: theme.colors.softBlue,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: theme.colors.softSaffron,
     borderWidth: 2,
-    borderColor: theme.colors.primaryBlue,
-    borderRadius: BorderRadius.medium,
-    padding: Spacing.m,
-    marginBottom: Spacing.s,
+    borderColor: theme.colors.primarySaffron,
+    borderRadius: BorderRadius.large,
+    padding: ComponentSpacing.cardPadding,
+    marginBottom: Spacing.m,
     minHeight: ComponentSpacing.minTouchTarget + 12,
-    justifyContent: 'center',
+    shadowColor: theme.colors.primarySaffron,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
   
   optionDisabled: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: theme.colors.softGray,
-    borderWidth: 2,
-    borderColor: theme.colors.lightGray,
-    borderRadius: BorderRadius.medium,
-    padding: Spacing.m,
-    marginBottom: Spacing.s,
+    borderRadius: BorderRadius.large,
+    padding: ComponentSpacing.cardPadding,
+    marginBottom: Spacing.m,
     minHeight: ComponentSpacing.minTouchTarget + 12,
-    justifyContent: 'center',
     opacity: 0.6,
+  },
+  
+  letterBadge: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: theme.colors.lightGray,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: Spacing.m,
+  },
+  
+  selectedBadge: {
+    backgroundColor: theme.colors.primarySaffron,
+  },
+  
+  letterText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: theme.colors.charcoal,
+  },
+  
+  selectedLetterText: {
+    color: theme.colors.white,
+  },
+  
+  optionTextContent: {
+    flex: 1,
+    marginRight: Spacing.s,
   },
   
   optionText: {
     ...Typography.body,
     color: theme.text.primary,
-    textAlign: 'left',
   },
   
   optionTextSelected: {
     ...Typography.body,
-    color: theme.colors.primaryBlue,
+    color: theme.colors.primarySaffron,
     fontWeight: '600',
-    textAlign: 'left',
   },
   
   optionTextDisabled: {
     ...Typography.body,
     color: theme.text.tertiary,
-    textAlign: 'left',
+  },
+  
+  selectionIndicator: {
+    width: 24,
+    height: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  
+  checkmark: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: theme.colors.primarySaffron,
+  },
+  
+  emptyCircle: {
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    borderWidth: 2,
+    borderColor: theme.colors.lightGray,
+    backgroundColor: 'transparent',
   },
 });
 

@@ -179,3 +179,16 @@ export interface PaginatedResult<T> {
     items_per_page: number;
   };
 }
+
+// Express Request extension types
+declare global {
+  namespace Express {
+    interface Request {
+      user?: {
+        id: string;
+        username?: string;
+        email?: string;
+      };
+    }
+  }
+}

@@ -195,7 +195,8 @@ describe('QuizService', () => {
       const validAnswers = correctAnswers.rows.map((row: any) => ({
         question_id: row.id,
         user_answer: row.correct_answer_id,
-        time_spent: 30
+        time_spent: 30,
+        is_correct: true
       }));
 
       const result = await quizService.submitQuizResults(
@@ -215,7 +216,8 @@ describe('QuizService', () => {
       const answers = testQuestionIds.slice(0, 2).map((questionId, index) => ({
         question_id: questionId,
         user_answer: index === 0 ? 0 : 1, // First correct, second incorrect (assuming 0 is correct)
-        time_spent: 30
+        time_spent: 30,
+        is_correct: index === 0
       }));
 
       // Get correct answers for comparison
@@ -251,7 +253,8 @@ describe('QuizService', () => {
       const answers = [{
         question_id: fakeQuestionId,
         user_answer: 0,
-        time_spent: 30
+        time_spent: 30,
+        is_correct: false
       }];
 
       const result = await quizService.submitQuizResults(
@@ -270,7 +273,8 @@ describe('QuizService', () => {
       const answers = [{
         question_id: testQuestionIds[0],
         user_answer: 0,
-        time_spent: 30
+        time_spent: 30,
+        is_correct: true
       }];
 
       const result = await quizService.submitQuizResults(
@@ -289,7 +293,8 @@ describe('QuizService', () => {
       const answers = testQuestionIds.slice(0, 2).map(questionId => ({
         question_id: questionId,
         user_answer: 0,
-        time_spent: 30
+        time_spent: 30,
+        is_correct: true
       }));
 
       await quizService.submitQuizResults(
@@ -327,7 +332,8 @@ describe('QuizService', () => {
       const answers = [{
         question_id: testQuestionIds[0],
         user_answer: 0,
-        time_spent: 30
+        time_spent: 30,
+        is_correct: true
       }];
 
       const result = await quizService.submitQuizResults(
@@ -354,7 +360,8 @@ describe('QuizService', () => {
       const answers = [{
         question_id: testQuestionIds[0],
         user_answer: 0,
-        time_spent: 45
+        time_spent: 45,
+        is_correct: true
       }];
 
       const result = await quizService.submitQuizResults(

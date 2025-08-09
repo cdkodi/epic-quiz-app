@@ -56,7 +56,7 @@ router.get('/',
       // Generate quiz package with balanced question selection
       const quizPackage = await quizService.generateQuizPackage(
         epicId as string,
-        count as number
+        parseInt(count as string) || 10
       );
 
       // Add metadata for mobile app caching and analytics
@@ -79,8 +79,8 @@ router.get('/',
             cache_duration_hours: 24 // Suggest mobile app cache duration
           },
           // Performance metadata for monitoring
-          categories_distribution: this.getCategoriesDistribution(quizPackage.questions),
-          difficulty_distribution: this.getDifficultyDistribution(quizPackage.questions)
+          categories_distribution: getCategoriesDistribution(quizPackage.questions),
+          difficulty_distribution: getDifficultyDistribution(quizPackage.questions)
         }
       };
 
@@ -137,9 +137,9 @@ router.post('/submit',
           // Educational feedback
           feedback: {
             message: results.feedback,
-            performance_level: this.getPerformanceLevel(results.score),
-            encouragement: this.getEncouragement(results.score),
-            next_steps: this.getNextSteps(results.score, epicId)
+            performance_level: getPerformanceLevel(results.score),
+            encouragement: getEncouragement(results.score),
+            next_steps: getNextSteps(results.score, epicId as string)
           },
           
           // Progress data (if user is registered)
@@ -148,7 +148,7 @@ router.post('/submit',
             average_score: Math.round(
               (results.progressUpdate.correct_answers / results.progressUpdate.total_questions_answered) * 100
             ),
-            category_strengths: this.analyzeCategoryPerformance(results.progressUpdate.category_scores),
+            category_strengths: analyzeCategoryPerformance(results.progressUpdate.category_scores),
             mastery_level: results.progressUpdate.mastery_level
           } : null,
           
@@ -156,7 +156,7 @@ router.post('/submit',
           time_analysis: {
             total_seconds: timeSpent,
             average_per_question: Math.round(timeSpent / results.totalQuestions),
-            efficiency_rating: this.getEfficiencyRating(timeSpent, results.totalQuestions, results.score)
+            efficiency_rating: getEfficiencyRating(timeSpent, results.totalQuestions, results.score)
           }
         },
         meta: {

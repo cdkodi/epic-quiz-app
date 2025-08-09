@@ -2,14 +2,14 @@
  * Epic Quiz App - With Epic Library Screen
  */
 
-import React from 'react';
+import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import EpicLibraryScreen from './EpicLibraryScreen';
-import QuizScreen from './QuizScreen';
-import QuizResultsScreen from './QuizResultsScreen';
-import ExplanationScreen from './ExplanationScreen';
-import DeepDiveScreen from './DeepDiveScreen';
+import EpicLibraryScreen from './src/screens/EpicLibraryScreen';
+import QuizScreen from './src/screens/QuizScreen';
+import QuizResultsScreen from './src/screens/QuizResultsScreen';
+import ExplanationScreen from './src/screens/ExplanationScreen';
+import DeepDiveScreen from './src/screens/DeepDiveScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,6 +17,7 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
+        id={undefined}
         initialRouteName="EpicLibrary"
         screenOptions={{
           headerStyle: {
@@ -46,7 +47,6 @@ const App = () => {
           component={QuizScreen}
           options={{
             title: '🕉️ THE RAMAYANA',
-            headerBackTitleVisible: false,
           }}
         />
         
@@ -55,7 +55,6 @@ const App = () => {
           component={QuizResultsScreen}
           options={{
             title: '🎉 Quiz Complete!',
-            headerBackTitleVisible: false,
             gestureEnabled: false,
           }}
         />
@@ -65,7 +64,6 @@ const App = () => {
           component={ExplanationScreen}
           options={{
             title: '📖 Answer Review',
-            headerBackTitleVisible: false,
           }}
         />
         
@@ -74,7 +72,6 @@ const App = () => {
           component={DeepDiveScreen}
           options={{
             title: '🔍 Deep Dive',
-            headerBackTitleVisible: false,
           }}
         />
       </Stack.Navigator>

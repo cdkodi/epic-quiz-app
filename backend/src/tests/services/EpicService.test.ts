@@ -163,7 +163,8 @@ describe('EpicService', () => {
         culture: 'hindu',
         time_period: 'Ancient Test Period',
         difficulty_level: 'intermediate' as const,
-        estimated_reading_time: '1-2 hours'
+        estimated_reading_time: '1-2 hours',
+        is_available: false
       };
 
       const result = await epicService.createEpic(epicData);
@@ -191,7 +192,8 @@ describe('EpicService', () => {
         culture: undefined,
         time_period: undefined,
         difficulty_level: undefined,
-        estimated_reading_time: undefined
+        estimated_reading_time: undefined,
+        is_available: false
       };
 
       const result = await epicService.createEpic(epicData);
@@ -212,7 +214,8 @@ describe('EpicService', () => {
         culture: 'test',
         time_period: 'test',
         difficulty_level: 'beginner' as const,
-        estimated_reading_time: 'test'
+        estimated_reading_time: 'test',
+        is_available: false
       };
 
       await expect(epicService.createEpic(epicData)).rejects.toThrow();

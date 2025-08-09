@@ -6,7 +6,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { QuizPackage, QuestionAnswer, QuizSubmission, QuizResult } from '../../types/api';
 import apiService from '../../services/api';
 
-interface QuizState {
+export interface QuizState {
   currentQuiz: QuizPackage | null;
   currentQuestionIndex: number;
   answers: QuestionAnswer[];

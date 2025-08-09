@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { View, StyleSheet, ViewStyle } from 'react-native';
-import { theme, ComponentSpacing, BorderRadius } from '../../constants';
+import { theme, ComponentSpacing, Spacing, BorderRadius } from '../../constants';
 
 interface CardProps {
   children: React.ReactNode;
@@ -49,11 +49,11 @@ const styles = StyleSheet.create({
   },
   
   smallPadding: {
-    padding: ComponentSpacing.s,
+    padding: Spacing.s,
   },
   
   mediumPadding: {
-    padding: ComponentSpacing.m,
+    padding: Spacing.m,
   },
   
   largePadding: {

@@ -6,7 +6,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { Epic } from '../../types/api';
 import apiService from '../../services/api';
 
-interface EpicState {
+export interface EpicState {
   epics: Epic[];
   selectedEpic: Epic | null;
   loading: boolean;

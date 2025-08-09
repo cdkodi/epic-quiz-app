@@ -102,7 +102,7 @@ router.get('/:epicId',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { epicId } = req.params;
-      const epic = await epicService.getEpicById(epicId);
+      const epic = await epicService.getEpicById(epicId!);
       
       if (!epic) {
         return res.status(404).json({
@@ -118,6 +118,7 @@ router.get('/:epicId',
         data: epic,
         timestamp: new Date().toISOString()
       });
+      return;
     } catch (error) {
       next(error);
     }
@@ -137,7 +138,7 @@ router.get('/:epicId/stats',
       const { epicId } = req.params;
       
       // Verify epic exists
-      const epic = await epicService.getEpicById(epicId);
+      const epic = await epicService.getEpicById(epicId!);
       if (!epic) {
         return res.status(404).json({
           success: false,
@@ -147,7 +148,7 @@ router.get('/:epicId/stats',
         });
       }
 
-      const stats = await epicService.getEpicStats(epicId);
+      const stats = await epicService.getEpicStats(epicId!);
       
       res.json({
         success: true,
@@ -161,6 +162,7 @@ router.get('/:epicId/stats',
         },
         timestamp: new Date().toISOString()
       });
+      return;
     } catch (error) {
       next(error);
     }
@@ -204,7 +206,7 @@ router.put('/:epicId/availability',
       const { epicId } = req.params;
       const { isAvailable } = req.body;
       
-      const updatedEpic = await epicService.updateEpicAvailability(epicId, isAvailable);
+      const updatedEpic = await epicService.updateEpicAvailability(epicId!, isAvailable);
       
       if (!updatedEpic) {
         return res.status(404).json({
@@ -221,6 +223,7 @@ router.put('/:epicId/availability',
         message: `Epic ${isAvailable ? 'published' : 'unpublished'} successfully`,
         timestamp: new Date().toISOString()
       });
+      return;
     } catch (error) {
       next(error);
     }

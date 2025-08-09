@@ -3,7 +3,8 @@
  * Matches HTML mockup design exactly with realistic data
  */
 
-import React, { useEffect, useState } from 'react';
+import * as React from 'react';
+const { useEffect, useState } = React;
 import { 
   View, 
   Text, 

@@ -5,7 +5,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { QuizQuestion } from '../../types/api';
-import { Card } from '../common';
 import AnswerOption from './AnswerOption';
 import { theme, Typography, Spacing } from '../../constants';
 
@@ -23,14 +22,11 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
   disabled = false,
 }) => {
   return (
-    <Card style={styles.card}>
+    <View style={styles.container}>
       {/* Question Text */}
       <View style={styles.questionContainer}>
         <Text style={styles.questionText}>{question.text}</Text>
       </View>
-      
-      {/* Divider */}
-      <View style={styles.divider} />
       
       {/* Answer Options */}
       <View style={styles.optionsContainer}>
@@ -45,35 +41,32 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
           />
         ))}
       </View>
-    </Card>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  card: {
-    marginHorizontal: Spacing.m,
-    marginVertical: Spacing.s,
+  container: {
+    flex: 1,
+    paddingHorizontal: Spacing.m,
   },
   
   questionContainer: {
-    paddingVertical: Spacing.s,
+    paddingVertical: Spacing.l,
+    paddingHorizontal: Spacing.s,
   },
   
   questionText: {
     ...Typography.questionText,
     color: theme.text.primary,
-    textAlign: 'center',
-    marginBottom: Spacing.m,
-  },
-  
-  divider: {
-    height: 1,
-    backgroundColor: theme.colors.lightGray,
-    marginVertical: Spacing.m,
+    textAlign: 'left',
+    fontSize: 18,
+    lineHeight: 26,
+    fontWeight: '500',
   },
   
   optionsContainer: {
-    paddingVertical: Spacing.s,
+    paddingTop: Spacing.l,
   },
 });
 

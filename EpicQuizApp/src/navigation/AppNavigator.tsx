@@ -21,6 +21,7 @@ const AppNavigator: React.FC = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
+        id={undefined}
         initialRouteName="EpicLibrary"
         screenOptions={{
           headerStyle: {
@@ -51,7 +52,6 @@ const AppNavigator: React.FC = () => {
           component={QuizScreen}
           options={({ route }) => ({
             title: route.params.epic.title,
-            headerBackTitleVisible: false,
           })}
         />
         
@@ -60,7 +60,6 @@ const AppNavigator: React.FC = () => {
           component={QuizResultsScreen}
           options={{
             title: '🎉 Quiz Complete!',
-            headerBackTitleVisible: false,
             gestureEnabled: false, // Prevent swipe back on results
           }}
         />
@@ -70,7 +69,6 @@ const AppNavigator: React.FC = () => {
           component={ExplanationScreen}
           options={{
             title: 'Question Review',
-            headerBackTitleVisible: false,
           }}
         />
         
@@ -79,7 +77,6 @@ const AppNavigator: React.FC = () => {
           component={DeepDiveScreen}
           options={{
             title: 'Deep Dive Content',
-            headerBackTitleVisible: false,
           }}
         />
       </Stack.Navigator>

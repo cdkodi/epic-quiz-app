@@ -9,7 +9,7 @@ export type RootStackParamList = {
   EpicLibrary: undefined;
   Quiz: {
     epic: Epic;
-    quizPackage: QuizPackage;
+    quizPackage?: QuizPackage; // Optional since Quiz screen will generate it
   };
   QuizResults: {
     epic: Epic;

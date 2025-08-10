@@ -20,10 +20,10 @@ import { RootStackParamList } from '../types/navigation';
 import { Epic, QuizPackage } from '../types/api';
 import { EpicCard } from '../components/epic';
 import { theme, Typography, ComponentSpacing, Spacing } from '../constants';
+import { apiService } from '../services/api';
 
-// Mock data imports
-import { mockEpics, mockUserProgress } from '../data/mockEpics';
-import { getMockQuiz } from '../data/mockQuizData';
+// Keep mock user progress for now
+import { mockUserProgress } from '../data/mockEpics';
 
 type EpicLibraryNavigationProp = NativeStackNavigationProp<RootStackParamList, 'EpicLibrary'>;
 
@@ -33,25 +33,25 @@ const EpicLibraryScreen: React.FC = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Simulate API call with realistic loading
+  // Fetch epics from Supabase
   const fetchEpics = async (showRefresh = false) => {
     if (showRefresh) setRefreshing(true);
-    
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 800));
+    console.log('📚 Loading real epics from Supabase...');
     
     try {
-      // TODO: Replace with real API call
-      // const response = await apiService.getEpics();
-      // if (response.success) {
-      //   setEpics(response.data || []);
-      // }
+      // Use real API service powered by Supabase
+      const response = await apiService.getEpics();
       
-      // For now, use mock data
-      setEpics(mockEpics);
+      if (response.success) {
+        console.log(`✅ Successfully loaded ${response.data.length} epics`);
+        setEpics(response.data || []);
+      } else {
+        console.error('API Error:', response.error, response.message);
+        Alert.alert('Error', response.message || 'Failed to load epics. Please try again.');
+      }
     } catch (error) {
       console.error('Failed to fetch epics:', error);
-      Alert.alert('Error', 'Failed to load epics. Please try again.');
+      Alert.alert('Connection Error', 'Unable to connect to the service. Please check your internet connection and try again.');
     } finally {
       setLoading(false);
       if (showRefresh) setRefreshing(false);
@@ -63,7 +63,7 @@ const EpicLibraryScreen: React.FC = () => {
   }, []);
 
   const handleEpicPress = async (epic: Epic) => {
-    if (!epic.is_available || epic.question_count === 0) {
+    if (!epic.isAvailable || epic.totalQuestions === 0) {
       // Show appropriate message for unavailable epics
       if (epic.id === 'mahabharata') {
         Alert.alert(
@@ -81,41 +81,20 @@ const EpicLibraryScreen: React.FC = () => {
       return;
     }
 
-    // For available epics, generate quiz and navigate
+    // For available epics, show quiz confirmation with real question count
     Alert.alert(
       '🎯 Start Quiz',
-      `Ready to test your knowledge of ${epic.title}?`,
+      `Ready to test your knowledge of ${epic.title}?\n\n📊 ${epic.totalQuestions} questions available\n⏱️ Estimated time: ${epic.estimatedTime}`,
       [
         { text: 'Cancel', style: 'cancel' },
         {
           text: 'Start Learning',
           style: 'default',
-          onPress: async () => {
-            try {
-              // TODO: Replace with real quiz generation API call
-              // const response = await apiService.generateQuiz(epic.id, 10);
-              // if (response.success) {
-              //   navigation.navigate('Quiz', {
-              //     epic,
-              //     quizPackage: response.data
-              //   });
-              // }
-
-              // For now, use mock quiz generation
-              const quizPackage = getMockQuiz(epic.id, 10);
-              
-              navigation.navigate('Quiz', {
-                epic,
-                quizPackage,
-              });
-            } catch (error) {
-              console.error('Failed to generate quiz:', error);
-              Alert.alert(
-                'Error',
-                'Failed to generate quiz. Please try again.',
-                [{ text: 'OK', style: 'default' }]
-              );
-            }
+          onPress: () => {
+            // Navigate to Quiz screen - it will handle the real quiz generation
+            navigation.navigate('Quiz', {
+              epic,
+            });
           }
         }
       ]
@@ -130,7 +109,10 @@ const EpicLibraryScreen: React.FC = () => {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.loadingContainer}>
-          <Text style={styles.loadingText}>Loading classical literature...</Text>
+          <Text style={styles.loadingText}>Loading epics from database...</Text>
+          <Text style={[styles.loadingText, { fontSize: 14, marginTop: 8, opacity: 0.7 }]}>
+            Connecting to Supabase...
+          </Text>
         </View>
       </SafeAreaView>
     );

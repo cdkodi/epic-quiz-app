@@ -10,33 +10,41 @@ export interface Epic {
   description?: string;
   language?: string;
   culture?: string;
-  time_period?: string;
-  question_count: number;
-  is_available: boolean;
-  difficulty_level?: 'beginner' | 'intermediate' | 'advanced';
-  estimated_reading_time?: string;
-  created_at: string;
-  updated_at: string;
+  totalQuestions: number;
+  isAvailable: boolean;
+  difficulty?: 'beginner' | 'intermediate' | 'advanced';
+  estimatedTime?: string;
+  coverImage?: string;
 }
 
 // Quiz types
 export interface QuizPackage {
-  quiz_id: string;
-  epic: {
-    id: string;
-    title: string;
+  id: string;
+  epicId: string;
+  epicTitle: string;
+  questions: Question[];
+  totalQuestions: number;
+  downloadedAt: string;
+  metadata: {
     language: string;
+    culture: string;
+    difficulty: string;
+    estimatedTime: string;
   };
-  questions: QuizQuestion[];
 }
 
-export interface QuizQuestion {
+export interface Question {
   id: string;
-  text: string;
-  options: string[];
-  correct_answer_id: number;
-  basic_explanation: string;
+  epicId: string;
   category: 'characters' | 'events' | 'themes' | 'culture';
+  difficulty: 'easy' | 'medium' | 'hard';
+  questionText: string;
+  options: string[];
+  correctAnswerId: number;
+  explanation: string;
+  tags: string[];
+  culturalContext?: string;
+  sourceReference: string;
 }
 
 export interface QuestionAnswer {
@@ -64,12 +72,21 @@ export interface QuizResult {
 
 // Deep dive content
 export interface DeepDiveContent {
-  detailed_explanation: string;
-  original_quote?: string;
-  translation?: string;
-  cultural_context?: string;
-  related_topics: string[];
-  cross_epic_connections: CrossEpicConnection[];
+  questionId: string;
+  detailedExplanation: string;
+  historicalBackground?: string;
+  culturalSignificance?: string;
+  scholarlyNotes?: string;
+  crossEpicConnections?: any[];
+  relatedTopics?: string[];
+  recommendedReading?: string[];
+  chapterSummary?: {
+    title: string;
+    keyEvents: string;
+    mainCharacters: string;
+    themes: string;
+    narrativeSummary: string;
+  };
 }
 
 export interface CrossEpicConnection {

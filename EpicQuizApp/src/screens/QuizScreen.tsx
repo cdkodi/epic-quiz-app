@@ -22,9 +22,7 @@ import { QuizPackage, QuestionAnswer } from '../types/api';
 import { QuizHeader, QuestionCard } from '../components/quiz';
 import { Button } from '../components/common';
 import { theme, Typography, ComponentSpacing, Spacing } from '../constants';
-
-// Mock data import
-import { getMockQuiz } from '../data/mockQuizData';
+import { apiService } from '../services/api';
 
 type QuizScreenRouteProp = RouteProp<RootStackParamList, 'Quiz'>;
 type QuizScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Quiz'>;
@@ -46,28 +44,38 @@ const QuizScreen: React.FC<QuizScreenProps> = ({ route }) => {
   const [questionStartTime, setQuestionStartTime] = useState(Date.now());
   const [loading, setLoading] = useState(true);
 
-  // Generate quiz data
+  // Generate quiz data - Now using real Supabase data!
   useEffect(() => {
     const generateQuiz = async () => {
       setLoading(true);
-      
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      console.log(`📚 Loading real quiz for ${epic.title} (ID: ${epic.id})`);
       
       try {
-        // TODO: Replace with real API call
-        // const response = await apiService.generateQuiz(epic.id, 10);
-        // if (response.success) {
-        //   setQuizData(response.data);
-        // }
+        // Use real API service powered by Supabase
+        const response = await apiService.generateQuiz(epic.id, 10);
         
-        // For now, use mock data
-        const mockQuiz = getMockQuiz(epic.id, 10);
-        setQuizData(mockQuiz);
+        if (response.success) {
+          console.log(`✅ Successfully loaded ${response.data.questions.length} real questions`);
+          setQuizData(response.data);
+        } else {
+          console.error('API Error:', response.error, response.message);
+          Alert.alert(
+            'Quiz Unavailable', 
+            response.message || 'Unable to load quiz questions. Please try again.',
+            [
+              { text: 'OK', onPress: () => navigation.goBack() }
+            ]
+          );
+        }
       } catch (error) {
         console.error('Failed to generate quiz:', error);
-        Alert.alert('Error', 'Failed to load quiz. Please try again.');
-        navigation.goBack();
+        Alert.alert(
+          'Connection Error', 
+          'Unable to connect to quiz service. Please check your internet connection and try again.',
+          [
+            { text: 'OK', onPress: () => navigation.goBack() }
+          ]
+        );
       } finally {
         setLoading(false);
       }
@@ -155,7 +163,7 @@ const QuizScreen: React.FC<QuizScreenProps> = ({ route }) => {
 
     finalAnswers.forEach(answer => {
       const question = quizData.questions.find(q => q.id === answer.question_id);
-      if (question && question.correct_answer_id === answer.user_answer) {
+      if (question && question.correctAnswerId === answer.user_answer) {
         correctCount++;
         correctAnswers.push(answer.question_id);
       }
@@ -211,7 +219,10 @@ const QuizScreen: React.FC<QuizScreenProps> = ({ route }) => {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.loadingContainer}>
-          <Text style={styles.loadingText}>Preparing your quiz...</Text>
+          <Text style={styles.loadingText}>Loading real {epic.title} questions...</Text>
+          <Text style={[styles.loadingText, { fontSize: 14, marginTop: 8, opacity: 0.7 }]}>
+            Fetching from database...
+          </Text>
         </View>
       </SafeAreaView>
     );

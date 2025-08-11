@@ -1,0 +1,387 @@
+{
+  "epic_id": "ramayana",
+  "kanda": "bala_kanda",
+  "sarga": 2,
+  "source_url": "https://www.valmikiramayan.net/utf8/baala/sarga2/bala_2_frame.htm",
+  "generation_date": "2025-08-11T17:44:58.056Z",
+  "generator": "openai-gpt4-multipass",
+  "total_questions": 12,
+  "questions": [
+    {
+      "category": "characters",
+      "difficulty": "easy",
+      "question_text": "Who is the disciple of Sage Valmiki mentioned in these verses?",
+      "options": [
+        "Narada",
+        "Bharadwaja",
+        "Rama",
+        "Hanuman"
+      ],
+      "correct_answer_id": 1,
+      "basic_explanation": "Bharadwaja is the disciple of Sage Valmiki. He is obedient and respectful towards his Guru, as shown in these verses.",
+      "original_quote": "एवमुक्तो भरद्वाजो वाल्मीकेन महात्मना | प्रायच्छत मुनेस्तस्य वल्कलं नियतो गुरोः || १-२-७",
+      "quote_translation": "Thus being said by the great-souled Valmiki, Bharadwaaja who was obedient towards his Guru, gave the bark-garment to that sage.",
+      "tags": [
+        "Valmiki",
+        "Bharadwaja",
+        "Guru-disciple"
+      ],
+      "cross_epic_tags": [
+        "Guru-disciple relationship"
+      ],
+      "pass_info": {
+        "pass_number": 1,
+        "pass_name": "Narada's Departure & Sacred Journey",
+        "verse_range": [
+          1,
+          10
+        ]
+      }
+    },
+    {
+      "category": "culture",
+      "difficulty": "medium",
+      "question_text": "What is the significance of the 'kamaNDalu' mentioned in the verses?",
+      "options": [
+        "It is a weapon",
+        "It is a musical instrument",
+        "It is a hand-vessel used by sages",
+        "It is a type of food"
+      ],
+      "correct_answer_id": 2,
+      "basic_explanation": "The 'kamaNDalu' is a type of hand-vessel used by sages and hermits in Hindu culture. It is often used to carry holy water.",
+      "original_quote": "न्यस्यतां कलशस्तात दीयतां वल्कलं मम | इदमेवावगाहिष्ये तमसातीर्थमुत्तमम् || १-२-६",
+      "quote_translation": "My dear, let the hand-vessel (kamaNDalu) be kept there; let my bark-garment be given; I will enter this best Tamasa ford only.",
+      "tags": [
+        "kamaNDalu",
+        "Hindu culture",
+        "sages"
+      ],
+      "cross_epic_tags": [
+        "Hindu rituals"
+      ],
+      "pass_info": {
+        "pass_number": 1,
+        "pass_name": "Narada's Departure & Sacred Journey",
+        "verse_range": [
+          1,
+          10
+        ]
+      }
+    },
+    {
+      "category": "events",
+      "difficulty": "medium",
+      "question_text": "What does Sage Valmiki do after Narada's departure?",
+      "options": [
+        "He goes to the banks of the Tamasa river",
+        "He starts writing the Ramayana",
+        "He meditates in his ashram",
+        "He goes to the world of gods"
+      ],
+      "correct_answer_id": 0,
+      "basic_explanation": "After Narada's departure, Sage Valmiki goes to the banks of the Tamasa river.",
+      "original_quote": "स मुहूर्तं गते तस्मिन्देवलोकं मुनिस्तदा | जगाम तमसातीरं जाह्नव्यास्त्वविदूरतः || १-२-३",
+      "quote_translation": "On his [Narada's] going to the world of gods in a trice, that sage [Valmiki] went to the banks of Tamasa river, not far from Jahnavi river.",
+      "tags": [
+        "Valmiki",
+        "Narada",
+        "Tamasa river"
+      ],
+      "cross_epic_tags": [
+        "Sage's journey"
+      ],
+      "pass_info": {
+        "pass_number": 1,
+        "pass_name": "Narada's Departure & Sacred Journey",
+        "verse_range": [
+          1,
+          10
+        ]
+      }
+    },
+    {
+      "category": "themes",
+      "difficulty": "easy",
+      "question_text": "What does Sage Valmiki observe about the Tamasa river?",
+      "options": [
+        "It is dirty and unpleasant",
+        "It is clear, pleasant and undirty",
+        "It is full of dangerous creatures",
+        "It is dry and barren"
+      ],
+      "correct_answer_id": 1,
+      "basic_explanation": "Sage Valmiki observes that the Tamasa river is clear, pleasant and undirty, which he likens to a virtuous man's mind.",
+      "original_quote": "अकर्दममिदं तीर्थं भरद्वाज निशामय | रमणीयं प्रसन्नाम्बु सन्मनुष्यमनो यथा || १-२-५",
+      "quote_translation": "Oh! Bharadwaaja, behold this ford which is without dirt, with clear waters, pleasant, like a virtuous man's mind.",
+      "tags": [
+        "Valmiki",
+        "Tamasa river",
+        "Nature"
+      ],
+      "cross_epic_tags": [
+        "Nature's symbolism"
+      ],
+      "pass_info": {
+        "pass_number": 1,
+        "pass_name": "Narada's Departure & Sacred Journey",
+        "verse_range": [
+          1,
+          10
+        ]
+      }
+    },
+    {
+      "category": "events",
+      "difficulty": "easy",
+      "question_text": "What was the incident that triggered Valmiki's spontaneous creation of poetry?",
+      "options": [
+        "Valmiki saw a beautiful sunset",
+        "Valmiki saw a hunter kill one of the Krauncha birds",
+        "Valmiki had a divine vision",
+        "Valmiki heard a divine voice"
+      ],
+      "correct_answer_id": 1,
+      "basic_explanation": "Valmiki was moved by the sight of a Krauncha bird being killed by a hunter, which led to the spontaneous creation of a verse.",
+      "original_quote": "तं शोणितपरीताङ्गं वेष्टमानं महीतले | भार्या तु निहतं दृष्ट्वा रुराव करुणां गिरम् || १-२-११",
+      "quote_translation": "On seeing the male bird of the couple killed and fallen on the ground, its wife cried out in a pitiful voice.",
+      "tags": [
+        "Valmiki",
+        "Krauncha birds",
+        "spontaneous poetry"
+      ],
+      "cross_epic_tags": [
+        "emotion",
+        "compassion"
+      ],
+      "pass_info": {
+        "pass_number": 2,
+        "pass_name": "The Krauncha Birds Incident",
+        "verse_range": [
+          11,
+          20
+        ]
+      }
+    },
+    {
+      "category": "themes",
+      "difficulty": "medium",
+      "question_text": "What was the emotional response of Valmiki to the incident of the Krauncha birds?",
+      "options": [
+        "Anger",
+        "Compassion",
+        "Fear",
+        "Indifference"
+      ],
+      "correct_answer_id": 1,
+      "basic_explanation": "Valmiki was filled with compassion on seeing the plight of the Krauncha bird, which led him to spontaneously create a verse.",
+      "original_quote": "ततः करुणवेदित्वादधर्मोऽयमिति द्विजः | निशाम्य रुदतीं क्रौञ्चीमिदं वचनमब्रवीत् || १-२-१४",
+      "quote_translation": "Then, the sage, realizing this to be unrighteous and moved by compassion on hearing the crying Krauncha bird, spoke these words.",
+      "tags": [
+        "Valmiki",
+        "compassion",
+        "emotional response"
+      ],
+      "cross_epic_tags": [
+        "emotion",
+        "compassion"
+      ],
+      "pass_info": {
+        "pass_number": 2,
+        "pass_name": "The Krauncha Birds Incident",
+        "verse_range": [
+          11,
+          20
+        ]
+      }
+    },
+    {
+      "category": "culture",
+      "difficulty": "medium",
+      "question_text": "What was the unique characteristic of the verse spontaneously created by Valmiki?",
+      "options": [
+        "It was metrically posited",
+        "It was in prose form",
+        "It was in the form of a riddle",
+        "It was in the form of a song"
+      ],
+      "correct_answer_id": 0,
+      "basic_explanation": "The verse created by Valmiki was metrically posited and suitable for union of song and string music.",
+      "original_quote": "पादबद्धोऽक्षरसमस्तन्त्रीलयसमन्वितः | शोकार्तस्य प्रवृत्तो मे श्लोको भवतु नान्यथा || १-२-१८",
+      "quote_translation": "A verse arose from me while I was tormented by grief, consisting of verses, possessing union of song and string music, metrically posited.",
+      "tags": [
+        "Valmiki",
+        "verse creation",
+        "poetry"
+      ],
+      "cross_epic_tags": [
+        "poetry",
+        "culture"
+      ],
+      "pass_info": {
+        "pass_number": 2,
+        "pass_name": "The Krauncha Birds Incident",
+        "verse_range": [
+          11,
+          20
+        ]
+      }
+    },
+    {
+      "category": "characters",
+      "difficulty": "easy",
+      "question_text": "Who was the disciple of Valmiki present during the incident of the Krauncha birds?",
+      "options": [
+        "Hanuman",
+        "Bharadwaja",
+        "Lakshmana",
+        "Rama"
+      ],
+      "correct_answer_id": 1,
+      "basic_explanation": "Bharadwaja was the disciple of Valmiki who was present during the incident of the Krauncha birds.",
+      "original_quote": "भरद्वाजस्ततः शिष्यो विनीतः श्रुतवान् गुरोः | कलशं पूर्णमादाय पृष्ठतोऽनुजगाम ह || १-२-२१",
+      "quote_translation": "Then, the obedient disciple Bharadwaja, who had listened to many scriptures, took a filled handy-vessel and followed his mentor from behind.",
+      "tags": [
+        "Valmiki",
+        "Bharadwaja",
+        "disciple"
+      ],
+      "cross_epic_tags": [
+        "mentor-disciple",
+        "characters"
+      ],
+      "pass_info": {
+        "pass_number": 2,
+        "pass_name": "The Krauncha Birds Incident",
+        "verse_range": [
+          11,
+          20
+        ]
+      }
+    },
+    {
+      "category": "culture",
+      "difficulty": "easy",
+      "question_text": "Who visits Sage Valmiki in his hermitage in this section of the Ramayana?",
+      "options": [
+        "Lord Rama",
+        "Lord Brahma",
+        "Lord Shiva",
+        "Lord Vishnu"
+      ],
+      "correct_answer_id": 1,
+      "basic_explanation": "In this section, Lord Brahma, the creator of the universe, visits Sage Valmiki in his hermitage. This visit is significant as it sets the stage for the creation of the Ramayana.",
+      "original_quote": "आजगाम ततो ब्रह्म लोककर्ता स्वयं प्रभुः | चतुर्मुखो महातेजा द्रष्टुं तं मुनिपुङ्गवम् || १-२-२३",
+      "quote_translation": "Then came Brahma, the creator of worlds, the four-faced, great resplendent one, to see the eminent sage [Valmiki].",
+      "tags": [
+        "Brahma",
+        "Valmiki",
+        "visit"
+      ],
+      "cross_epic_tags": [
+        "divine intervention"
+      ],
+      "pass_info": {
+        "pass_number": 3,
+        "pass_name": "Divine Intervention & Epic Commission",
+        "verse_range": [
+          21,
+          -1
+        ]
+      }
+    },
+    {
+      "category": "themes",
+      "difficulty": "medium",
+      "question_text": "What is the significance of the verse that spontaneously forms in Valmiki's mind in this section?",
+      "options": [
+        "It is the first verse of the Ramayana",
+        "It is a prophecy about Rama's life",
+        "It is a curse on Ravana",
+        "It is a blessing for Sita"
+      ],
+      "correct_answer_id": 0,
+      "basic_explanation": "The verse that forms in Valmiki's mind is significant as it is the first verse of the Ramayana. This spontaneous verse sets the stage for the entire epic.",
+      "original_quote": "समाक्षरैश्चतुर्भिर्यः पादैर्गीतो महर्षिणा | सोऽनुव्याहरणाद् भूयः श्लोकः श्लोकत्वमागतः || १-२-४०",
+      "quote_translation": "That which is articulated by the great sage with four equally lettered feet, that verse, by recitation, again, further, came into verse form.",
+      "tags": [
+        "first verse",
+        "Ramayana",
+        "creation"
+      ],
+      "cross_epic_tags": [
+        "epic creation"
+      ],
+      "pass_info": {
+        "pass_number": 3,
+        "pass_name": "Divine Intervention & Epic Commission",
+        "verse_range": [
+          21,
+          -1
+        ]
+      }
+    },
+    {
+      "category": "characters",
+      "difficulty": "medium",
+      "question_text": "What does Valmiki do upon seeing Lord Brahma in his hermitage?",
+      "options": [
+        "He runs away in fear",
+        "He offers him a seat and pays his respects",
+        "He asks him to leave",
+        "He ignores him"
+      ],
+      "correct_answer_id": 1,
+      "basic_explanation": "Upon seeing Lord Brahma, Valmiki quickly gets up, humbly adjoins his palms, and offers him a seat. This shows Valmiki's respect and reverence for the divine.",
+      "original_quote": "पूजयामास तं देवं पाद्यार्घ्यासनवन्दनैः | प्रणम्य विधिवच्चैनं पृष्ट्वानामयमव्ययम् || १-२-२५",
+      "quote_translation": "Valmiki paid his respects to the god, offering him water for washing the feet, water for drenching the thirst, a seat, and also inquired about his well-being.",
+      "tags": [
+        "Valmiki",
+        "Brahma",
+        "respect"
+      ],
+      "cross_epic_tags": [
+        "divine interaction"
+      ],
+      "pass_info": {
+        "pass_number": 3,
+        "pass_name": "Divine Intervention & Epic Commission",
+        "verse_range": [
+          21,
+          -1
+        ]
+      }
+    },
+    {
+      "category": "events",
+      "difficulty": "easy",
+      "question_text": "What does Valmiki decide to do after the spontaneous verse forms in his mind?",
+      "options": [
+        "He decides to write the Ramayana",
+        "He decides to become a king",
+        "He decides to leave his hermitage",
+        "He decides to challenge Lord Brahma"
+      ],
+      "correct_answer_id": 0,
+      "basic_explanation": "After the spontaneous verse forms in his mind, Valmiki decides to compose the entire Ramayana epic in such verses. This marks the beginning of the creation of the Ramayana.",
+      "original_quote": "तस्य बुद्धिरियं जाता महर्षेर्भावितात्मनः | कृत्स्नं रामायणं काव्यमीदृशैः करवाण्यहम् || १-२-४१",
+      "quote_translation": "This kind of intuition occurred to that contemplated soul, the great sage Valmiki, 'I will compose the entire Ramayana epic in suchlike verses.'",
+      "tags": [
+        "Valmiki",
+        "Ramayana",
+        "creation"
+      ],
+      "cross_epic_tags": [
+        "epic creation"
+      ],
+      "pass_info": {
+        "pass_number": 3,
+        "pass_name": "Divine Intervention & Epic Commission",
+        "verse_range": [
+          21,
+          -1
+        ]
+      }
+    }
+  ]
+}

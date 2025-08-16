@@ -113,14 +113,20 @@ class SupabaseService {
       return data.map((dbEpic: DatabaseEpic): Epic => ({
         id: dbEpic.id,
         title: dbEpic.title,
-        description: dbEpic.description,
-        language: dbEpic.language,
-        culture: dbEpic.culture,
-        totalQuestions: dbEpic.question_count,
+        description: dbEpic.description || '',
+        language: dbEpic.language || '',
+        culture: dbEpic.culture || '',
+        // Database fields
+        question_count: dbEpic.question_count || 0,
+        is_available: dbEpic.is_available || false,
+        difficulty_level: dbEpic.difficulty_level,
+        estimated_reading_time: dbEpic.estimated_reading_time,
+        // Legacy aliases
+        totalQuestions: dbEpic.question_count || 0,
         difficulty: dbEpic.difficulty_level,
-        estimatedTime: dbEpic.estimated_reading_time,
-        isAvailable: dbEpic.is_available,
-        coverImage: `https://example.com/covers/${dbEpic.id}.jpg`, // Placeholder
+        estimatedTime: dbEpic.estimated_reading_time || '',
+        isAvailable: dbEpic.is_available || false,
+        coverImage: '🕉️', // Use emoji for now
       }));
     } catch (error) {
       console.error('Error in getEpics:', error);
@@ -173,6 +179,7 @@ class SupabaseService {
         category: dbQ.category,
         difficulty: dbQ.difficulty,
         questionText: dbQ.question_text,
+        text: dbQ.question_text, // Legacy alias
         options: dbQ.options,
         correctAnswerId: dbQ.correct_answer_id,
         explanation: dbQ.basic_explanation,

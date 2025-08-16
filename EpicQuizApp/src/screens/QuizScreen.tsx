@@ -12,7 +12,8 @@ import {
   SafeAreaView, 
   Alert,
   BackHandler,
-  ViewStyle
+  ViewStyle,
+  ScrollView
 } from 'react-native';
 import { RouteProp, useFocusEffect } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
@@ -256,13 +257,17 @@ const QuizScreen: React.FC<QuizScreenProps> = ({ route }) => {
       />
 
       {/* Question Card */}
-      <View style={styles.questionContainer}>
+      <ScrollView 
+        style={styles.questionContainer}
+        contentContainerStyle={styles.questionContentContainer}
+        showsVerticalScrollIndicator={true}
+      >
         <QuestionCard
           question={currentQuestion}
           selectedAnswer={selectedAnswer}
           onAnswerSelect={handleAnswerSelect}
         />
-      </View>
+      </ScrollView>
 
       {/* Action Button */}
       <View style={styles.actionsContainer}>
@@ -311,6 +316,11 @@ const styles = StyleSheet.create({
   questionContainer: {
     flex: 1,
     paddingVertical: Spacing.s,
+  },
+
+  questionContentContainer: {
+    flexGrow: 1,
+    paddingBottom: Spacing.l,
   },
 
   actionsContainer: {

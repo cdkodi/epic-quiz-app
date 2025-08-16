@@ -9,6 +9,8 @@ import { ValmikiContent } from './ValmikiScrapingService';
 export interface SheetsRow {
   questionId: string;
   epic: string;
+  kanda: string;
+  sarga: string;
   chapterSource: string;
   category: string;
   difficulty: string;
@@ -44,10 +46,10 @@ export interface SummaryRow {
 }
 
 export class GoogleSheetsService {
-  private sheets: any;
-  private sheetId: string;
-  private readonly QUIZ_TAB_ID = 0; // First tab (gid=0)
-  private readonly SUMMARY_TAB_ID = 157495304; // Summary tab (gid=157495304)
+  protected sheets: any;
+  protected sheetId: string;
+  protected readonly QUIZ_TAB_ID = 0; // First tab (gid=0)
+  protected readonly SUMMARY_TAB_ID = 157495304; // Summary tab (gid=157495304)
 
   constructor() {
     if (!process.env.CONTENT_REVIEW_SHEET_ID) {
@@ -76,9 +78,9 @@ export class GoogleSheetsService {
     try {
       console.log('📋 Setting up content review sheet headers...');
 
-      // Define headers
+      // Define headers - now includes Kanda and Sarga columns for proper attribution
       const headers = [
-        'Question ID', 'Epic', 'Chapter Source', 'Category', 'Difficulty',
+        'Question ID', 'Epic', 'Kanda', 'Sarga', 'Chapter Source', 'Category', 'Difficulty',
         'Question Text', 'Option A', 'Option B', 'Option C', 'Option D',
         'Correct Answer', 'Basic Explanation', 'Tags', 'Cultural Context',
         'Source Reference', 'Status', 'Reviewer Notes', 'Generated Date'
@@ -92,7 +94,7 @@ export class GoogleSheetsService {
 
       await this.sheets.spreadsheets.values.update({
         spreadsheetId: this.sheetId,
-        range: 'A1:R1',
+        range: 'A1:T1',
         valueInputOption: 'RAW',
         requestBody: {
           values: [headers]
@@ -237,7 +239,7 @@ export class GoogleSheetsService {
       });
 
       const nextRow = (existingData.data.values?.length || 0) + 1;
-      const range = `A${nextRow}:R${nextRow + rows.length - 1}`;
+      const range = `A${nextRow}:T${nextRow + rows.length - 1}`;
 
       await this.sheets.spreadsheets.values.update({
         spreadsheetId: this.sheetId,
@@ -335,14 +337,14 @@ export class GoogleSheetsService {
     try {
       const response = await this.sheets.spreadsheets.values.get({
         spreadsheetId: this.sheetId,
-        range: 'A2:R1000' // Skip header row
+        range: 'A2:T1000' // Skip header row - now includes Kanda and Sarga columns
       });
 
       const rows = response.data.values || [];
       const approvedQuestions: GeneratedQuizQuestion[] = [];
 
       for (const row of rows) {
-        if (row[15] === 'Approved') { // Status column
+        if (row[17] === 'Approved') { // Status column (moved due to Kanda/Sarga columns)
           const question = this.rowToQuestion(row);
           if (question) {
             approvedQuestions.push(question);
@@ -366,6 +368,8 @@ export class GoogleSheetsService {
     return questions.map((q, index) => ({
       questionId: `${q.chapter_source}_${index + 1}`,
       epic: q.epic_id,
+      kanda: q.kanda || '',
+      sarga: q.sarga?.toString() || '',
       chapterSource: q.chapter_source || '',
       category: q.category,
       difficulty: q.difficulty,
@@ -413,6 +417,8 @@ export class GoogleSheetsService {
     return [
       row.questionId,
       row.epic,
+      row.kanda,
+      row.sarga,
       row.chapterSource,
       row.category,
       row.difficulty,
@@ -456,22 +462,24 @@ export class GoogleSheetsService {
   /**
    * Convert sheet row back to question object
    */
-  private rowToQuestion(row: string[]): GeneratedQuizQuestion | null {
+  protected rowToQuestion(row: string[]): GeneratedQuizQuestion | null {
     try {
       const correctAnswerMap: Record<string, number> = { 'A': 0, 'B': 1, 'C': 2, 'D': 3 };
 
       return {
         epic_id: row[1] || 'ramayana',
-        chapter_source: row[2] || '',
-        category: row[3] as any,
-        difficulty: row[4] as any,
-        question_text: row[5] || '',
-        options: [row[6], row[7], row[8], row[9]].filter(Boolean),
-        correct_answer_id: correctAnswerMap[row[10]] || 0,
-        basic_explanation: row[11] || '',
-        tags: row[12] ? row[12].split(', ').map(t => t.trim()) : [],
-        cultural_context: row[13] || '',
-        source_reference: row[14] || ''
+        kanda: row[2] || null,
+        sarga: row[3] ? parseInt(row[3]) : null,
+        chapter_source: row[4] || '',
+        category: row[5] as any,
+        difficulty: row[6] as any,
+        question_text: row[7] || '',
+        options: [row[8], row[9], row[10], row[11]].filter(Boolean),
+        correct_answer_id: correctAnswerMap[row[12]] || 0,
+        basic_explanation: row[13] || '',
+        tags: row[14] ? row[14].split(', ').map(t => t.trim()) : [],
+        cultural_context: row[15] || '',
+        source_reference: row[16] || ''
       };
     } catch (error) {
       console.error('Error converting row to question:', error);
@@ -562,24 +570,31 @@ export class GoogleSheetsService {
     try {
       const response = await this.sheets.spreadsheets.values.get({
         spreadsheetId: this.sheetId,
-        range: 'A2:P1000'
+        range: 'A2:T1000' // Updated range to include kanda/sarga columns
       });
 
       const rows = response.data.values || [];
+      let totalQuestions = 0;
       const stats = {
-        totalQuestions: rows.length,
+        totalQuestions: 0,
         needsReview: 0,
         approved: 0,
         rejected: 0
       };
 
       for (const row of rows) {
-        const status = row[15]; // Status column
+        // Skip empty rows
+        if (row.length === 0 || !row[0]) continue;
+        
+        totalQuestions++;
+        
+        const status = row[17]; // Status column (updated from 15 to 17 due to kanda/sarga columns)
         if (status === 'Needs Review') stats.needsReview++;
         else if (status === 'Approved') stats.approved++;
         else if (status === 'Rejected') stats.rejected++;
       }
 
+      stats.totalQuestions = totalQuestions;
       return stats;
 
     } catch (error) {

@@ -3,13 +3,19 @@
  * Matching backend API structure
  */
 
-// Epic types
+// Epic types (matching Supabase schema)
 export interface Epic {
   id: string;
   title: string;
   description?: string;
   language?: string;
   culture?: string;
+  // Database fields
+  question_count: number;
+  is_available: boolean;
+  difficulty_level?: 'beginner' | 'intermediate' | 'advanced';
+  estimated_reading_time?: string;
+  // Legacy aliases for backward compatibility
   totalQuestions: number;
   isAvailable: boolean;
   difficulty?: 'beginner' | 'intermediate' | 'advanced';
@@ -25,6 +31,9 @@ export interface QuizPackage {
   questions: Question[];
   totalQuestions: number;
   downloadedAt: string;
+  // Legacy properties
+  quiz_id?: string;
+  epic?: any;
   metadata: {
     language: string;
     culture: string;
@@ -39,6 +48,7 @@ export interface Question {
   category: 'characters' | 'events' | 'themes' | 'culture';
   difficulty: 'easy' | 'medium' | 'hard';
   questionText: string;
+  text: string; // Legacy alias for questionText
   options: string[];
   correctAnswerId: number;
   explanation: string;
@@ -46,6 +56,9 @@ export interface Question {
   culturalContext?: string;
   sourceReference: string;
 }
+
+// Legacy alias for backward compatibility
+export type QuizQuestion = Question;
 
 export interface QuestionAnswer {
   question_id: string;

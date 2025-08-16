@@ -19,7 +19,11 @@ export class QuizService {
    * CRITICAL ARCHITECTURAL IMPLEMENTATION: This method enables offline-first design
    * by providing complete quiz data including basic explanations in single API call
    */
-  async generateQuizPackage(epicId: string, questionCount = 10): Promise<QuizPackage> {
+  async generateQuizPackage(
+    epicId: string, 
+    questionCount = 10, 
+    options?: { kanda?: string; sarga?: number }
+  ): Promise<QuizPackage> {
     // Validate epic exists and is available
     const epicQuery = 'SELECT id, title, language FROM epics WHERE id = $1 AND is_available = true';
     const epicResult = await executeQuery(epicQuery, [epicId]);
@@ -30,24 +34,42 @@ export class QuizService {
 
     const epic = epicResult.rows[0];
 
+    // Build dynamic WHERE clause for chapter filtering
+    const whereConditions = ['epic_id = $1'];
+    const queryParams: any[] = [epicId];
+    
+    if (options?.kanda) {
+      whereConditions.push(`kanda = $${queryParams.length + 1}`);
+      queryParams.push(options.kanda);
+    }
+    
+    if (options?.sarga !== undefined) {
+      whereConditions.push(`sarga = $${queryParams.length + 1}`);
+      queryParams.push(options.sarga);
+    }
+    
+    const whereClause = whereConditions.join(' AND ');
+
     // Get random questions with balanced distribution across categories and difficulties
     // PERFORMANCE OPTIMIZATION: Using TABLESAMPLE for better random distribution at scale
+    // CHAPTER SUPPORT: Now supports filtering by kanda and sarga for targeted quizzes
     const questionsQuery = `
       WITH balanced_questions AS (
         SELECT *, ROW_NUMBER() OVER (PARTITION BY category, difficulty ORDER BY RANDOM()) as rn
         FROM questions 
-        WHERE epic_id = $1
+        WHERE ${whereClause}
       )
       SELECT 
         id, question_text, options, correct_answer_id, 
-        basic_explanation, category, difficulty
+        basic_explanation, category, difficulty, kanda, sarga
       FROM balanced_questions 
-      WHERE rn <= CEIL($2::float / (4 * 3)) -- Distribute across 4 categories and 3 difficulties
+      WHERE rn <= CEIL($${queryParams.length + 1}::float / (4 * 3)) -- Distribute across 4 categories and 3 difficulties
       ORDER BY RANDOM()
-      LIMIT $2
+      LIMIT $${queryParams.length + 1}
     `;
 
-    const questionsResult = await executeQuery(questionsQuery, [epicId, questionCount]);
+    queryParams.push(questionCount);
+    const questionsResult = await executeQuery(questionsQuery, queryParams);
 
     if (questionsResult.rows.length < Math.min(questionCount, 5)) {
       throw new Error('Insufficient questions available for this epic');
@@ -74,6 +96,48 @@ export class QuizService {
       },
       questions
     };
+  }
+
+  /**
+   * Generate quiz package for a specific chapter (Sarga)
+   * CHAPTER-SPECIFIC FUNCTIONALITY: Enables targeted learning by chapter
+   */
+  async generateChapterQuiz(
+    epicId: string, 
+    kanda: string, 
+    sarga: number, 
+    questionCount = 10
+  ): Promise<QuizPackage> {
+    return this.generateQuizPackage(epicId, questionCount, { kanda, sarga });
+  }
+
+  /**
+   * Get all questions for a specific chapter
+   * EDUCATIONAL SUPPORT: Complete chapter coverage for comprehensive learning
+   */
+  async getChapterQuestions(epicId: string, kanda: string, sarga: number): Promise<Question[]> {
+    const query = `
+      SELECT * FROM questions 
+      WHERE epic_id = $1 AND kanda = $2 AND sarga = $3
+      ORDER BY sheet_question_id
+    `;
+
+    const result = await executeQuery(query, [epicId, kanda, sarga]);
+    return result.rows;
+  }
+
+  /**
+   * Get chapter summary for educational context
+   * EDUCATIONAL ENHANCEMENT: Provides learning context alongside questions
+   */
+  async getChapterSummary(epicId: string, kanda: string, sarga: number): Promise<any> {
+    const query = `
+      SELECT * FROM chapter_summaries 
+      WHERE epic_id = $1 AND kanda = $2 AND sarga = $3
+    `;
+
+    const result = await executeQuery(query, [epicId, kanda, sarga]);
+    return result.rows[0] || null;
   }
 
   /**
@@ -258,14 +322,15 @@ export class QuizService {
 
   /**
    * Add new question to epic
+   * ENHANCED: Now supports chapter assignment (kanda/sarga)
    */
   async addQuestion(questionData: CreateQuestionData): Promise<Question> {
     const query = `
       INSERT INTO questions (
         epic_id, category, difficulty, question_text, options, correct_answer_id,
         basic_explanation, original_quote, original_language, quote_translation,
-        tags, cross_epic_tags
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+        tags, cross_epic_tags, kanda, sarga, sheet_question_id, import_batch_id
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
       RETURNING *
     `;
 
@@ -281,7 +346,11 @@ export class QuizService {
       questionData.original_language,
       questionData.quote_translation,
       questionData.tags,
-      questionData.cross_epic_tags
+      questionData.cross_epic_tags,
+      (questionData as any).kanda,
+      (questionData as any).sarga,
+      (questionData as any).sheet_question_id,
+      (questionData as any).import_batch_id
     ];
 
     const result = await executeQuery(query, values);

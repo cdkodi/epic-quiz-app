@@ -48,9 +48,11 @@ class HardQuestionsSheetsStager {
   }
 
   formatQuestionsForSheets(addonData) {
-    // Match the exact format expected by GoogleSheetsService
+    // Match the exact format expected by GoogleSheetsService with kanda/sarga attribution
     const questions = addonData.questions.map(question => ({
       epic_id: addonData.epic_id,
+      kanda: addonData.kanda,
+      sarga: addonData.sarga,
       chapter_source: `${addonData.kanda}_sarga_${addonData.sarga}`,
       category: question.category,
       difficulty: question.difficulty,

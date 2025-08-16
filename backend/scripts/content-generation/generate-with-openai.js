@@ -1,11 +1,34 @@
 #!/usr/bin/env node
 
 /**
- * OpenAI Content Generation Script for Valmiki Ramayana
+ * ⚠️ DEPRECATED SCRIPT - DO NOT USE ⚠️
  * 
- * Generates chapter summaries and quiz questions from scraped Sanskrit content
- * Usage: node generate-with-openai.js --input=structured_bala_kanda_sarga_2.json
+ * This script only generates 4 questions and is DEPRECATED.
+ * 
+ * ✅ USE THIS INSTEAD:
+ * node generate-with-openai-multipass.js --input=structured_bala_kanda_sarga_X.json --multipass
+ * 
+ * The multipass script generates 12+ questions for complete coverage.
+ * 
+ * ❌ LEGACY: OpenAI Content Generation Script for Valmiki Ramayana (DEPRECATED)
+ * ❌ PROBLEM: Only generates 4 questions instead of required 12+
+ * ❌ Usage: DO NOT USE - node generate-with-openai.js --input=structured_bala_kanda_sarga_2.json
  */
+
+console.error(`
+🚨 ERROR: DEPRECATED SCRIPT USAGE DETECTED 🚨
+
+This script (generate-with-openai.js) is DEPRECATED and only produces 4 questions.
+
+✅ USE THIS INSTEAD:
+node generate-with-openai-multipass.js --input=structured_bala_kanda_sarga_X.json --multipass
+
+This will generate 12+ questions for complete content coverage.
+
+Exiting to prevent low-quality content generation...
+`);
+
+process.exit(1);
 
 const fs = require('fs').promises;
 const path = require('path');

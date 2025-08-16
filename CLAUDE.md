@@ -248,7 +248,13 @@ TEST_DB_PASSWORD=your_password
 # Server Configuration  
 PORT=3000
 NODE_ENV=development
+
+# Supabase Configuration (for MCP tools)
+SUPABASE_PROJECT_ID=ccfpbksllmvzxllwyqyv
 ```
+
+**🚨 CRITICAL: Supabase Project ID Reference**
+For ALL MCP Supabase operations, always use: **`ccfpbksllmvzxllwyqyv`**
 
 ## Essential Testing (Lean Approach)
 
@@ -382,3 +388,58 @@ npx tsc --noEmit
 # Force hard refresh if changes don't appear
 pkill -f expo && npx expo start --clear
 ```
+
+## Critical Error Fixes
+
+### Hermes URL.protocol Error Fix
+
+**Error Symptoms:**
+```
+[runtime not ready]: Error: URL.protocol is not implemented, js engine: hermes
+ERROR [runtime not ready]: Invariant Violation: "main" has not been registered.
+```
+
+**Root Cause:**
+The Hermes JavaScript engine doesn't implement Node.js APIs like `URL.protocol` that are required by the Supabase client and other dependencies.
+
+**Permanent Fix Applied:**
+
+1. **Install URL Polyfill Package:**
+```bash
+npm install react-native-url-polyfill --legacy-peer-deps
+```
+
+2. **Import Polyfill at App Entry Point:**
+Add to `/EpicQuizApp/index.js` as the FIRST import:
+```javascript
+import 'react-native-url-polyfill/auto';
+import { AppRegistry } from 'react-native';
+import App from './App';
+
+AppRegistry.registerComponent('main', () => App);
+```
+
+3. **Ensure Hermes is Enabled:**
+In `app.json`:
+```json
+{
+  "expo": {
+    "jsEngine": "hermes"
+  }
+}
+```
+
+**Why This Works:**
+- The polyfill provides missing URL parsing APIs that Hermes lacks
+- Supabase client can now properly parse URLs and connect to the database
+- App registration completes successfully without runtime errors
+- Maintains Hermes performance benefits while adding necessary compatibility
+
+**Alternative Solutions Tested:**
+- ❌ Switching to JSC engine (`"jsEngine": "jsc"`) - Works but loses Hermes performance
+- ✅ URL polyfill with Hermes - Best solution (performance + compatibility)
+
+**Future Prevention:**
+- Always test new dependencies with Hermes engine
+- Check for Node.js API usage in dependency documentation
+- Add polyfills proactively for known compatibility issues

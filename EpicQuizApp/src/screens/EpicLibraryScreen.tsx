@@ -12,7 +12,8 @@ import {
   ScrollView, 
   SafeAreaView,
   RefreshControl,
-  Alert
+  Alert,
+  TouchableOpacity
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -138,8 +139,80 @@ const EpicLibraryScreen: React.FC = () => {
           <Text style={styles.subtitle}>Discover Classical Literature</Text>
         </View>
 
-        {/* Epic Cards */}
+        {/* Continue Learning Section */}
+        <View style={styles.continueSection}>
+          <TouchableOpacity 
+            style={styles.continueButton}
+            onPress={() => {
+              // Navigate to continue learning
+              Alert.alert(
+                '🎯 Continue Learning',
+                'Pick up where you left off with personalized quiz recommendations.',
+                [
+                  { text: 'Cancel', style: 'cancel' },
+                  { 
+                    text: 'Continue Quiz', 
+                    onPress: () => {
+                      // Navigate to a new quiz
+                      const ramayana = epics.find(e => e.id === 'ramayana');
+                      if (ramayana) {
+                        handleEpicPress(ramayana);
+                      } else {
+                        Alert.alert('Error', 'Ramayana epic not found. Please refresh the app.');
+                      }
+                    }
+                  }
+                ]
+              );
+            }}
+          >
+            <Text style={styles.continueButtonIcon}>🎯</Text>
+            <View style={styles.continueButtonText}>
+              <Text style={styles.continueTitle}>Continue Your Journey</Text>
+              <Text style={styles.continueSubtitle}>Ready for Bala Kanda - Sarga 2?</Text>
+            </View>
+            <Text style={styles.continueArrow}>→</Text>
+          </TouchableOpacity>
+        </View>
+
+
+        {/* Recent Activity Section */}
+        <View style={styles.recentActivitySection}>
+          <Text style={styles.sectionTitle}>🕒 Recent Activity</Text>
+          
+          <TouchableOpacity 
+            style={styles.recentActivityItem}
+            onPress={() => {
+              // Navigate to last quiz results
+              Alert.alert(
+                '📝 Last Quiz Results', 
+                'Review your most recent Ramayana quiz performance and explanations.',
+                [
+                  { text: 'Cancel', style: 'cancel' },
+                  { text: 'Review Answers', onPress: () => {
+                    // This would navigate to the explanation screen with recent quiz data
+                    Alert.alert('Coming Soon', 'Quiz history and review navigation will be available in the next update.');
+                  }}
+                ]
+              );
+            }}
+          >
+            <View style={styles.activityIcon}>
+              <Text style={styles.activityIconText}>📝</Text>
+            </View>
+            <View style={styles.activityContent}>
+              <Text style={styles.activityTitle}>Bala Kanda - Sarga 1 Completed</Text>
+              <Text style={styles.activitySubtitle}>Review your answers and explanations</Text>
+            </View>
+            <View style={styles.activityArrow}>
+              <Text style={styles.activityArrowText}>→</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        {/* Available Epics Section */}
         <View style={styles.epicsContainer}>
+          <Text style={styles.sectionTitle}>📚 Available Literature</Text>
           {epics.map((epic) => (
             <EpicCard
               key={epic.id}
@@ -225,6 +298,105 @@ const styles = StyleSheet.create({
 
   footerSpacing: {
     height: Spacing.xl,
+  },
+
+  // New sections styles
+  continueSection: {
+    marginBottom: Spacing.xl,
+    paddingHorizontal: Spacing.s,
+  },
+
+  continueButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: theme.colors.primarySaffron + '15',
+    padding: Spacing.l,
+    borderRadius: 16,
+    borderWidth: 2,
+    borderColor: theme.colors.primarySaffron + '30',
+  },
+
+  continueButtonIcon: {
+    fontSize: 28,
+    marginRight: Spacing.m,
+  },
+
+  continueButtonText: {
+    flex: 1,
+  },
+
+  continueTitle: {
+    ...Typography.h3,
+    color: theme.colors.primarySaffron,
+    fontWeight: '700',
+    marginBottom: Spacing.xs,
+  },
+
+  continueSubtitle: {
+    ...Typography.body,
+    color: theme.text.secondary,
+  },
+
+  continueArrow: {
+    ...Typography.h2,
+    color: theme.colors.primarySaffron,
+    marginLeft: Spacing.s,
+  },
+
+
+  recentActivitySection: {
+    marginBottom: Spacing.xl,
+    paddingHorizontal: Spacing.s,
+  },
+
+  recentActivityItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: theme.backgrounds.secondary,
+    padding: Spacing.m,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: theme.colors.lightGray,
+    marginTop: Spacing.m,
+  },
+
+  activityIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: theme.colors.primarySaffron + '20',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: Spacing.m,
+  },
+
+  activityIconText: {
+    fontSize: 20,
+  },
+
+  activityContent: {
+    flex: 1,
+  },
+
+  activityTitle: {
+    ...Typography.subtitle,
+    color: theme.text.primary,
+    fontWeight: '600',
+    marginBottom: Spacing.xs,
+  },
+
+  activitySubtitle: {
+    ...Typography.caption,
+    color: theme.text.secondary,
+  },
+
+  activityArrow: {
+    marginLeft: Spacing.m,
+  },
+
+  activityArrowText: {
+    ...Typography.h3,
+    color: theme.colors.primarySaffron,
   },
 });
 

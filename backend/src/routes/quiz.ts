@@ -54,9 +54,14 @@ router.get('/',
       }
 
       // Generate quiz package with balanced question selection
+      // CHAPTER SUPPORT: Check for kanda/sarga filtering
+      const kanda = req.query.kanda as string;
+      const sarga = req.query.sarga ? parseInt(req.query.sarga as string) : undefined;
+      
       const quizPackage = await quizService.generateQuizPackage(
         epicId as string,
-        parseInt(count as string) || 10
+        parseInt(count as string) || 10,
+        { kanda, sarga }
       );
 
       // Add metadata for mobile app caching and analytics
@@ -90,6 +95,102 @@ router.get('/',
         'ETag': `"${quizPackage.quiz_id}"`,
         'Content-Type': 'application/json; charset=utf-8'
       });
+
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+/**
+ * GET /api/v1/quiz/chapter/:epicId/:kanda/:sarga
+ * Get quiz for specific chapter (Sarga)
+ * 
+ * CHAPTER-SPECIFIC LEARNING: Enables targeted study of individual chapters
+ */
+router.get('/chapter/:epicId/:kanda/:sarga',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { epicId, kanda, sarga } = req.params;
+      const questionCount = parseInt(req.query.count as string) || 10;
+      
+      // Generate chapter-specific quiz
+      const quizPackage = await quizService.generateChapterQuiz(
+        epicId,
+        kanda,
+        parseInt(sarga),
+        questionCount
+      );
+
+      // Get chapter summary for educational context
+      const chapterSummary = await quizService.getChapterSummary(
+        epicId,
+        kanda,
+        parseInt(sarga)
+      );
+
+      const response = {
+        success: true,
+        data: {
+          quiz: quizPackage,
+          chapter_summary: chapterSummary,
+          chapter_info: {
+            epic_id: epicId,
+            kanda,
+            sarga: parseInt(sarga),
+            title: chapterSummary?.title || `${kanda} Sarga ${sarga}`
+          }
+        },
+        meta: {
+          generated_at: new Date().toISOString(),
+          chapter_focus: true
+        }
+      };
+
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+/**
+ * GET /api/v1/quiz/chapter/:epicId/:kanda/:sarga/questions
+ * Get all questions for a specific chapter
+ * 
+ * COMPREHENSIVE LEARNING: Complete chapter coverage for thorough study
+ */
+router.get('/chapter/:epicId/:kanda/:sarga/questions',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { epicId, kanda, sarga } = req.params;
+      
+      const questions = await quizService.getChapterQuestions(
+        epicId,
+        kanda,
+        parseInt(sarga)
+      );
+
+      const chapterSummary = await quizService.getChapterSummary(
+        epicId,
+        kanda,
+        parseInt(sarga)
+      );
+
+      const response = {
+        success: true,
+        data: {
+          questions,
+          chapter_summary: chapterSummary,
+          chapter_info: {
+            epic_id: epicId,
+            kanda,
+            sarga: parseInt(sarga),
+            question_count: questions.length
+          }
+        }
+      };
 
       res.json(response);
     } catch (error) {

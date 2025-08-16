@@ -48,11 +48,11 @@ class OfflineStorageService {
   async getQuizPackage(epicId: string): Promise<QuizPackage | null> {
     try {
       const packages = await this.getStoredQuizPackages();
-      const package = packages[epicId];
+      const packageData = packages[epicId];
       
-      if (package) {
+      if (packageData) {
         console.log(`📦 Retrieved cached quiz package for ${epicId}`);
-        return package;
+        return packageData;
       }
       
       return null;

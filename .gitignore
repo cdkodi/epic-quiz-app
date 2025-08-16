@@ -118,3 +118,22 @@ EpicQuizApp/android/app/build/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Generated Content & Data
+backend/generated-content/
+backend/analysis-reports/
+backend/import-reports/
+backend/logs/
+
+# Temporary Test Files
+backend/test-*.js
+backend/verify-*.js
+backend/setup-*.js
+
+# Sensitive Files
+backend/google-credentials.json
+*.log
+
+# Additional Build Outputs
+backend/dist/
+build/

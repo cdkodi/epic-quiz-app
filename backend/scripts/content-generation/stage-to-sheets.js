@@ -102,9 +102,11 @@ class ContentStager {
       source_reference: summaryData.source_url || 'Valmiki Ramayana'
     };
 
-    // Convert questions format
+    // Convert questions format with kanda/sarga attribution
     const questions = questionsData.questions.map(q => ({
       epic_id: questionsData.epic_id,
+      kanda: questionsData.kanda,
+      sarga: questionsData.sarga,
       chapter_source: `${questionsData.kanda}_sarga_${questionsData.sarga}`,
       category: q.category,
       difficulty: q.difficulty,

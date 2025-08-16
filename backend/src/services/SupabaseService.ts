@@ -39,7 +39,7 @@ export interface DatabaseSummary {
 }
 
 export class SupabaseService {
-  private supabase: SupabaseClient;
+  protected supabase: SupabaseClient;
 
   constructor() {
     const supabaseUrl = process.env.SUPABASE_URL;

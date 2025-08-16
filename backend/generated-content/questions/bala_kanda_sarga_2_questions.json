@@ -3,385 +3,297 @@
   "kanda": "bala_kanda",
   "sarga": 2,
   "source_url": "https://www.valmikiramayan.net/utf8/baala/sarga2/bala_2_frame.htm",
-  "generation_date": "2025-08-11T17:44:58.056Z",
+  "generation_date": "2025-08-15T05:37:47.216Z",
   "generator": "openai-gpt4-multipass",
   "total_questions": 12,
   "questions": [
     {
       "category": "characters",
       "difficulty": "easy",
-      "question_text": "Who is the disciple of Sage Valmiki mentioned in these verses?",
+      "question_text": "In the second Sarga of Bala Kanda, Sage Valmiki, a virtuous and skilled speaker, pays his respects to a divine sage. Who is this divine sage that Valmiki worships?",
       "options": [
-        "Narada",
-        "Bharadwaja",
-        "Rama",
-        "Hanuman"
+        "Sage Vashishta",
+        "Sage Narada",
+        "Sage Vishvamitra",
+        "Sage Bharadwaja"
       ],
       "correct_answer_id": 1,
-      "basic_explanation": "Bharadwaja is the disciple of Sage Valmiki. He is obedient and respectful towards his Guru, as shown in these verses.",
-      "original_quote": "एवमुक्तो भरद्वाजो वाल्मीकेन महात्मना | प्रायच्छत मुनेस्तस्य वल्कलं नियतो गुरोः || १-२-७",
+      "basic_explanation": "Sage Valmiki worships Sage Narada, a divine sage known for his wisdom and knowledge.",
+      "original_quote": "नारदस्य तु तद्वाक्यं श्रुत्वा वाक्यविशारदः | पूजयामास धर्मात्मा सहशिष्यो महामुनिः ||",
+      "quote_translation": "Having heard the speech of Narada, the virtuous and great sage Valmiki, a skilled speaker, worshipped him along with his disciples.",
+      "tags": [
+        "Valmiki",
+        "Narada",
+        "Worship"
+      ],
+      "cross_epic_tags": [
+        "Respect",
+        "Wisdom"
+      ]
+    },
+    {
+      "category": "events",
+      "difficulty": "easy",
+      "question_text": "After Sage Narada leaves for the divine realm, where does Sage Valmiki decide to go?",
+      "options": [
+        "To the banks of River Tamasa",
+        "To the banks of River Ganga",
+        "To the city of Ayodhya",
+        "To the Himalayas"
+      ],
+      "correct_answer_id": 0,
+      "basic_explanation": "Sage Valmiki decides to go to the banks of River Tamasa for a bath after Sage Narada leaves for the divine realm.",
+      "original_quote": "स मुहूर्तं गते तस्मिन्देवलोकं मुनिस्तदा | जगाम तमसातीरं जाह्नव्यास्त्वविदूरतः ||",
+      "quote_translation": "Then, on Narada's going to the world of gods in a trice, that sage Valmiki went to the banks of Tamasa river, not far from Jahnavi river.",
+      "tags": [
+        "Valmiki",
+        "Narada",
+        "Tamasa"
+      ],
+      "cross_epic_tags": [
+        "Journey",
+        "Nature"
+      ]
+    },
+    {
+      "category": "characters",
+      "difficulty": "medium",
+      "question_text": "Upon reaching the banks of the Tamasa river, Sage Valmiki speaks to his disciple who is standing by his side. Who is this disciple?",
+      "options": [
+        "Bharadwaja",
+        "Lakshmana",
+        "Hanuman",
+        "Sugriva"
+      ],
+      "correct_answer_id": 0,
+      "basic_explanation": "Sage Valmiki's disciple is Bharadwaja, who is obedient and respectful towards his guru.",
+      "original_quote": "स तु तीरं समासाद्य तमसाया महामुनिः | शिष्यमाह स्थितं पार्श्वे दृष्ट्वा तीर्थमकर्दमम् ||",
+      "quote_translation": "Then that sage Valmiki on reaching the shore of Tamasa, which was not dirty, spoke to his disciple Bharadwaja who was at his side.",
+      "tags": [
+        "Valmiki",
+        "Bharadwaja",
+        "Disciple"
+      ],
+      "cross_epic_tags": [
+        "Guru-Shishya",
+        "Respect"
+      ]
+    },
+    {
+      "category": "culture",
+      "difficulty": "medium",
+      "question_text": "Sage Valmiki describes the ford of the Tamasa river as 'akardamam', which means without dirt. What does this symbolize in the context of ancient Indian culture?",
+      "options": [
+        "Purity of nature",
+        "Cleanliness of the environment",
+        "Spiritual purity",
+        "Physical cleanliness"
+      ],
+      "correct_answer_id": 2,
+      "basic_explanation": "In ancient Indian culture, a clean and clear river often symbolizes spiritual purity and tranquility.",
+      "original_quote": "अकर्दममिदं तीर्थं भरद्वाज निशामय | रमणीयं प्रसन्नाम्बु सन्मनुष्यमनो यथा ||",
+      "quote_translation": "Oh! Bharadwaaja, behold this ford which is without dirt, with clear waters, and pleasant, like a virtuous man's mind.",
+      "tags": [
+        "Valmiki",
+        "Bharadwaja",
+        "Tamasa"
+      ],
+      "cross_epic_tags": [
+        "Purity",
+        "Spirituality"
+      ]
+    },
+    {
+      "category": "events",
+      "difficulty": "hard",
+      "question_text": "While at the banks of the Tamasa river, Sage Valmiki witnesses a tragic event involving a couple of birds. What happens to the birds?",
+      "options": [
+        "They are captured by a hunter",
+        "One of them is killed by a hunter",
+        "They are separated by a storm",
+        "One of them is injured by a predator"
+      ],
+      "correct_answer_id": 1,
+      "basic_explanation": "Sage Valmiki witnesses a tragic event where a hunter kills one bird from a couple that was moving about charmingly and not leaving one another.",
+      "original_quote": "तस्मात्तु मिथुनादेकं पुमांसं पापनिश्चयः | जघान वैरनिलयो निषादस्तस्य पश्यतः ||",
+      "quote_translation": "But a hunter, the harborer of ill-will, killed one male bird from that couple, while it was in the vicinity of Valmiki.",
+      "tags": [
+        "Valmiki",
+        "Birds",
+        "Hunter"
+      ],
+      "cross_epic_tags": [
+        "Tragedy",
+        "Violence"
+      ]
+    },
+    {
+      "category": "themes",
+      "difficulty": "hard",
+      "question_text": "The tragic event of the bird being killed by the hunter deeply affects Sage Valmiki. What does this incident symbolize in the broader context of the Ramayana?",
+      "options": [
+        "The inevitability of death",
+        "The cruelty of fate",
+        "The disruption of peace and harmony",
+        "The power of destiny"
+      ],
+      "correct_answer_id": 2,
+      "basic_explanation": "The incident symbolizes the disruption of peace and harmony, which is a recurring theme in the Ramayana, where the peaceful life of Rama and Sita is disrupted by Ravana.",
+      "original_quote": "तस्मात्तु मिथुनादेकं पुमांसं पापनिश्चयः | जघान वैरनिलयो निषादस्तस्य पश्यतः ||",
+      "quote_translation": "But a hunter, the harborer of ill-will, killed one male bird from that couple, while it was in the vicinity of Valmiki.",
+      "tags": [
+        "Valmiki",
+        "Birds",
+        "Hunter"
+      ],
+      "cross_epic_tags": [
+        "Disruption",
+        "Peace"
+      ]
+    },
+    {
+      "category": "characters",
+      "difficulty": "medium",
+      "question_text": "Sage Valmiki's disciple, Bharadwaja, is described as 'niyata', which means controlled or disciplined. What does this term imply about Bharadwaja's character?",
+      "options": [
+        "He is obedient to his guru",
+        "He is a skilled warrior",
+        "He is a great scholar",
+        "He is a powerful sage"
+      ],
+      "correct_answer_id": 0,
+      "basic_explanation": "The term 'niyata' implies that Bharadwaja is obedient and respectful towards his guru, Sage Valmiki.",
+      "original_quote": "स शिष्यहस्तादादाय वल्कलं नियतेन्द्रियः | विचचार ह पश्यंस्तत्सर्वतो विपुलं वनम् ||",
+      "quote_translation": "That self-controlled Bharadwaja, on taking the bark-garment from his guru's hands, indeed moved away from that wide forest, looking in all directions.",
+      "tags": [
+        "Valmiki",
+        "Bharadwaja",
+        "Discipline"
+      ],
+      "cross_epic_tags": [
+        "Guru-Shishya",
+        "Respect"
+      ]
+    },
+    {
+      "category": "culture",
+      "difficulty": "medium",
+      "question_text": "Sage Valmiki instructs his disciple Bharadwaja to keep his hand-vessel and give him his bark-garment before he enters the Tamasa river. What does this ritual signify in the context of ancient Indian traditions?",
+      "options": [
+        "Preparation for a battle",
+        "Preparation for a journey",
+        "Preparation for meditation",
+        "Preparation for a bath"
+      ],
+      "correct_answer_id": 3,
+      "basic_explanation": "In ancient Indian traditions, before entering a river for a bath, it was customary to keep aside one's belongings and wear simple clothing, signifying purity and humility.",
+      "original_quote": "न्यस्यतां कलशस्तात दीयतां वल्कलं मम | इदमेवावगाहिष्ये तमसातीर्थमुत्तमम् ||",
+      "quote_translation": "My dear! Let the hand-vessel [kamaNDalu] be kept there and give me my bark-garment. I will enter this best Tamasa ford only.",
+      "tags": [
+        "Valmiki",
+        "Bharadwaja",
+        "Ritual"
+      ],
+      "cross_epic_tags": [
+        "Purity",
+        "Humility"
+      ]
+    },
+    {
+      "category": "events",
+      "difficulty": "easy",
+      "question_text": "After Sage Valmiki enters the Tamasa river, what does his disciple Bharadwaja do?",
+      "options": [
+        "He follows Valmiki into the river",
+        "He stays on the bank and guards Valmiki's belongings",
+        "He goes into the forest to gather fruits",
+        "He starts meditating on the river bank"
+      ],
+      "correct_answer_id": 1,
+      "basic_explanation": "Bharadwaja, being obedient to his guru, stays on the bank and guards Valmiki's belongings.",
+      "original_quote": "एवमुक्तो भरद्वाजो वाल्मीकेन महात्मना | प्रायच्छत मुनेस्तस्य वल्कलं नियतो गुरोः ||",
       "quote_translation": "Thus being said by the great-souled Valmiki, Bharadwaaja who was obedient towards his Guru, gave the bark-garment to that sage.",
       "tags": [
         "Valmiki",
         "Bharadwaja",
-        "Guru-disciple"
+        "Obedience"
       ],
       "cross_epic_tags": [
-        "Guru-disciple relationship"
-      ],
-      "pass_info": {
-        "pass_number": 1,
-        "pass_name": "Narada's Departure & Sacred Journey",
-        "verse_range": [
-          1,
-          10
-        ]
-      }
+        "Guru-Shishya",
+        "Respect"
+      ]
     },
     {
-      "category": "culture",
-      "difficulty": "medium",
-      "question_text": "What is the significance of the 'kamaNDalu' mentioned in the verses?",
+      "category": "characters",
+      "difficulty": "hard",
+      "question_text": "Sage Valmiki witnesses a tragic event involving a couple of birds. What kind of birds are they?",
       "options": [
-        "It is a weapon",
-        "It is a musical instrument",
-        "It is a hand-vessel used by sages",
-        "It is a type of food"
+        "Eagles",
+        "Swans",
+        "Cranes",
+        "Curlews"
       ],
-      "correct_answer_id": 2,
-      "basic_explanation": "The 'kamaNDalu' is a type of hand-vessel used by sages and hermits in Hindu culture. It is often used to carry holy water.",
-      "original_quote": "न्यस्यतां कलशस्तात दीयतां वल्कलं मम | इदमेवावगाहिष्ये तमसातीर्थमुत्तमम् || १-२-६",
-      "quote_translation": "My dear, let the hand-vessel (kamaNDalu) be kept there; let my bark-garment be given; I will enter this best Tamasa ford only.",
-      "tags": [
-        "kamaNDalu",
-        "Hindu culture",
-        "sages"
-      ],
-      "cross_epic_tags": [
-        "Hindu rituals"
-      ],
-      "pass_info": {
-        "pass_number": 1,
-        "pass_name": "Narada's Departure & Sacred Journey",
-        "verse_range": [
-          1,
-          10
-        ]
-      }
-    },
-    {
-      "category": "events",
-      "difficulty": "medium",
-      "question_text": "What does Sage Valmiki do after Narada's departure?",
-      "options": [
-        "He goes to the banks of the Tamasa river",
-        "He starts writing the Ramayana",
-        "He meditates in his ashram",
-        "He goes to the world of gods"
-      ],
-      "correct_answer_id": 0,
-      "basic_explanation": "After Narada's departure, Sage Valmiki goes to the banks of the Tamasa river.",
-      "original_quote": "स मुहूर्तं गते तस्मिन्देवलोकं मुनिस्तदा | जगाम तमसातीरं जाह्नव्यास्त्वविदूरतः || १-२-३",
-      "quote_translation": "On his [Narada's] going to the world of gods in a trice, that sage [Valmiki] went to the banks of Tamasa river, not far from Jahnavi river.",
+      "correct_answer_id": 3,
+      "basic_explanation": "The birds that Sage Valmiki sees are curlews, a type of water bird.",
+      "original_quote": "तस्याभ्याशे तु मिथुनं चरन्तमनपायिनम् | ददर्श भगवांस्तत्र क्रौञ्चयोश्चारुनिःस्वनम् ||",
+      "quote_translation": "There holy sage Valmiki saw a couple of curlews moving about not leaving one another and cooing charmingly in the vicinity.",
       "tags": [
         "Valmiki",
-        "Narada",
-        "Tamasa river"
+        "Birds",
+        "Curlews"
       ],
       "cross_epic_tags": [
-        "Sage's journey"
-      ],
-      "pass_info": {
-        "pass_number": 1,
-        "pass_name": "Narada's Departure & Sacred Journey",
-        "verse_range": [
-          1,
-          10
-        ]
-      }
-    },
-    {
-      "category": "themes",
-      "difficulty": "easy",
-      "question_text": "What does Sage Valmiki observe about the Tamasa river?",
-      "options": [
-        "It is dirty and unpleasant",
-        "It is clear, pleasant and undirty",
-        "It is full of dangerous creatures",
-        "It is dry and barren"
-      ],
-      "correct_answer_id": 1,
-      "basic_explanation": "Sage Valmiki observes that the Tamasa river is clear, pleasant and undirty, which he likens to a virtuous man's mind.",
-      "original_quote": "अकर्दममिदं तीर्थं भरद्वाज निशामय | रमणीयं प्रसन्नाम्बु सन्मनुष्यमनो यथा || १-२-५",
-      "quote_translation": "Oh! Bharadwaaja, behold this ford which is without dirt, with clear waters, pleasant, like a virtuous man's mind.",
-      "tags": [
-        "Valmiki",
-        "Tamasa river",
-        "Nature"
-      ],
-      "cross_epic_tags": [
-        "Nature's symbolism"
-      ],
-      "pass_info": {
-        "pass_number": 1,
-        "pass_name": "Narada's Departure & Sacred Journey",
-        "verse_range": [
-          1,
-          10
-        ]
-      }
-    },
-    {
-      "category": "events",
-      "difficulty": "easy",
-      "question_text": "What was the incident that triggered Valmiki's spontaneous creation of poetry?",
-      "options": [
-        "Valmiki saw a beautiful sunset",
-        "Valmiki saw a hunter kill one of the Krauncha birds",
-        "Valmiki had a divine vision",
-        "Valmiki heard a divine voice"
-      ],
-      "correct_answer_id": 1,
-      "basic_explanation": "Valmiki was moved by the sight of a Krauncha bird being killed by a hunter, which led to the spontaneous creation of a verse.",
-      "original_quote": "तं शोणितपरीताङ्गं वेष्टमानं महीतले | भार्या तु निहतं दृष्ट्वा रुराव करुणां गिरम् || १-२-११",
-      "quote_translation": "On seeing the male bird of the couple killed and fallen on the ground, its wife cried out in a pitiful voice.",
-      "tags": [
-        "Valmiki",
-        "Krauncha birds",
-        "spontaneous poetry"
-      ],
-      "cross_epic_tags": [
-        "emotion",
-        "compassion"
-      ],
-      "pass_info": {
-        "pass_number": 2,
-        "pass_name": "The Krauncha Birds Incident",
-        "verse_range": [
-          11,
-          20
-        ]
-      }
+        "Nature",
+        "Observation"
+      ]
     },
     {
       "category": "themes",
       "difficulty": "medium",
-      "question_text": "What was the emotional response of Valmiki to the incident of the Krauncha birds?",
+      "question_text": "The tragic event of the bird being killed by the hunter deeply affects Sage Valmiki. What emotion does this incident evoke in him?",
       "options": [
         "Anger",
-        "Compassion",
+        "Sadness",
         "Fear",
-        "Indifference"
+        "Disgust"
       ],
       "correct_answer_id": 1,
-      "basic_explanation": "Valmiki was filled with compassion on seeing the plight of the Krauncha bird, which led him to spontaneously create a verse.",
-      "original_quote": "ततः करुणवेदित्वादधर्मोऽयमिति द्विजः | निशाम्य रुदतीं क्रौञ्चीमिदं वचनमब्रवीत् || १-२-१४",
-      "quote_translation": "Then, the sage, realizing this to be unrighteous and moved by compassion on hearing the crying Krauncha bird, spoke these words.",
+      "basic_explanation": "The incident evokes a deep sense of sadness in Sage Valmiki, leading him to lament the loss of the bird.",
+      "original_quote": "तस्मात्तु मिथुनादेकं पुमांसं पापनिश्चयः | जघान वैरनिलयो निषादस्तस्य पश्यतः ||",
+      "quote_translation": "But a hunter, the harborer of ill-will, killed one male bird from that couple, while it was in the vicinity of Valmiki.",
       "tags": [
         "Valmiki",
-        "compassion",
-        "emotional response"
+        "Birds",
+        "Emotion"
       ],
       "cross_epic_tags": [
-        "emotion",
-        "compassion"
-      ],
-      "pass_info": {
-        "pass_number": 2,
-        "pass_name": "The Krauncha Birds Incident",
-        "verse_range": [
-          11,
-          20
-        ]
-      }
+        "Tragedy",
+        "Empathy"
+      ]
     },
     {
       "category": "culture",
-      "difficulty": "medium",
-      "question_text": "What was the unique characteristic of the verse spontaneously created by Valmiki?",
+      "difficulty": "hard",
+      "question_text": "Sage Valmiki compares the clear and pleasant waters of the Tamasa river to a virtuous man's mind. What does this comparison signify in the context of ancient Indian philosophy?",
       "options": [
-        "It was metrically posited",
-        "It was in prose form",
-        "It was in the form of a riddle",
-        "It was in the form of a song"
+        "The importance of a calm and clear mind",
+        "The power of nature",
+        "The significance of rivers",
+        "The virtues of a good man"
       ],
       "correct_answer_id": 0,
-      "basic_explanation": "The verse created by Valmiki was metrically posited and suitable for union of song and string music.",
-      "original_quote": "पादबद्धोऽक्षरसमस्तन्त्रीलयसमन्वितः | शोकार्तस्य प्रवृत्तो मे श्लोको भवतु नान्यथा || १-२-१८",
-      "quote_translation": "A verse arose from me while I was tormented by grief, consisting of verses, possessing union of song and string music, metrically posited.",
-      "tags": [
-        "Valmiki",
-        "verse creation",
-        "poetry"
-      ],
-      "cross_epic_tags": [
-        "poetry",
-        "culture"
-      ],
-      "pass_info": {
-        "pass_number": 2,
-        "pass_name": "The Krauncha Birds Incident",
-        "verse_range": [
-          11,
-          20
-        ]
-      }
-    },
-    {
-      "category": "characters",
-      "difficulty": "easy",
-      "question_text": "Who was the disciple of Valmiki present during the incident of the Krauncha birds?",
-      "options": [
-        "Hanuman",
-        "Bharadwaja",
-        "Lakshmana",
-        "Rama"
-      ],
-      "correct_answer_id": 1,
-      "basic_explanation": "Bharadwaja was the disciple of Valmiki who was present during the incident of the Krauncha birds.",
-      "original_quote": "भरद्वाजस्ततः शिष्यो विनीतः श्रुतवान् गुरोः | कलशं पूर्णमादाय पृष्ठतोऽनुजगाम ह || १-२-२१",
-      "quote_translation": "Then, the obedient disciple Bharadwaja, who had listened to many scriptures, took a filled handy-vessel and followed his mentor from behind.",
+      "basic_explanation": "In ancient Indian philosophy, a calm and clear mind is considered essential for spiritual growth and enlightenment, just like the clear and pleasant waters of a river.",
+      "original_quote": "अकर्दममिदं तीर्थं भरद्वाज निशामय | रमणीयं प्रसन्नाम्बु सन्मनुष्यमनो यथा ||",
+      "quote_translation": "Oh! Bharadwaaja, behold this ford which is without dirt, with clear waters, and pleasant, like a virtuous man's mind.",
       "tags": [
         "Valmiki",
         "Bharadwaja",
-        "disciple"
+        "Philosophy"
       ],
       "cross_epic_tags": [
-        "mentor-disciple",
-        "characters"
-      ],
-      "pass_info": {
-        "pass_number": 2,
-        "pass_name": "The Krauncha Birds Incident",
-        "verse_range": [
-          11,
-          20
-        ]
-      }
-    },
-    {
-      "category": "culture",
-      "difficulty": "easy",
-      "question_text": "Who visits Sage Valmiki in his hermitage in this section of the Ramayana?",
-      "options": [
-        "Lord Rama",
-        "Lord Brahma",
-        "Lord Shiva",
-        "Lord Vishnu"
-      ],
-      "correct_answer_id": 1,
-      "basic_explanation": "In this section, Lord Brahma, the creator of the universe, visits Sage Valmiki in his hermitage. This visit is significant as it sets the stage for the creation of the Ramayana.",
-      "original_quote": "आजगाम ततो ब्रह्म लोककर्ता स्वयं प्रभुः | चतुर्मुखो महातेजा द्रष्टुं तं मुनिपुङ्गवम् || १-२-२३",
-      "quote_translation": "Then came Brahma, the creator of worlds, the four-faced, great resplendent one, to see the eminent sage [Valmiki].",
-      "tags": [
-        "Brahma",
-        "Valmiki",
-        "visit"
-      ],
-      "cross_epic_tags": [
-        "divine intervention"
-      ],
-      "pass_info": {
-        "pass_number": 3,
-        "pass_name": "Divine Intervention & Epic Commission",
-        "verse_range": [
-          21,
-          -1
-        ]
-      }
-    },
-    {
-      "category": "themes",
-      "difficulty": "medium",
-      "question_text": "What is the significance of the verse that spontaneously forms in Valmiki's mind in this section?",
-      "options": [
-        "It is the first verse of the Ramayana",
-        "It is a prophecy about Rama's life",
-        "It is a curse on Ravana",
-        "It is a blessing for Sita"
-      ],
-      "correct_answer_id": 0,
-      "basic_explanation": "The verse that forms in Valmiki's mind is significant as it is the first verse of the Ramayana. This spontaneous verse sets the stage for the entire epic.",
-      "original_quote": "समाक्षरैश्चतुर्भिर्यः पादैर्गीतो महर्षिणा | सोऽनुव्याहरणाद् भूयः श्लोकः श्लोकत्वमागतः || १-२-४०",
-      "quote_translation": "That which is articulated by the great sage with four equally lettered feet, that verse, by recitation, again, further, came into verse form.",
-      "tags": [
-        "first verse",
-        "Ramayana",
-        "creation"
-      ],
-      "cross_epic_tags": [
-        "epic creation"
-      ],
-      "pass_info": {
-        "pass_number": 3,
-        "pass_name": "Divine Intervention & Epic Commission",
-        "verse_range": [
-          21,
-          -1
-        ]
-      }
-    },
-    {
-      "category": "characters",
-      "difficulty": "medium",
-      "question_text": "What does Valmiki do upon seeing Lord Brahma in his hermitage?",
-      "options": [
-        "He runs away in fear",
-        "He offers him a seat and pays his respects",
-        "He asks him to leave",
-        "He ignores him"
-      ],
-      "correct_answer_id": 1,
-      "basic_explanation": "Upon seeing Lord Brahma, Valmiki quickly gets up, humbly adjoins his palms, and offers him a seat. This shows Valmiki's respect and reverence for the divine.",
-      "original_quote": "पूजयामास तं देवं पाद्यार्घ्यासनवन्दनैः | प्रणम्य विधिवच्चैनं पृष्ट्वानामयमव्ययम् || १-२-२५",
-      "quote_translation": "Valmiki paid his respects to the god, offering him water for washing the feet, water for drenching the thirst, a seat, and also inquired about his well-being.",
-      "tags": [
-        "Valmiki",
-        "Brahma",
-        "respect"
-      ],
-      "cross_epic_tags": [
-        "divine interaction"
-      ],
-      "pass_info": {
-        "pass_number": 3,
-        "pass_name": "Divine Intervention & Epic Commission",
-        "verse_range": [
-          21,
-          -1
-        ]
-      }
-    },
-    {
-      "category": "events",
-      "difficulty": "easy",
-      "question_text": "What does Valmiki decide to do after the spontaneous verse forms in his mind?",
-      "options": [
-        "He decides to write the Ramayana",
-        "He decides to become a king",
-        "He decides to leave his hermitage",
-        "He decides to challenge Lord Brahma"
-      ],
-      "correct_answer_id": 0,
-      "basic_explanation": "After the spontaneous verse forms in his mind, Valmiki decides to compose the entire Ramayana epic in such verses. This marks the beginning of the creation of the Ramayana.",
-      "original_quote": "तस्य बुद्धिरियं जाता महर्षेर्भावितात्मनः | कृत्स्नं रामायणं काव्यमीदृशैः करवाण्यहम् || १-२-४१",
-      "quote_translation": "This kind of intuition occurred to that contemplated soul, the great sage Valmiki, 'I will compose the entire Ramayana epic in suchlike verses.'",
-      "tags": [
-        "Valmiki",
-        "Ramayana",
-        "creation"
-      ],
-      "cross_epic_tags": [
-        "epic creation"
-      ],
-      "pass_info": {
-        "pass_number": 3,
-        "pass_name": "Divine Intervention & Epic Commission",
-        "verse_range": [
-          21,
-          -1
-        ]
-      }
+        "Mind",
+        "Spirituality"
+      ]
     }
   ]
 }

@@ -7,6 +7,8 @@ import { ValmikiContent } from './ValmikiScrapingService';
 
 export interface GeneratedQuizQuestion {
   epic_id: string;
+  kanda?: string;
+  sarga?: number;
   chapter_source?: string;
   category: 'characters' | 'events' | 'themes' | 'culture';
   difficulty: 'easy' | 'medium' | 'hard';

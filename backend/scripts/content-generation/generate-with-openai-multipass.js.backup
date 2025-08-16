@@ -1,0 +1,1264 @@
+#!/usr/bin/env node
+
+/**
+ * Enhanced OpenAI Content Generation Script with Multi-Pass Support
+ * 
+ * Generates chapter summaries and quiz questions using thematic multi-pass approach
+ * Usage: node generate-with-openai-multipass.js --input=structured_bala_kanda_sarga_2.json [--multipass]
+ */
+
+const fs = require('fs').promises;
+const path = require('path');
+
+// Load environment variables from .env file
+require('dotenv').config({ path: path.join(__dirname, '../../.env') });
+
+class EnhancedOpenAIContentGenerator {
+  constructor() {
+    this.inputDir = path.join(__dirname, '../../generated-content/scraped');
+    this.summariesDir = path.join(__dirname, '../../generated-content/summaries');
+    this.questionsDir = path.join(__dirname, '../../generated-content/questions');
+    this.openaiApiKey = process.env.OPENAI_API_KEY;
+    
+    if (!this.openaiApiKey) {
+      throw new Error('OPENAI_API_KEY environment variable is required');
+    }
+    
+    // Generic template system - no manual configurations needed!
+    // All manual configurations have been replaced with dynamic generic template
+  }
+        {
+          name: "Narada's Departure & Sacred Journey",
+          verseRange: [1, 10],
+          focus: "characters, spiritual practices, teacher-disciple relationships",
+          categories: ["characters", "culture"]
+        },
+        {
+          name: "The Krauncha Birds Incident", 
+          verseRange: [11, 20],
+          focus: "key events, emotional response, spontaneous poetry creation",
+          categories: ["events", "themes"]
+        },
+        {
+          name: "Divine Intervention & Epic Commission",
+          verseRange: [21, -1], // -1 means to end of content
+          focus: "divine characters, epic creation mandate, cosmic purpose",
+          categories: ["culture", "themes"]
+        }
+      ],
+      // Configuration for Sarga 3: Valmiki's yogic vision and epic planning
+      3: [
+        {
+          name: "Yogic Vision & Divine Insight",
+          verseRange: [1, 12],
+          focus: "Valmiki's yogic powers, comprehensive vision of Rama's story, spiritual meditation",
+          categories: ["characters", "culture"]
+        },
+        {
+          name: "Epic Structure & Comprehensive Planning",
+          verseRange: [13, 24],
+          focus: "systematic narrative organization, dharmic framework, literary composition",
+          categories: ["themes", "culture"]
+        },
+        {
+          name: "Completion & Cosmic Scope",
+          verseRange: [25, -1],
+          focus: "epic's universal significance, Ramayana as complete dharmic guide, narrative conclusion",
+          categories: ["themes", "events"]
+        }
+      ],
+      // Configuration for Sarga 4: Epic completion and transmission to disciples
+      4: [
+        {
+          name: "Epic Composition & Structure",
+          verseRange: [1, 10],
+          focus: "Ramayana's completion, 24,000 verses, six kandas, Gayatri connection, literary achievement",
+          categories: ["culture", "events"]
+        },
+        {
+          name: "Discipleship & Teaching Methodology",
+          verseRange: [11, 20],
+          focus: "Lava and Kusha as disciples, guru-student transmission, musical training, epic recitation",
+          categories: ["characters", "culture"]
+        },
+        {
+          name: "Public Performance & Royal Recognition",
+          verseRange: [21, -1],
+          focus: "singing in assemblies, Rama's encounter with the boys, palace invitation, emotional impact",
+          categories: ["events", "themes"]
+        }
+      ],
+      // Configuration for Sarga 7: Ministers and advisors of Dasharatha
+      7: [
+        {
+          name: "Political Ministers & Administrative Excellence",
+          verseRange: [1, 6],
+          focus: "eight ministers, their qualities, administrative skills, royal service",
+          categories: ["characters", "culture"]
+        },
+        {
+          name: "Religious Ministry & Brahmanical Authority",
+          verseRange: [7, 12],
+          focus: "ritual authorities, Vedic scholars, Vashishta, Vamadeva, religious guidance",
+          categories: ["characters", "culture"]
+        },
+        {
+          name: "Ministerial Virtues & Ideal Governance",
+          verseRange: [13, -1],
+          focus: "truthfulness, knowledge, intelligence system, ethical administration",
+          categories: ["themes", "culture"]
+        }
+      ],
+      // Configuration for Sarga 8: Dasharatha's desire for sons and Ashvamedha decision
+      8: [
+        {
+          name: "Royal Anguish & Sonless Grief",
+          verseRange: [1, 7],
+          focus: "Dasharatha's childlessness, dynastic concerns, royal sorrow",
+          categories: ["characters", "themes"]
+        },
+        {
+          name: "Ashvamedha Resolution & Ritual Decision",
+          verseRange: [8, 14],
+          focus: "horse sacrifice decision, Vedic ritual planning, divine intervention seeking",
+          categories: ["events", "culture"]
+        },
+        {
+          name: "Consultation & Royal Protocol",
+          verseRange: [15, -1],
+          focus: "ministerial consultation, guru summons, collective decision-making",
+          categories: ["events", "themes"]
+        }
+      ],
+      // Configuration for Sarga 9: Sumantra's narration about Sage Rishyasringa
+      9: [
+        {
+          name: "Sage Rishyasringa's Divine Nature & Celibacy",
+          verseRange: [1, 4],
+          focus: "Rishyasringa's birth, celibacy, forest upbringing, Vibhandaka's son",
+          categories: ["characters", "culture"]
+        },
+        {
+          name: "King Romapaada's Drought & Divine Retribution",
+          verseRange: [5, 8],
+          focus: "Anga kingdom drought, violation of dharma, divine punishment",
+          categories: ["events", "themes"]
+        },
+        {
+          name: "Brahmanic Counsel & Solution Through Sage",
+          verseRange: [9, -1],
+          focus: "Brahman consultation, purification ritual, bringing Rishyasringa",
+          categories: ["culture", "themes"]
+        }
+      ],
+      // Configuration for Sarga 10: The plan to bring Rishyasringa and his marriage
+      10: [
+        {
+          name: "Strategic Planning & Ministerial Counsel",
+          verseRange: [1, 9],
+          focus: "Romapaada's ministers, strategic planning, non-harmful approach",
+          categories: ["characters", "events"]
+        },
+        {
+          name: "Seduction Plan & Women's Mission",
+          verseRange: [10, 18],
+          focus: "courtesans plan, women's role, seducing the celibate sage",
+          categories: ["events", "themes"]
+        },
+        {
+          name: "Marriage Alliance & Princess Shanta",
+          verseRange: [19, -1],
+          focus: "Rishyasringa's marriage, Princess Shanta, royal alliance",
+          categories: ["characters", "culture"]
+        }
+      ],
+      // Configuration for Sarga 11: Dasharatha's quest for progeny and divine intervention
+      11: [
+        {
+          name: "Royal Quest & Ritual Authority",
+          verseRange: [1, 5],
+          focus: "Dasharatha's childless state, Vedic ritual seeking, sage authority",
+          categories: ["characters", "events"]
+        },
+        {
+          name: "Inter-Kingdom Dharmic Cooperation",
+          verseRange: [6, 10],
+          focus: "royal diplomacy, dharmic alliances, mutual benefit, spiritual governance",
+          categories: ["events", "themes"]
+        },
+        {
+          name: "Feminine Spiritual Authority & Royal Reception",
+          verseRange: [11, -1],
+          focus: "Shanta's arrival, sage wives, feminine wisdom, spiritual companionship",
+          categories: ["characters", "culture"]
+        }
+      ],
+      // Configuration for Sarga 12: King Dasharatha's decision to conduct the Ashvamedha Yajna
+      12: [
+        {
+          name: "Ashvamedha Yajna Philosophy & Ritual Authority",
+          verseRange: [1, 3],
+          focus: "Vedic sacrifice theory, royal ritual authority, cosmic renewal through sacrifice",
+          categories: ["events", "culture"]
+        },
+        {
+          name: "Seasonal Symbolism & Dharmic Timing",
+          verseRange: [4, 6],
+          focus: "spring season significance, temporal dharma, cyclical renewal, auspicious timing",
+          categories: ["themes", "culture"]
+        },
+        {
+          name: "Collective Wisdom & Ministerial Authority",
+          verseRange: [7, -1],
+          focus: "collective decision-making, sage counsel, administrative dharma, wisdom integration",
+          categories: ["characters", "themes"]
+        }
+      ],
+      // Configuration for Sarga 13: Dasharatha requests Sage Vashishta for Ashvamedha preparation
+      13: [
+        {
+          name: "Royal Request & Priestly Authority",
+          verseRange: [1, 8],
+          focus: "Dasharatha's humble request, Vashishta's authority, royal-priestly relationship",
+          categories: ["characters", "events"]
+        },
+        {
+          name: "Ritual Preparation & Sacred Discipline",
+          verseRange: [9, 16],
+          focus: "Vedic ritual discipline, preparation requirements, sacred observances",
+          categories: ["culture", "themes"]
+        },
+        {
+          name: "Royal Hospitality & International Diplomacy",
+          verseRange: [17, -1],
+          focus: "invitation of kings, diplomatic protocols, royal hospitality, ritual vows",
+          categories: ["events", "culture"]
+        }
+      ],
+      // Configuration for Sarga 14: Commencement of the Ashvamedha Yajna
+      14: [
+        {
+          name: "Ritual Commencement & Sacred Geography",
+          verseRange: [1, 15],
+          focus: "ritual horse return, Sarayu River significance, sacred timing and location",
+          categories: ["events", "culture"]
+        },
+        {
+          name: "Vedic Ritual Authority & Brahmanical Expertise",
+          verseRange: [16, 30],
+          focus: "Rishyasringa's leadership, Vedic scholars, ritual expertise, systematic execution",
+          categories: ["characters", "culture"]
+        },
+        {
+          name: "Royal Magnificence & Ceremonial Grandeur",
+          verseRange: [31, -1],
+          focus: "elaborate arrangements, royal patronage, ceremonial splendor, hospitality",
+          categories: ["themes", "events"]
+        }
+      ],
+      // Configuration for Sarga 17: The Birth of Vanara Heroes
+      17: [
+        {
+          name: "Divine Council & Creation Mandate",
+          verseRange: [1, 8],
+          focus: "Brahma's instruction to gods, divine strategy for Rama's mission, Vishnu's sonship with Dasharatha",
+          categories: ["characters", "events"]
+        },
+        {
+          name: "Vanara Creation & Divine Parentage",
+          verseRange: [9, 16],
+          focus: "gods creating Vanara heroes, Indra-Vali, Sun-Sugreeva, divine genealogy",
+          categories: ["characters", "culture"]
+        },
+        {
+          name: "Vanara Powers & Earth Distribution",
+          verseRange: [17, -1],
+          focus: "Vanara abilities, earth populated with heroes, cosmic purpose for Rama's aid",
+          categories: ["themes", "culture"]
+        }
+      ],
+      // Configuration for Sarga 18: Completion of Ashvamedha and Royal Joy
+      18: [
+        {
+          name: "Ritual Completion & Divine Satisfaction",
+          verseRange: [1, 6],
+          focus: "Ashvamedha completion, gods receiving offerings, ritual success",
+          categories: ["events", "culture"]
+        },
+        {
+          name: "Royal Departure & Return Journey",
+          verseRange: [7, 12],
+          focus: "kings and sages departing, Dasharatha's return to Ayodhya, ceremonial conclusion",
+          categories: ["events", "characters"]
+        },
+        {
+          name: "Anticipation & Divine Blessing",
+          verseRange: [13, -1],
+          focus: "expectation of divine sons, blessed anticipation, preparation for divine births",
+          categories: ["themes", "culture"]
+        }
+      ],
+      // Configuration for Sarga 19: Vishvamitra's Request and Dasharatha's Dilemma
+      19: [
+        {
+          name: "Sage Authority & Divine Request",
+          verseRange: [1, 2],
+          focus: "Vishvamitra's authority, sage-king protocol, divine mission request",
+          categories: ["characters", "culture"]
+        },
+        {
+          name: "Demonic Disruption & Ritual Protection",
+          verseRange: [3, 4],
+          focus: "Maricha-Subahu demons, Vedic ritual protection, cosmic battle",
+          categories: ["events", "themes"]
+        },
+        {
+          name: "Royal Duty vs Paternal Love",
+          verseRange: [5, -1],
+          focus: "Dasharatha's dilemma, dharmic duty, parental concern, royal obligation",
+          categories: ["themes", "characters"]
+        }
+      ],
+      // Configuration for Sarga 20: Dasharatha's Concerns and Rama's Youth
+      20: [
+        {
+          name: "Parental Protection & Royal Anxiety",
+          verseRange: [1, 4],
+          focus: "Dasharatha's protective instincts, royal concern, paternal love",
+          categories: ["characters", "themes"]
+        },
+        {
+          name: "Youth vs Responsibility",
+          verseRange: [5, 8],
+          focus: "Rama's tender age, readiness for duty, youth versus responsibility",
+          categories: ["characters", "events"]
+        },
+        {
+          name: "Dharmic Conflict Resolution",
+          verseRange: [9, -1],
+          focus: "duty-love conflict, dharmic decision-making, royal responsibility",
+          categories: ["themes", "culture"]
+        }
+      ],
+      // Configuration for Sarga 21: Vishvamitra's Ire and Vashishta's Intervention
+      21: [
+        {
+          name: "Sage Vishvamitra's Wrath & Royal Promise Breaking",
+          verseRange: [1, 8],
+          focus: "Vishvamitra's anger, broken promises, dynasty honor, royal commitment",
+          categories: ["characters", "themes"]
+        },
+        {
+          name: "Cosmic Consequences & Divine Fear",
+          verseRange: [9, 16],
+          focus: "earth trembling, gods' fear, cosmic impact, sage's power",
+          categories: ["events", "culture"]
+        },
+        {
+          name: "Vashishta's Intervention & Weapon Knowledge",
+          verseRange: [17, -1],
+          focus: "Vashishta's mediation, divine weapons, sage authority, diplomatic resolution",
+          categories: ["characters", "culture"]
+        }
+      ],
+      // Configuration for Sarga 22: Rama's Departure with Blessings
+      22: [
+        {
+          name: "Royal Decision & Paternal Blessing",
+          verseRange: [1, 4],
+          focus: "Dasharatha's agreement, parental blessings, royal preparation",
+          categories: ["characters", "events"]
+        },
+        {
+          name: "Sacred Ceremonies & Ritual Preparation", 
+          verseRange: [5, 8],
+          focus: "Vedic ceremonies, purification rituals, sacred preparations",
+          categories: ["culture", "events"]
+        },
+        {
+          name: "Journey Commencement & Divine Protection",
+          verseRange: [9, -1],
+          focus: "departure with Vishvamitra, divine protection, journey beginning",
+          categories: ["events", "themes"]
+        }
+      ],
+      // Configuration for Sarga 23: Arrival at Sacred Ashram & River Confluence
+      23: [
+        {
+          name: "Dawn Awakening & Spiritual Practices",
+          verseRange: [1, 6],
+          focus: "Vishvamitra's wake-up call, dawn rituals, spiritual observances",
+          categories: ["characters", "culture"]
+        },
+        {
+          name: "Sacred Geography & Divine Rivers",
+          verseRange: [7, 12],
+          focus: "Ganga-Sarayu confluence, sacred hermitage, divine landscape",
+          categories: ["events", "culture"]
+        },
+        {
+          name: "Inquiry & Sacred History",
+          verseRange: [13, -1],
+          focus: "Rama's questions about the ashram, sage traditions, sacred place significance",
+          categories: ["characters", "themes"]
+        }
+      ],
+      // Configuration for Sarga 24: River Crossing & Sage Encounter
+      24: [
+        {
+          name: "River Crossing & Sacred Preparation",
+          verseRange: [1, 2],
+          focus: "morning routines, river crossing, ritual preparation",
+          categories: ["events", "culture"]
+        },
+        {
+          name: "Sage Welcome & Hermitage Arrival",
+          verseRange: [3, 4],
+          focus: "sage welcome, hermitage protocols, spiritual hospitality",
+          categories: ["characters", "culture"]
+        },
+        {
+          name: "Divine Instruction & Sacred Knowledge",
+          verseRange: [5, -1],
+          focus: "spiritual teachings, divine guidance, sacred instruction",
+          categories: ["themes", "culture"]
+        }
+      ],
+      // Configuration for Sarga 25: Vishvamitra Narrates Tataka's Story
+      25: [
+        {
+          name: "Narrative Introduction & Sage Authority",
+          verseRange: [1, 6],
+          focus: "Vishvamitra's storytelling, Tataka's origins, divine parentage and supernatural strength",
+          categories: ["characters", "culture"]
+        },
+        {
+          name: "Dharmic Conflict & Royal Duty",
+          verseRange: [7, 14],
+          focus: "Rama's hesitation about killing a female, dharmic principles, protection of society",
+          categories: ["themes", "characters"]
+        },
+        {
+          name: "Historical Precedents & Divine Sanction", 
+          verseRange: [15, -1],
+          focus: "examples of female elimination for dharma, divine precedents, royal obligation",
+          categories: ["culture", "themes"]
+        }
+      ],
+      // Configuration for Sarga 28: Divine Weapon Recall Knowledge
+      28: [
+        {
+          name: "Weapon Mastery & Sacred Knowledge Request",
+          verseRange: [1, 3],
+          focus: "Rama's request for annulment knowledge, spiritual humility, divine weapon mastery",
+          categories: ["characters", "themes"]
+        },
+        {
+          name: "Divine Missile Catalog & Manifestation",
+          verseRange: [4, 11],
+          focus: "extensive list of divine missiles, their manifestations, spiritual forms",
+          categories: ["culture", "events"]
+        },
+        {
+          name: "Sacred Communion & Divine Dismissal",
+          verseRange: [12, -1],
+          focus: "missiles' personalities, divine communication, respectful dismissal",
+          categories: ["themes", "culture"]
+        }
+      ],
+      // Configuration for Sarga 29: The Story of Vamana Avatar
+      29: [
+        {
+          name: "Sacred Geography & Vishnu's Penance",
+          verseRange: [1, 5],
+          focus: "Siddhaashrama's significance, Vishnu's asceticism, spiritual accomplishment location",
+          categories: ["culture", "characters"]
+        },
+        {
+          name: "King Bali's Dominion & Divine Challenge",
+          verseRange: [6, 15],
+          focus: "Bali's conquest of three worlds, great sacrifice, gods' appeal to Vishnu",
+          categories: ["events", "characters"]
+        },
+        {
+          name: "Vamana's Mission & Cosmic Balance",
+          verseRange: [16, -1],
+          focus: "divine incarnation purpose, cosmic order restoration, dharmic intervention",
+          categories: ["themes", "culture"]
+        }
+      ],
+      // Configuration for Sarga 26: Rama's Encounter with Tataka
+      26: [
+        {
+          name: "Dharmic Resolve & Duty to Elders",
+          verseRange: [1, 7],
+          focus: "Rama's moral reasoning, duty to father and guru, dharmic conflict resolution",
+          categories: ["characters", "themes"]
+        },
+        {
+          name: "Battle with Demonic Forces",
+          verseRange: [8, 15],
+          focus: "Tataka's assault, Rama's combat strategy, supernatural battle elements",
+          categories: ["events", "characters"]
+        },
+        {
+          name: "Divine Approval & Sacred Victory",
+          verseRange: [16, 20],
+          focus: "celestial witnessing, divine blessings, transformation of cursed land",
+          categories: ["culture", "themes"]
+        }
+      ],
+      // Configuration for Sarga 27: Divine Weapons Bestowed by Vishvamitra
+      27: [
+        {
+          name: "Divine Gratitude & Weapon Bestowal",
+          verseRange: [1, 3],
+          focus: "Vishvamitra's satisfaction, divine weapons introduction, sacred relationship",
+          categories: ["characters", "culture"]
+        },
+        {
+          name: "Celestial Weaponry Catalog",
+          verseRange: [4, 6],
+          focus: "description of divine astras, cosmic powers, weapon classifications",
+          categories: ["culture", "themes"]
+        },
+        {
+          name: "Sacred Transmission & Mantric Knowledge",
+          verseRange: [7, 8],
+          focus: "mantra transmission, sacred knowledge transfer, guru-disciple relationship",
+          categories: ["culture", "themes"]
+        }
+      ],
+      // Configuration for Sarga 30: The Night Demons Attack
+      30: [
+        {
+          name: "Ritual Preparation & Sacred Timing",
+          verseRange: [1, 6],
+          focus: "Rama's questions about demons, ritual protection duty, six-day vigil",
+          categories: ["characters", "events"]
+        },
+        {
+          name: "Demonic Assault & Divine Weapons",
+          verseRange: [7, 18],
+          focus: "Maareecha and Subaahu attack, ritual contamination, Rama's weapon response",
+          categories: ["events", "themes"]
+        },
+        {
+          name: "Victory & Sacred Accomplishment",
+          verseRange: [19, -1],
+          focus: "demons defeated, ritual completion, divine approval, Vishvamitra's gratitude",
+          categories: ["themes", "culture"]
+        }
+      ],
+      // Configuration for Sarga 31: Journey to Mithila
+      31: [
+        {
+          name: "Mission Accomplished & New Journey",
+          verseRange: [1, 7],
+          focus: "celebration of success, sage invitation to Mithila, divine bow introduction",
+          categories: ["events", "culture"]
+        },
+        {
+          name: "Sacred Bow & Divine Challenge",
+          verseRange: [8, 13],
+          focus: "Shiva's bow description, impossibility of lifting, divine origin story",
+          categories: ["culture", "themes"]
+        },
+        {
+          name: "Departure & Sacred Geography",
+          verseRange: [14, -1],
+          focus: "journey preparation, geographical movement, camp at Sona river",
+          categories: ["events", "culture"]
+        }
+      ],
+      // Configuration for Sarga 32: The Legend of Kusha Dynasty
+      32: [
+        {
+          name: "Kusha's Royal Lineage & City Foundation",
+          verseRange: [1, 7],
+          focus: "Kusha's divine origins, four sons, establishment of great cities",
+          categories: ["characters", "culture"]
+        },
+        {
+          name: "Kushanaabha's Hundred Daughters & Geography",
+          verseRange: [8, 15],
+          focus: "hundred beautiful daughters, geographical locations, kingdom description",
+          categories: ["characters", "events"]
+        },
+        {
+          name: "Divine Geography & Sacred Locations",
+          verseRange: [16, -1],
+          focus: "sacred rivers, mountains, cosmic geography, divine landscapes",
+          categories: ["culture", "themes"]
+        }
+      ],
+      // Configuration for Sarga 33: The Wind God's Transgression
+      33: [
+        {
+          name: "Daughters' Virtue & Divine Challenge",
+          verseRange: [1, 8],
+          focus: "hundred daughters report Wind God's advances, virtue and propriety",
+          categories: ["characters", "themes"]
+        },
+        {
+          name: "Royal Justice & Divine Marriage Arrangement",
+          verseRange: [9, 16],
+          focus: "Kushanaabha's response, arrangement of marriage with Brahmadatta",
+          categories: ["events", "culture"]
+        },
+        {
+          name: "Divine Restoration & Sacred Transformation",
+          verseRange: [17, -1],
+          focus: "restoration of beauty through virtuous marriage, divine justice",
+          categories: ["themes", "culture"]
+        }
+      ],
+      // Configuration for Sarga 34: The Birth of Gaadhi and River Kaushiki
+      34: [
+        {
+          name: "Ritual for Divine Lineage & Sacred Birth",
+          verseRange: [1, 8],
+          focus: "Kushanaabha's ritual for son, Kusha's divine guidance, Gaadhi's prophesied birth",
+          categories: ["characters", "events"]
+        },
+        {
+          name: "Transformation & Sacred Rivers",
+          verseRange: [9, 16],
+          focus: "Vishvamitra's sister transformation into River Kaushiki, pativrata dharma, sacred geography",
+          categories: ["culture", "themes"]
+        },
+        {
+          name: "Divine Nature & Cosmic Order",
+          verseRange: [17, -1],
+          focus: "moon's rise, cosmic cycles, divine presence in nature, spiritual significance",
+          categories: ["themes", "culture"]
+        }
+      ],
+      // Configuration for Sarga 35: Vishvamitra's Narration of Ganga's Descent
+      35: [
+        {
+          name: "Spiritual Discipline & Morning Rituals",
+          verseRange: [1, 8],
+          focus: "early morning religious activities, spiritual discipline, guru-shishya tradition",
+          categories: ["culture", "characters"]
+        },
+        {
+          name: "Divine Inquiry & Sacred Knowledge",
+          verseRange: [9, 16],
+          focus: "Rama's inquiry about Ganga, divine stories, spiritual curiosity and learning",
+          categories: ["events", "themes"]
+        },
+        {
+          name: "Ganga's Divine Origin & Cosmic Significance",
+          verseRange: [17, -1],
+          focus: "Ganga's celestial origin, divine intervention, cosmic order and dharma",
+          categories: ["culture", "themes"]
+        }
+      ],
+      // Configuration for Sarga 36: The Legend of Ganga's Descent and Shiva's Penance
+      36: [
+        {
+          name: "Divine Request & Spiritual Authority",
+          verseRange: [1, 8],
+          focus: "Rama and Lakshmana's request, Vishvamitra's narrative authority, spiritual guidance",
+          categories: ["characters", "events"]
+        },
+        {
+          name: "Shiva's Divine Decision & Cosmic Balance",
+          verseRange: [9, 16],
+          focus: "Shiva's decision about divine potency, cosmic balance, divine conjugal bliss",
+          categories: ["themes", "culture"]
+        },
+        {
+          name: "Sacred Geography & Divine Penance",
+          verseRange: [17, -1],
+          focus: "Himalayas as spiritual retreat, divine penance, sacred mountains significance",
+          categories: ["culture", "themes"]
+        }
+      ],
+      // Configuration for Sarga 37: The Birth of Skanda and Role of Ganga
+      37: [
+        {
+          name: "Divine Council & Celestial Hierarchy",
+          verseRange: [1, 9],
+          focus: "gods approaching Brahma, celestial hierarchy, divine authority structures",
+          categories: ["characters", "culture"]
+        },
+        {
+          name: "Divine Mission & Sacred Union",
+          verseRange: [10, 18],
+          focus: "Agni's divine mission, union with Ganga, divine potency and creation",
+          categories: ["events", "themes"]
+        },
+        {
+          name: "Skanda's Birth & Universal Brotherhood",
+          verseRange: [19, -1],
+          focus: "Kartikeya's birth, Krittikas' collective nurturing, cosmic family concept",
+          categories: ["themes", "culture"]
+        }
+      ],
+      // Configuration for Sarga 38: The Legend of King Sagara and His Progeny
+      38: [
+        {
+          name: "Royal Heritage & Childless King",
+          verseRange: [1, 6],
+          focus: "Vishvamitra's narration, King Sagara's introduction, childlessness and desire for progeny",
+          categories: ["characters", "events"]
+        },
+        {
+          name: "Divine Wives & Sacred Penance",
+          verseRange: [7, 13],
+          focus: "Keshini and Sumati as wives, hundred years of penance, Bhrigu's blessing",
+          categories: ["culture", "themes"]
+        },
+        {
+          name: "Miraculous Birth & Divine Progeny",
+          verseRange: [14, -1],
+          focus: "Asamanja's birth, sixty thousand sons from gourd, divine manifestation",
+          categories: ["events", "themes"]
+        }
+      ],
+      // Configuration for Sarga 39: The Sacred Horse Ritual and Its Disruption
+      39: [
+        {
+          name: "Narrative Continuation & Royal Inquiry",
+          verseRange: [1, 6],
+          focus: "Rama's enthusiasm, desire to hear more, Vishvamitra's continuation of Sagara's story",
+          categories: ["characters", "events"]
+        },
+        {
+          name: "Sacred Ritual & Divine Disruption",
+          verseRange: [7, 12],
+          focus: "Sagara's horse sacrifice, Indra's theft in demon form, ritual complications",
+          categories: ["culture", "events"]
+        },
+        {
+          name: "Royal Mission & Earth's Excavation",
+          verseRange: [13, -1],
+          focus: "sixty thousand sons' mission to find the horse, systematic earth digging, cosmic task",
+          categories: ["themes", "culture"]
+        }
+      ],
+      // Configuration for Sarga 40: The Encounter with Sage Kapila
+      40: [
+        {
+          name: "Divine Search & Earth Excavation",
+          verseRange: [1, 8],
+          focus: "sixty thousand sons digging earth, directional search, encountering guardian elephants",
+          categories: ["events", "characters"]
+        },
+        {
+          name: "Sacred Discovery & Confrontation",
+          verseRange: [9, 18],
+          focus: "finding Sage Kapila with the horse, accusations of theft, divine disguise",
+          categories: ["characters", "culture"]
+        },
+        {
+          name: "Divine Justice & Yogic Power",
+          verseRange: [19, -1],
+          focus: "Kapila's anger, yogic destruction with 'hum' sound, consequences of disrespect",
+          categories: ["themes", "events"]
+        }
+      ],
+      // Configuration for Sarga 41: Amshuman's Quest and Sagara's End
+      41: [
+        {
+          name: "Royal Mission & Generational Duty",
+          verseRange: [1, 9],
+          focus: "Sagara sends Amshuman, grandson's quest, learning from directional elephants",
+          categories: ["characters", "events"]
+        },
+        {
+          name: "Divine Guidance & Spiritual Revelation",
+          verseRange: [10, 20],
+          focus: "Garuda's counsel, truth about Kapila, Ganges as sole purifier",
+          categories: ["culture", "themes"]
+        },
+        {
+          name: "Mission Completion & Unresolved Legacy",
+          verseRange: [21, -1],
+          focus: "horse retrieval, Sagara's inability to bring Ganges, passing unfinished duty",
+          categories: ["themes", "characters"]
+        }
+      ]
+    // }; // COMMENTED OUT: Using generic template instead
+  }
+
+  // Generate generic thematic passes for any sarga - no manual configuration needed!
+  generateGenericPasses(sarga, totalVerses) {
+    const third = Math.ceil(totalVerses / 3);
+    const twoThirds = Math.ceil((totalVerses * 2) / 3);
+    
+    return [
+      {
+        name: "Characters & Setting",
+        verseRange: [1, third],
+        focus: "main characters, their relationships, setting and context",
+        categories: ["characters", "culture"]
+      },
+      {
+        name: "Events & Actions", 
+        verseRange: [third + 1, twoThirds],
+        focus: "key events, actions taken, plot developments",
+        categories: ["events", "themes"]
+      },
+      {
+        name: "Themes & Philosophy",
+        verseRange: [twoThirds + 1, -1],
+        focus: "deeper themes, philosophical insights, spiritual significance",
+        categories: ["themes", "culture"]
+      }
+    ];
+  }
+
+  async generateContent(inputFilename, useMultipass = false) {
+    console.log(`🤖 Starting ${useMultipass ? 'Multi-Pass' : 'Standard'} OpenAI content generation...`);
+    
+    // Ensure output directories exist
+    await Promise.all([
+      fs.mkdir(this.summariesDir, { recursive: true }),
+      fs.mkdir(this.questionsDir, { recursive: true })
+    ]);
+    
+    // Load scraped content
+    const inputPath = path.join(this.inputDir, inputFilename);
+    const rawContent = await fs.readFile(inputPath, 'utf8');
+    const scrapedData = JSON.parse(rawContent);
+    
+    console.log(`📖 Loaded content: ${scrapedData.epic_id} ${scrapedData.kanda} Sarga ${scrapedData.sarga}`);
+    console.log(`📊 Processing ${scrapedData.verses.length} verses`);
+    
+    // Generate chapter summary (using representative verses from all sections)
+    console.log('\\n📝 Generating comprehensive chapter summary...');
+    const summary = await this.generateChapterSummary(scrapedData);
+    await this.saveSummary(scrapedData, summary);
+    
+    // Generate quiz questions using generic template multipass method
+    let allQuestions;
+    if (useMultipass) {
+      console.log('\\n🎯 Using generic template multi-pass question generation...');
+      allQuestions = await this.generateMultiPassQuestions(scrapedData);
+    } else {
+      console.log('\\n🎯 Using standard question generation...');
+      allQuestions = await this.generateStandardQuestions(scrapedData);
+    }
+    
+    await this.saveQuestions(scrapedData, allQuestions);
+    
+    console.log('\\n✅ Content generation completed successfully!');
+    
+    return {
+      summary: summary,
+      questions: allQuestions,
+      sourceData: scrapedData
+    };
+  }
+
+  async generateMultiPassQuestions(scrapedData) {
+    const sarga = scrapedData.sarga;
+    
+    // Generate generic template passes for this sarga
+    const totalVerses = scrapedData.verses.length;
+    const passes = this.generateGenericPasses(sarga, totalVerses);
+    
+    console.log(`📋 Using generic template: Executing ${passes.length} thematic passes for Sarga ${sarga}`);
+    
+    let allQuestions = [];
+    let passNumber = 1;
+    
+    for (const pass of passes) {
+      console.log(`\\n🔄 Pass ${passNumber}: ${pass.name}`);
+      
+      // Extract verses for this pass
+      const passVerses = this.extractVerseRange(scrapedData.verses, pass.verseRange);
+      console.log(`   📖 Using verses ${pass.verseRange[0]}-${pass.verseRange[1] === -1 ? 'end' : pass.verseRange[1]} (${passVerses.length} verses)`);
+      
+      // Create pass-specific content structure
+      const passContent = {
+        ...scrapedData,
+        verses: passVerses
+      };
+      
+      // Generate questions for this pass
+      const passQuestions = await this.generatePassQuestions(passContent, pass, passNumber);
+      allQuestions = allQuestions.concat(passQuestions);
+      
+      console.log(`   ✅ Generated ${passQuestions.length} questions for ${pass.name}`);
+      passNumber++;
+      
+      // Small delay between API calls
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+    
+    // Remove potential duplicates and ensure quality
+    const uniqueQuestions = this.deduplicateQuestions(allQuestions);
+    console.log(`\\n📊 Multi-pass summary: ${allQuestions.length} total → ${uniqueQuestions.length} unique questions`);
+    
+    return uniqueQuestions;
+  }
+
+  extractVerseRange(verses, range) {
+    const [start, end] = range;
+    const endIndex = end === -1 ? verses.length : Math.min(end, verses.length);
+    return verses.slice(start - 1, endIndex); // Convert to 0-based indexing
+  }
+
+  async generatePassQuestions(passContent, passConfig, passNumber) {
+    const prompt = this.buildPassSpecificPrompt(passContent, passConfig, passNumber);
+    let response;
+    
+    try {
+      response = await this.callOpenAI(prompt, {
+        model: "gpt-4",
+        max_tokens: 1800,
+        temperature: 0.2
+      });
+      
+      const questions = JSON.parse(response);
+      
+      // Add pass metadata to questions
+      return questions.map(q => ({
+        ...q,
+        pass_info: {
+          pass_number: passNumber,
+          pass_name: passConfig.name,
+          verse_range: passConfig.verseRange
+        }
+      }));
+      
+    } catch (error) {
+      console.error(`❌ Failed to generate questions for pass ${passNumber}:`, error.message);
+      if (error.message.includes('JSON') && response) {
+        const debugPath = path.join(__dirname, `debug_pass_${passNumber}_${Date.now()}.txt`);
+        await fs.writeFile(debugPath, response, 'utf8');
+        console.log(`🐛 Saved failed response to: ${debugPath}`);
+      }
+      // Return empty array instead of throwing to continue with other passes
+      return [];
+    }
+  }
+
+  buildPassSpecificPrompt(passContent, passConfig, passNumber) {
+    // Clean and prepare verse content for this pass
+    const cleanedVerses = passContent.verses
+      .filter(verse => verse.sanskrit && verse.translation)
+      .slice(0, 10) // Use up to 10 verses per pass to manage tokens
+      .map(verse => ({
+        number: verse.number,
+        sanskrit: verse.sanskrit.substring(0, 150),
+        translation: this.cleanTranslation(verse.translation).substring(0, 250)
+      }));
+
+    const versesText = cleanedVerses
+      .map(verse => `Verse ${verse.number}:\\nSanskrit: ${verse.sanskrit}\\nTranslation: ${verse.translation}`)
+      .join('\\n\\n');
+
+    return `Generate exactly 4 quiz questions from Valmiki Ramayana ${passContent.kanda} Sarga ${passContent.sarga} - ${passConfig.name}:
+
+THEMATIC FOCUS: ${passConfig.focus}
+TARGET CATEGORIES: Focus on ${passConfig.categories.join(' and ')} questions
+VERSE RANGE: ${passConfig.verseRange[0]}-${passConfig.verseRange[1] === -1 ? 'end' : passConfig.verseRange[1]}
+
+Content from this thematic section:
+${versesText}
+
+Generate questions with this distribution:
+- 2 questions from primary categories: ${passConfig.categories.join(', ')}
+- 2 questions covering other aspects of this section
+- Difficulty levels: 1 easy, 2 medium, 1 hard
+
+Return ONLY valid JSON array:
+
+[
+  {
+    "category": "characters|events|themes|culture",
+    "difficulty": "easy|medium|hard",
+    "question_text": "Question focusing on the thematic section",
+    "options": ["Option A", "Option B", "Option C", "Option D"],
+    "correct_answer_id": 0,
+    "basic_explanation": "Educational explanation connecting to the theme",
+    "original_quote": "Sanskrit quote from this section's verses",
+    "quote_translation": "English translation of the Sanskrit quote",
+    "tags": ["thematic", "tags"],
+    "cross_epic_tags": ["universal", "themes"]
+  }
+]
+
+QUALITY STANDARDS:
+- Questions must be directly based on the provided verse content
+- Sanskrit quotes must be from the actual verses in this section
+- Focus on the specific themes and characters in this narrative section
+- Ensure educational value for understanding this part of the story`;
+  }
+
+  deduplicateQuestions(questions) {
+    const seen = new Set();
+    const unique = [];
+    
+    for (const question of questions) {
+      // Create a signature based on question text and category
+      const signature = `${question.category}:${question.question_text.substring(0, 50)}`;
+      
+      if (!seen.has(signature)) {
+        seen.add(signature);
+        unique.push(question);
+      }
+    }
+    
+    return unique;
+  }
+
+  // Standard generation method (fallback)
+  async generateStandardQuestions(scrapedData) {
+    const prompt = this.buildQuestionsPrompt(scrapedData);
+    let response;
+    
+    try {
+      response = await this.callOpenAI(prompt, {
+        model: "gpt-4",
+        max_tokens: 1800,
+        temperature: 0.2
+      });
+      
+      const questions = JSON.parse(response);
+      console.log(`✅ Generated ${questions.length} quiz questions (standard method)`);
+      return questions;
+      
+    } catch (error) {
+      console.error('❌ Failed to generate quiz questions:', error.message);
+      throw error;
+    }
+  }
+
+  async generateChapterSummary(scrapedData) {
+    const prompt = this.buildSummaryPrompt(scrapedData);
+    
+    try {
+      const response = await this.callOpenAI(prompt, {
+        model: "gpt-4",
+        max_tokens: 1000,
+        temperature: 0.3
+      });
+      
+      const summary = JSON.parse(response);
+      console.log('✅ Chapter summary generated successfully');
+      return summary;
+      
+    } catch (error) {
+      console.error('❌ Failed to generate chapter summary:', error.message);
+      throw error;
+    }
+  }
+
+  buildSummaryPrompt(scrapedData) {
+    // Use representative verses from different sections for comprehensive summary
+    const totalVerses = scrapedData.verses.length;
+    const sampleVerses = [
+      ...scrapedData.verses.slice(0, 3), // Beginning
+      ...scrapedData.verses.slice(Math.floor(totalVerses/3), Math.floor(totalVerses/3) + 3), // Middle
+      ...scrapedData.verses.slice(-3) // End
+    ].filter(verse => verse.sanskrit && verse.translation);
+
+    const versesText = sampleVerses
+      .map(verse => `Verse ${verse.number}:\\nSanskrit: ${verse.sanskrit.substring(0, 200)}\\nTranslation: ${verse.translation.substring(0, 300)}`)
+      .join('\\n\\n');
+
+    return `Based on the following representative Sanskrit verses and translations from ${scrapedData.kanda} Sarga ${scrapedData.sarga} of the Valmiki Ramayana:
+
+${versesText}
+
+Generate a comprehensive chapter summary with the following structure. Return ONLY valid JSON:
+
+{
+  "title": "Descriptive title for this Sarga",
+  "key_events": [
+    "Event 1 description",
+    "Event 2 description", 
+    "Event 3 description"
+  ],
+  "main_characters": [
+    "Character name with brief description"
+  ],
+  "themes": [
+    "Theme 1",
+    "Theme 2"
+  ],
+  "cultural_significance": "Paragraph explaining religious, philosophical, or cultural importance",
+  "narrative_summary": "2-3 paragraph prose summary of the complete story"
+}
+
+Requirements:
+- Maintain cultural sensitivity and accuracy to Hindu traditions
+- Use proper Sanskrit terms with brief explanations where needed
+- Connect to the broader Ramayana narrative arc
+- Focus on the spiritual and literary significance
+- Be educational and engaging for modern readers`;
+  }
+
+  buildQuestionsPrompt(scrapedData) {
+    // Standard question generation (legacy method)
+    const cleanedVerses = scrapedData.verses
+      .filter(verse => verse.sanskrit && verse.translation)
+      .slice(0, 8)
+      .map(verse => ({
+        number: verse.number,
+        sanskrit: verse.sanskrit.substring(0, 150),
+        translation: this.cleanTranslation(verse.translation).substring(0, 250)
+      }));
+
+    const versesText = cleanedVerses
+      .map(verse => `Verse ${verse.number}:\\nSanskrit: ${verse.sanskrit}\\nTranslation: ${verse.translation}`)
+      .join('\\n\\n');
+
+    return `Generate exactly 4 quiz questions from Valmiki Ramayana ${scrapedData.kanda} Sarga ${scrapedData.sarga}:
+
+- 1 CHARACTERS question (easy)
+- 1 EVENTS question (easy)  
+- 1 THEMES question (medium)
+- 1 CULTURE question (medium)
+
+Content:
+${versesText}
+
+Return ONLY valid JSON array with the standard question format.`;
+  }
+
+  cleanTranslation(translation) {
+    return translation
+      .replace(/<[^>]*>/g, ' ')
+      .replace(/&[^;]+;/g, ' ')
+      .replace(/\\s+/g, ' ')
+      .trim()
+      .substring(0, 500);
+  }
+
+  async callOpenAI(prompt, options = {}) {
+    const requestBody = {
+      model: options.model || "gpt-4",
+      messages: [
+        {
+          role: "system",
+          content: "You are an expert Sanskrit scholar and educator specializing in the Valmiki Ramayana. You create culturally accurate, educationally valuable content that respects Hindu traditions and helps modern learners understand classical literature."
+        },
+        {
+          role: "user", 
+          content: prompt
+        }
+      ],
+      max_tokens: options.max_tokens || 2000,
+      temperature: options.temperature || 0.2
+    };
+
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${this.openaiApiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestBody)
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`OpenAI API error: ${response.status} - ${JSON.stringify(errorData)}`);
+    }
+
+    const responseData = await response.json();
+    
+    if (!responseData.choices || !responseData.choices[0] || !responseData.choices[0].message) {
+      throw new Error('Invalid response format from OpenAI API');
+    }
+
+    return responseData.choices[0].message.content.trim();
+  }
+
+  async saveSummary(scrapedData, summary) {
+    const filename = `${scrapedData.kanda}_sarga_${scrapedData.sarga}_summary.json`;
+    const filepath = path.join(this.summariesDir, filename);
+    
+    const summaryData = {
+      epic_id: scrapedData.epic_id,
+      kanda: scrapedData.kanda,
+      sarga: scrapedData.sarga,
+      source_url: scrapedData.source_url,
+      generation_date: new Date().toISOString(),
+      generator: 'openai-gpt4-multipass',
+      ...summary
+    };
+    
+    await fs.writeFile(filepath, JSON.stringify(summaryData, null, 2), 'utf8');
+    console.log(`💾 Summary saved to: ${filepath}`);
+    return filepath;
+  }
+
+  async saveQuestions(scrapedData, questions) {
+    const filename = `${scrapedData.kanda}_sarga_${scrapedData.sarga}_questions.json`;
+    const filepath = path.join(this.questionsDir, filename);
+    
+    const questionsData = {
+      epic_id: scrapedData.epic_id,
+      kanda: scrapedData.kanda,
+      sarga: scrapedData.sarga,
+      source_url: scrapedData.source_url,
+      generation_date: new Date().toISOString(),
+      generator: 'openai-gpt4-multipass',
+      total_questions: questions.length,
+      questions: questions
+    };
+    
+    await fs.writeFile(filepath, JSON.stringify(questionsData, null, 2), 'utf8');
+    console.log(`💾 Questions saved to: ${filepath}`);
+    return filepath;
+  }
+}
+
+// CLI Usage
+async function main() {
+  const args = process.argv.slice(2);
+  const inputArg = args.find(arg => arg.startsWith('--input='));
+  const multipassFlag = args.includes('--multipass');
+  
+  if (!inputArg) {
+    console.error('❌ Usage: node generate-with-openai-multipass.js --input=structured_bala_kanda_sarga_2.json [--multipass]');
+    console.error('   Add --multipass flag to use enhanced multi-pass generation');
+    process.exit(1);
+  }
+  
+  const inputFilename = inputArg.split('=')[1];
+  
+  const generator = new EnhancedOpenAIContentGenerator();
+  
+  try {
+    const result = await generator.generateContent(inputFilename, multipassFlag);
+    
+    console.log('\\n📊 Generation Summary:');
+    console.log(`- Epic: ${result.sourceData.epic_id}`);
+    console.log(`- Kanda: ${result.sourceData.kanda}`);
+    console.log(`- Sarga: ${result.sourceData.sarga}`);
+    console.log(`- Source verses: ${result.sourceData.verses.length}`);
+    console.log(`- Generated questions: ${result.questions.length}`);
+    console.log(`- Summary title: ${result.summary.title}`);
+    console.log(`- Key events: ${result.summary.key_events.length}`);
+    console.log(`- Generation method: ${multipassFlag ? 'Multi-pass thematic' : 'Standard'}`);
+    
+    console.log('\\n✨ Content generation pipeline completed successfully!');
+    console.log('📁 Check generated-content/summaries/ and generated-content/questions/ directories');
+    
+  } catch (error) {
+    console.error('\\n❌ Content generation failed:', error.message);
+    
+    if (error.message.includes('OPENAI_API_KEY')) {
+      console.error('💡 Set your OpenAI API key: export OPENAI_API_KEY=your_key_here');
+    }
+    
+    process.exit(1);
+  }
+}
+
+// Export for use in other scripts
+module.exports = EnhancedOpenAIContentGenerator;
+
+// Run if called directly
+if (require.main === module) {
+  main();
+}

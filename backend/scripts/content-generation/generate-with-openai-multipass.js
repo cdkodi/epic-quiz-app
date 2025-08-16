@@ -24,30 +24,34 @@ class EnhancedOpenAIContentGenerator {
       throw new Error('OPENAI_API_KEY environment variable is required');
     }
     
-    // Thematic pass configurations for different Sargas
-    this.thematicPasses = {
-      // Configuration for Sarga 2: Valmiki's encounter at Tamasa River
-      2: [
-        {
-          name: "Narada's Departure & Sacred Journey",
-          verseRange: [1, 10],
-          focus: "characters, spiritual practices, teacher-disciple relationships",
-          categories: ["characters", "culture"]
-        },
-        {
-          name: "The Krauncha Birds Incident", 
-          verseRange: [11, 20],
-          focus: "key events, emotional response, spontaneous poetry creation",
-          categories: ["events", "themes"]
-        },
-        {
-          name: "Divine Intervention & Epic Commission",
-          verseRange: [21, -1], // -1 means to end of content
-          focus: "divine characters, epic creation mandate, cosmic purpose",
-          categories: ["culture", "themes"]
-        }
-      ]
-    };
+    // Generic template system - no manual configurations needed!
+    // All manual configurations have been replaced with dynamic generic template
+  }
+
+  generateGenericPasses(sarga, totalVerses) {
+    const third = Math.ceil(totalVerses / 3);
+    const twoThirds = Math.ceil((totalVerses * 2) / 3);
+    
+    return [
+      {
+        name: "Characters & Setting",
+        verseRange: [1, third],
+        focus: "main characters, their relationships, setting and context",
+        categories: ["characters", "culture"]
+      },
+      {
+        name: "Events & Actions", 
+        verseRange: [third + 1, twoThirds],
+        focus: "key events, actions taken, plot developments",
+        categories: ["events", "themes"]
+      },
+      {
+        name: "Themes & Philosophy",
+        verseRange: [twoThirds + 1, -1],
+        focus: "deeper themes, philosophical insights, spiritual significance",
+        categories: ["themes", "culture"]
+      }
+    ];
   }
 
   async generateContent(inputFilename, useMultipass = false) {
@@ -72,10 +76,10 @@ class EnhancedOpenAIContentGenerator {
     const summary = await this.generateChapterSummary(scrapedData);
     await this.saveSummary(scrapedData, summary);
     
-    // Generate quiz questions using appropriate method
+    // Generate quiz questions using generic template multipass method
     let allQuestions;
-    if (useMultipass && this.thematicPasses[scrapedData.sarga]) {
-      console.log('\\n🎯 Using multi-pass question generation...');
+    if (useMultipass) {
+      console.log('\\n🎯 Using generic template multi-pass question generation...');
       allQuestions = await this.generateMultiPassQuestions(scrapedData);
     } else {
       console.log('\\n🎯 Using standard question generation...');
@@ -95,47 +99,133 @@ class EnhancedOpenAIContentGenerator {
 
   async generateMultiPassQuestions(scrapedData) {
     const sarga = scrapedData.sarga;
-    const passes = this.thematicPasses[sarga];
+    console.log(`📋 Generating 12 rich-context questions for Sarga ${sarga}`);
     
-    if (!passes) {
-      console.log(`⚠️  No multi-pass configuration for Sarga ${sarga}, falling back to standard generation`);
-      return await this.generateStandardQuestions(scrapedData);
+    // Use the new comprehensive 12-question generation
+    const allQuestions = await this.generateRichContextQuestions(scrapedData);
+    
+    console.log(`\\n📊 Generated ${allQuestions.length} rich-context questions`);
+    return allQuestions;
+  }
+
+  async generateRichContextQuestions(scrapedData) {
+    // Clean and prepare all verse content
+    const cleanedVerses = scrapedData.verses
+      .filter(verse => verse.sanskrit && verse.translation)
+      .slice(0, 10) // Use up to 10 verses to fit context window
+      .map(verse => ({
+        number: verse.number,
+        sanskrit: verse.sanskrit.substring(0, 200),
+        translation: this.cleanTranslation(verse.translation).substring(0, 300)
+      }));
+
+    const versesText = cleanedVerses
+      .map(verse => `Verse ${verse.number}:\\nSanskrit: ${verse.sanskrit}\\nTranslation: ${verse.translation}`)
+      .join('\\n\\n');
+
+    const prompt = `Generate exactly 12 quiz questions from Valmiki Ramayana ${scrapedData.kanda} Sarga ${scrapedData.sarga}:
+
+MANDATORY RICH CONTEXT REQUIREMENTS:
+- Every question MUST tell a complete mini-story with full narrative context
+- Include ALL character names, titles, and relationships explicitly  
+- Explain the situation, circumstances, and background completely
+- NO assumptions about reader's prior knowledge of the story
+- Each question must be completely standalone and educational
+- Use VARIED question openings - avoid repetitive "In the Ramayana" starts
+
+DISTRIBUTION REQUIRED:
+- 4 EASY questions (basic character/event identification with full context)
+- 4 MEDIUM questions (cultural concepts/story connections with rich background)
+- 4 HARD questions (themes/philosophy/deeper meaning with complete setup)
+
+QUESTION FORMATS - Use Natural Variety (DO NOT start every question the same way):
+
+PATTERN A - Character Introduction:
+"Sage Vishvamitra, who was once a powerful king named Kaushika, transformed himself through intense spiritual practices into a Brahmarishi. When this accomplished sage-king arrives at King Dasharatha's court in Ayodhya and requests Prince Rama's help, what does he offer to teach the prince?"
+
+PATTERN B - Situational Context:
+"When King Dasharatha's royal priest Vashishta engages in a spiritual battle with the warrior-sage Vishvamitra, demonstrating the power of Brahma's divine staff, what fundamental principle does this confrontation illustrate?"
+
+PATTERN C - Event-Driven:
+"After Vishvamitra witnesses the incredible power of Vashishta's Brahma-staff neutralizing all his divine weapons, he realizes something profound about spiritual authority. What decision does this revelation lead him to make?"
+
+PATTERN D - Cultural Context:
+"The relationship between kings and their royal priests in ancient India was considered sacred, with the priest serving as the ultimate spiritual guide. When Vishvamitra learns that Vashishta is the ultimate recourse for all Ikshvaku kings, what does this reveal about the priest's role?"
+
+ABSOLUTELY FORBIDDEN TERMS (NEVER USE):
+- "this passage/context/section/verse/text"
+- "the sage/character/king/prince" (without specific name)
+- "mentioned/discussed/described/referred to"  
+- "in these verses/the text"
+- "the above/following"
+- "In the Ramayana" (repetitive - context is already established)
+- "In the Bala Kanda of Valmiki Ramayana" (repetitive opening)
+- "In Valmiki Ramayana" (repetitive opening)
+- Any reference requiring external context
+
+VARIETY REQUIREMENT:
+- Use DIFFERENT openings for each question
+- Start some questions with character names directly
+- Start some with "When..." or "After..." 
+- Start some with situational context
+- NO repetitive openings across questions
+
+Content from Sarga ${scrapedData.sarga}:
+${versesText}
+
+EXAMPLES OF UNACCEPTABLE QUESTIONS:
+- "Who is the sage that arrives at the court?" (NO CONTEXT)
+- "What does the character request?" (VAGUE REFERENCE)  
+- "What is mentioned in the passage?" (FORBIDDEN PHRASE)
+- "Who is being honored in the verses?" (FORBIDDEN PHRASE)
+- "In the Ramayana, what happens..." (REPETITIVE OPENING)
+
+QUESTION VARIETY REQUIREMENTS:
+- Use different patterns - don't start every question the same way
+- Create natural storytelling flow
+- Integrate character names and context organically  
+- Make each question feel like an engaging educational story
+
+GOOD VARIETY EXAMPLES:
+- "Sage Vishvamitra, once a powerful king..."
+- "When King Dasharatha encounters..."
+- "After witnessing the divine power..."
+- "The ancient tradition of royal priests..." 
+- "During the intense spiritual battle..."
+- "Following his transformation..."
+
+Return ONLY valid JSON array with exactly 12 questions, each with complete narrative context:
+
+[
+  {
+    "category": "characters|events|themes|culture",
+    "difficulty": "easy|medium|hard",
+    "question_text": "Rich narrative question with complete context",
+    "options": ["Option A", "Option B", "Option C", "Option D"],
+    "correct_answer_id": 0,
+    "basic_explanation": "Educational explanation connecting to the story",
+    "original_quote": "Sanskrit quote from the verses",
+    "quote_translation": "English translation of the Sanskrit quote",
+    "tags": ["relevant", "tags"],
+    "cross_epic_tags": ["universal", "themes"]
+  }
+]`;
+
+    try {
+      const response = await this.callOpenAI(prompt, {
+        model: "gpt-4",
+        max_tokens: 4000,
+        temperature: 0.2
+      });
+      
+      const questions = JSON.parse(response);
+      console.log(`✅ Generated ${questions.length} rich-context questions`);
+      return questions;
+      
+    } catch (error) {
+      console.error('❌ Failed to generate rich-context questions:', error.message);
+      throw error;
     }
-    
-    console.log(`📋 Executing ${passes.length} thematic passes for Sarga ${sarga}`);
-    
-    let allQuestions = [];
-    let passNumber = 1;
-    
-    for (const pass of passes) {
-      console.log(`\\n🔄 Pass ${passNumber}: ${pass.name}`);
-      
-      // Extract verses for this pass
-      const passVerses = this.extractVerseRange(scrapedData.verses, pass.verseRange);
-      console.log(`   📖 Using verses ${pass.verseRange[0]}-${pass.verseRange[1] === -1 ? 'end' : pass.verseRange[1]} (${passVerses.length} verses)`);
-      
-      // Create pass-specific content structure
-      const passContent = {
-        ...scrapedData,
-        verses: passVerses
-      };
-      
-      // Generate questions for this pass
-      const passQuestions = await this.generatePassQuestions(passContent, pass, passNumber);
-      allQuestions = allQuestions.concat(passQuestions);
-      
-      console.log(`   ✅ Generated ${passQuestions.length} questions for ${pass.name}`);
-      passNumber++;
-      
-      // Small delay between API calls
-      await new Promise(resolve => setTimeout(resolve, 1000));
-    }
-    
-    // Remove potential duplicates and ensure quality
-    const uniqueQuestions = this.deduplicateQuestions(allQuestions);
-    console.log(`\\n📊 Multi-pass summary: ${allQuestions.length} total → ${uniqueQuestions.length} unique questions`);
-    
-    return uniqueQuestions;
   }
 
   extractVerseRange(verses, range) {
@@ -183,11 +273,11 @@ class EnhancedOpenAIContentGenerator {
     // Clean and prepare verse content for this pass
     const cleanedVerses = passContent.verses
       .filter(verse => verse.sanskrit && verse.translation)
-      .slice(0, 10) // Use up to 10 verses per pass to manage tokens
+      .slice(0, 15) // Use more verses for better context
       .map(verse => ({
         number: verse.number,
-        sanskrit: verse.sanskrit.substring(0, 150),
-        translation: this.cleanTranslation(verse.translation).substring(0, 250)
+        sanskrit: verse.sanskrit.substring(0, 200),
+        translation: this.cleanTranslation(verse.translation).substring(0, 300)
       }));
 
     const versesText = cleanedVerses
@@ -196,40 +286,66 @@ class EnhancedOpenAIContentGenerator {
 
     return `Generate exactly 4 quiz questions from Valmiki Ramayana ${passContent.kanda} Sarga ${passContent.sarga} - ${passConfig.name}:
 
-THEMATIC FOCUS: ${passConfig.focus}
-TARGET CATEGORIES: Focus on ${passConfig.categories.join(' and ')} questions
-VERSE RANGE: ${passConfig.verseRange[0]}-${passConfig.verseRange[1] === -1 ? 'end' : passConfig.verseRange[1]}
+MANDATORY RICH CONTEXT REQUIREMENTS:
+- Every question MUST tell a complete mini-story with full narrative context
+- Include ALL character names, titles, and relationships explicitly
+- Explain the situation, circumstances, and background completely
+- NO assumptions about reader's prior knowledge of the story
+- Each question must be completely standalone and educational
+- Use VARIED question openings - avoid repetitive "In the Ramayana" starts
+
+QUESTION FORMATS - Use Natural Variety (DO NOT start every question the same way):
+
+PATTERN A - Character Introduction:
+"Sage Vishvamitra, who was once a powerful king named Kaushika, transformed himself through intense spiritual practices into a Brahmarishi. When this accomplished sage-king arrives at King Dasharatha's court in Ayodhya and requests Prince Rama's help, what does he offer to teach the prince?"
+
+PATTERN B - Situational Context:
+"When King Dasharatha's royal priest Vashishta engages in a spiritual battle with the warrior-sage Vishvamitra, demonstrating the power of Brahma's divine staff, what fundamental principle does this confrontation illustrate?"
+
+PATTERN C - Event-Driven:
+"After Vishvamitra witnesses the incredible power of Vashishta's Brahma-staff neutralizing all his divine weapons, he realizes something profound about spiritual authority. What decision does this revelation lead him to make?"
+
+ABSOLUTELY FORBIDDEN TERMS (NEVER USE):
+- "this passage/context/section/verse/text"
+- "the sage/character/king/prince" (without specific name)
+- "mentioned/discussed/described/referred to"
+- "in these verses/the text"
+- "the above/following"
+- "In the Ramayana" (repetitive - context is already established)
+- "In the Bala Kanda of Valmiki Ramayana" (repetitive opening)
+- "In Valmiki Ramayana" (repetitive opening)
+- Any reference requiring external context
+
+VARIETY REQUIREMENT:
+- Use DIFFERENT openings for each question
+- Start some questions with character names directly
+- Start some with "When..." or "After..." 
+- Start some with situational context
+- NO repetitive openings across questions
 
 Content from this thematic section:
 ${versesText}
 
-Generate questions with this distribution:
-- 2 questions from primary categories: ${passConfig.categories.join(', ')}
-- 2 questions covering other aspects of this section
-- Difficulty levels: 1 easy, 2 medium, 1 hard
+DIFFICULTY DISTRIBUTION:
+- 1 EASY question (basic character/event identification with full context)
+- 2 MEDIUM questions (cultural concepts/story connections with rich background)
+- 1 HARD question (themes/philosophy/deeper meaning with complete setup)
 
-Return ONLY valid JSON array:
+QUESTION VARIETY REQUIREMENTS:
+- Use different patterns - don't start every question the same way
+- Create natural storytelling flow
+- Integrate character names and context organically  
+- Make each question feel like an engaging educational story
 
-[
-  {
-    "category": "characters|events|themes|culture",
-    "difficulty": "easy|medium|hard",
-    "question_text": "Question focusing on the thematic section",
-    "options": ["Option A", "Option B", "Option C", "Option D"],
-    "correct_answer_id": 0,
-    "basic_explanation": "Educational explanation connecting to the theme",
-    "original_quote": "Sanskrit quote from this section's verses",
-    "quote_translation": "English translation of the Sanskrit quote",
-    "tags": ["thematic", "tags"],
-    "cross_epic_tags": ["universal", "themes"]
-  }
-]
+GOOD VARIETY EXAMPLES:
+- "Sage Vishvamitra, once a powerful king..."
+- "When King Dasharatha encounters..."
+- "After witnessing the divine power..."
+- "The ancient tradition of royal priests..." 
+- "During the intense spiritual battle..."
+- "Following his transformation..."
 
-QUALITY STANDARDS:
-- Questions must be directly based on the provided verse content
-- Sanskrit quotes must be from the actual verses in this section
-- Focus on the specific themes and characters in this narrative section
-- Ensure educational value for understanding this part of the story`;
+Return ONLY valid JSON array with complete narrative context in each question.`;
   }
 
   deduplicateQuestions(questions) {
@@ -360,6 +476,22 @@ Requirements:
 
 Content:
 ${versesText}
+
+QUESTION CLARITY REQUIREMENTS:
+- AVOID vague references like "in the verses", "in these verses", or "the verses"
+- Questions must be self-contained and make sense without seeing the source verses
+- Use specific narrative context: character names, story events, or situational details
+- Include relevant context directly in the question text
+
+GOOD QUESTION EXAMPLES:
+- "When Vishvamitra encounters Vashishta, what does he request?"
+- "According to the story of Kaamadhenu, what makes this cow special?"
+- "In Vishvamitra's interaction with the sage, what spiritual principle is demonstrated?"
+
+BAD EXAMPLES (NEVER USE):
+- "Who is being honored in the verses?"
+- "What is the main event discussed in these verses?"
+- "Who is mentioned in the verses?"
 
 Return ONLY valid JSON array with the standard question format.`;
   }

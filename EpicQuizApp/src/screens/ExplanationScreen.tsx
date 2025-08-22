@@ -2,7 +2,7 @@
  * Answer Review Screen - Shows question explanations and cultural context
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   View, 
   Text, 
@@ -26,7 +26,8 @@ interface ExplanationScreenProps {
 
 const ExplanationScreen: React.FC<ExplanationScreenProps> = ({ route }) => {
   const navigation = useNavigation<NavigationProp>();
-  const { epic, questions, currentIndex } = route.params;
+  const { epic, questions, currentIndex: initialIndex } = route.params;
+  const [currentIndex, setCurrentIndex] = useState(initialIndex);
   
   if (!questions || questions.length === 0) {
     return (
@@ -52,6 +53,22 @@ const ExplanationScreen: React.FC<ExplanationScreenProps> = ({ route }) => {
       questionId: question.id,
       questionText: question.questionText || question.text || 'Question',
     });
+  };
+
+  const handlePreviousQuestion = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    }
+  };
+
+  const handleNextQuestion = () => {
+    if (currentIndex < questions.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+    }
+  };
+
+  const handleBackToResults = () => {
+    navigation.goBack();
   };
 
   const getAnswerIcon = (index: number) => {
@@ -106,46 +123,83 @@ const ExplanationScreen: React.FC<ExplanationScreenProps> = ({ route }) => {
           ))}
         </Card>
 
-        {/* Basic Explanation */}
+        {/* Answer Explanation */}
         <Card style={styles.explanationCard}>
-          <Text style={styles.sectionTitle}>📝 Explanation</Text>
+          <Text style={styles.sectionTitle}>
+            {currentQuestion.isCorrect ? '✅ Why This Answer is Correct' : '❌ Why This Answer is Wrong'}
+          </Text>
           <Text style={styles.explanationText}>
             {question.explanation || question.basic_explanation || 'Explanation not available.'}
           </Text>
           
-          {/* Cultural Context */}
-          {question.culturalContext && (
-            <>
-              <Text style={styles.culturalTitle}>🏛️ Cultural Context</Text>
-              <Text style={styles.culturalText}>
-                {question.culturalContext}
-              </Text>
-            </>
-          )}
+          {/* Learning Point */}
+          <View style={styles.learningPointContainer}>
+            <Text style={styles.learningPointTitle}>💡 Key Learning Point</Text>
+            <Text style={styles.learningPointText}>
+              {currentQuestion.isCorrect 
+                ? `Great job identifying the correct answer! This demonstrates your understanding of ${question.category || 'the topic'}.`
+                : `This question tests your knowledge of ${question.category || 'the topic'}. Review the correct answer above and the cultural context to strengthen your understanding.`
+              }
+            </Text>
+          </View>
           
-          {/* Source Reference */}
+          {/* Quick Source Reference */}
           {question.sourceReference && (
             <Text style={styles.sourceText}>
-              📚 Source: {question.sourceReference}
+              📖 From: {question.sourceReference}
             </Text>
           )}
         </Card>
 
-        {/* Learn More Button */}
-        <Button
-          title="🔍 Learn More - Deep Dive"
-          onPress={handleLearnMore}
-          variant="secondary"
-          style={styles.learnMoreButton}
-        />
+        {/* Deep Dive CTA */}
+        <Card style={styles.deepDiveCTA}>
+          <Text style={styles.deepDiveTitle}>🏛️ Want to Learn More?</Text>
+          <Text style={styles.deepDiveDescription}>
+            Explore the rich cultural context, historical background, and scholarly insights 
+            related to this question in our Deep Dive section.
+          </Text>
+          <Button
+            title="📚 Explore Cultural Deep Dive"
+            onPress={handleLearnMore}
+            variant="secondary"
+            style={styles.deepDiveButton}
+          />
+        </Card>
 
-        {/* Navigation Hint */}
-        <Text style={styles.navigationHint}>
-          {currentIndex < questions.length - 1 
-            ? 'Swipe or navigate to review more questions'
-            : 'You have reviewed all questions!'
-          }
-        </Text>
+        {/* Navigation Controls */}
+        <View style={styles.navigationContainer}>
+          {questions.length > 1 && (
+            <View style={styles.navigationButtons}>
+              <Button
+                title="← Previous"
+                onPress={handlePreviousQuestion}
+                variant="outline"
+                style={[styles.navButton, { opacity: currentIndex === 0 ? 0.5 : 1 }]}
+                disabled={currentIndex === 0}
+              />
+              
+              <Text style={styles.navigationCounter}>
+                {currentIndex + 1} of {questions.length}
+              </Text>
+              
+              <Button
+                title="Next →"
+                onPress={handleNextQuestion}
+                variant="outline"
+                style={[styles.navButton, { opacity: currentIndex === questions.length - 1 ? 0.5 : 1 }]}
+                disabled={currentIndex === questions.length - 1}
+              />
+            </View>
+          )}
+          
+          {/* Back to Results */}
+          <Button
+            title="📊 Back to Results"
+            onPress={handleBackToResults}
+            variant="primary"
+            style={styles.backButton}
+          />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -248,20 +302,27 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.m,
   },
   
-  culturalTitle: {
-    ...Typography.subtitle,
-    color: theme.colors.primaryBlue,
-    fontWeight: '600',
-    marginBottom: Spacing.s,
-    marginTop: Spacing.s,
+  learningPointContainer: {
+    backgroundColor: theme.backgrounds.secondary,
+    borderRadius: 8,
+    padding: Spacing.m,
+    marginTop: Spacing.m,
+    borderLeftWidth: 4,
+    borderLeftColor: theme.colors.primarySaffron,
   },
   
-  culturalText: {
+  learningPointTitle: {
+    ...Typography.subtitle,
+    color: theme.colors.primarySaffron,
+    fontWeight: '600',
+    marginBottom: Spacing.s,
+  },
+  
+  learningPointText: {
     ...Typography.body,
-    color: theme.text.secondary,
+    color: theme.text.primary,
     lineHeight: 22,
     fontStyle: 'italic',
-    marginBottom: Spacing.m,
   },
   
   sourceText: {
@@ -271,16 +332,62 @@ const styles = StyleSheet.create({
     marginTop: Spacing.xs,
   },
   
-  learnMoreButton: {
+  deepDiveCTA: {
     marginBottom: Spacing.l,
-    marginHorizontal: Spacing.m,
+    padding: Spacing.l,
+    backgroundColor: theme.backgrounds.accent,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: theme.colors.primaryBlue,
   },
   
-  navigationHint: {
-    ...Typography.caption,
-    color: theme.text.tertiary,
+  deepDiveTitle: {
+    ...Typography.h3,
+    color: theme.colors.primaryBlue,
+    fontWeight: '600',
     textAlign: 'center',
-    fontStyle: 'italic',
+    marginBottom: Spacing.s,
+  },
+  
+  deepDiveDescription: {
+    ...Typography.body,
+    color: theme.text.secondary,
+    textAlign: 'center',
+    lineHeight: 22,
+    marginBottom: Spacing.m,
+  },
+  
+  deepDiveButton: {
+    marginHorizontal: Spacing.s,
+  },
+  
+  navigationContainer: {
+    paddingHorizontal: Spacing.m,
+  },
+  
+  navigationButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: Spacing.m,
+    paddingHorizontal: Spacing.s,
+  },
+  
+  navButton: {
+    minWidth: 80,
+    paddingVertical: Spacing.s,
+  },
+  
+  navigationCounter: {
+    ...Typography.subtitle,
+    color: theme.text.primary,
+    fontWeight: '600',
+    textAlign: 'center',
+    minWidth: 60,
+  },
+  
+  backButton: {
+    marginHorizontal: Spacing.s,
   },
   
   errorText: {

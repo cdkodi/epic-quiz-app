@@ -38,13 +38,45 @@ class SupabaseService {
   // Quiz Generation
   async getQuizPackage(epicId: string, questionCount?: number): Promise<QuizPackage | null>
   
-  // Educational Content
+  // Educational Content (Enhanced Authentic System)
   async getDeepDiveContent(questionId: string): Promise<DeepDiveContent | null>
   
-  // Chapter Summaries
-  async getChapterSummaries(epicId: string): Promise<ChapterSummary[]>
+  // Database Statistics
+  async getStats(): Promise<{epics: number, questions: number, summaries: number}>
 }
 ```
+
+#### Enhanced Deep Dive Content Architecture
+
+The `getDeepDiveContent` method now implements a **pure database approach**:
+
+```typescript
+async getDeepDiveContent(questionId: string): Promise<DeepDiveContent | null> {
+  // 1. Fetch base question data
+  const question = await supabase.from('questions').select('*').eq('id', questionId).single();
+  
+  // 2. Attempt premium educational content lookup
+  const educationalContent = await supabase.from('educational_content')
+    .select('*').eq('question_id', questionId).single();
+  
+  // 3. Parse source reference for chapter context
+  const chapterSummary = await this.parseSourceAndFetchChapter(question.source_reference);
+  
+  // 4. Combine only authentic database sources
+  return {
+    detailedExplanation: educationalContent?.detailed_explanation || question.basic_explanation,
+    culturalSignificance: question.cultural_context || educationalContent?.cultural_significance,
+    chapterSummary: chapterSummary // From scraped traditional summaries
+  };
+}
+```
+
+**Key Changes Made**:
+- ❌ **Removed**: All hardcoded external scholar references
+- ❌ **Removed**: Template-based content generation with modern interpretations  
+- ❌ **Removed**: Fixed book recommendations and preset topic lists
+- ✅ **Added**: Pure database content sourcing from authentic materials
+- ✅ **Added**: Graceful fallbacks that maintain cultural respect
 
 #### Data Transformations
 
@@ -151,17 +183,31 @@ Fetch from Supabase → Transform data → Cache package
 Return quiz package to UI
 ```
 
-### 3. Deep Dive Content Flow
+### 3. Deep Dive Content Flow (Enhanced Authentic Content System)
 
 ```
-User taps "Learn More"
+User taps "Explore Cultural Deep Dive"
      ↓
-Check question ID → Fetch educational content
+Query question details (basic_explanation, cultural_context)
      ↓
-Get chapter summaries → Combine content
+Attempt educational_content table lookup (premium content)
      ↓
-Display rich educational experience
+Parse source_reference → Extract kanda/sarga info
+     ↓
+Query chapter_summaries table (scraped traditional content)
+     ↓
+Combine authentic database sources only
+     ↓
+Display immersive cultural learning experience
 ```
+
+**Content Source Priority**:
+1. **`educational_content` table** (when populated with verified content)
+2. **`chapter_summaries` table** (scraped traditional summaries)
+3. **`questions` table** (basic explanations and cultural context)
+
+**Authentication Policy**: No external scholarly references or modern interpretations
+**Fallback Strategy**: Graceful placeholders referencing authentic content development
 
 ## Backend Services Integration
 

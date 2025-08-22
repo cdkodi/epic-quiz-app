@@ -15,14 +15,21 @@ import {
 
 export class QuizService {
   /**
-   * Generate quiz package for bulk download
+   * Generate quiz package for bulk download with progressive sarga-block system
    * CRITICAL ARCHITECTURAL IMPLEMENTATION: This method enables offline-first design
    * by providing complete quiz data including basic explanations in single API call
+   * EDUCATIONAL IMPROVEMENT: Now uses progressive sarga blocks instead of random selection
    */
   async generateQuizPackage(
     epicId: string, 
     questionCount = 10, 
-    options?: { kanda?: string; sarga?: number }
+    options?: { 
+      kanda?: string; 
+      sarga?: number; 
+      difficulty?: 'easy' | 'medium' | 'hard' | 'mixed';
+      category?: 'characters' | 'events' | 'themes' | 'culture' | 'mixed';
+      blockId?: number;
+    }
   ): Promise<QuizPackage> {
     // Validate epic exists and is available
     const epicQuery = 'SELECT id, title, language FROM epics WHERE id = $1 AND is_available = true';
@@ -34,28 +41,71 @@ export class QuizService {
 
     const epic = epicResult.rows[0];
 
-    // Build dynamic WHERE clause for chapter filtering
+    // PROGRESSIVE SARGA-BLOCK SYSTEM: Determine which block to use for quiz generation
+    let targetBlockId: number | null = null;
+    let blockInfo: any = null;
+
+    if (options?.blockId) {
+      // Specific block requested
+      targetBlockId = options.blockId;
+    } else if (options?.difficulty && options.difficulty !== 'mixed') {
+      // Get the first available block of the requested difficulty
+      const blockQuery = `
+        SELECT id, block_name, difficulty_level, start_sarga, end_sarga, learning_objectives
+        FROM quiz_blocks 
+        WHERE epic_id = $1 AND difficulty_level = $2 AND is_available = true
+        ORDER BY sequence_order
+        LIMIT 1
+      `;
+      const blockResult = await executeQuery(blockQuery, [epicId, options.difficulty]);
+      if (blockResult.rows.length > 0) {
+        targetBlockId = blockResult.rows[0].id;
+        blockInfo = blockResult.rows[0];
+      }
+    }
+
+    // Build dynamic WHERE clause for filtering
     const whereConditions = ['epic_id = $1'];
     const queryParams: any[] = [epicId];
     
-    if (options?.kanda) {
+    // BLOCK-BASED FILTERING: Use sarga blocks instead of random selection
+    if (targetBlockId) {
+      whereConditions.push(`sarga_block_id = $${queryParams.length + 1}`);
+      queryParams.push(targetBlockId);
+    } else if (options?.kanda) {
       whereConditions.push(`kanda = $${queryParams.length + 1}`);
       queryParams.push(options.kanda);
+      
+      if (options?.sarga !== undefined) {
+        whereConditions.push(`sarga = $${queryParams.length + 1}`);
+        queryParams.push(options.sarga);
+      }
     }
-    
-    if (options?.sarga !== undefined) {
-      whereConditions.push(`sarga = $${queryParams.length + 1}`);
-      queryParams.push(options.sarga);
+
+    // DIFFICULTY FILTERING: Fix the missing difficulty filter implementation
+    if (options?.difficulty && options.difficulty !== 'mixed') {
+      whereConditions.push(`difficulty = $${queryParams.length + 1}`);
+      queryParams.push(options.difficulty);
+    }
+
+    // CATEGORY FILTERING: Add category filtering support
+    if (options?.category && options.category !== 'mixed') {
+      whereConditions.push(`category = $${queryParams.length + 1}`);
+      queryParams.push(options.category);
     }
     
     const whereClause = whereConditions.join(' AND ');
 
-    // Get random questions with balanced distribution across categories and difficulties
-    // PERFORMANCE OPTIMIZATION: Using TABLESAMPLE for better random distribution at scale
-    // CHAPTER SUPPORT: Now supports filtering by kanda and sarga for targeted quizzes
+    // IMPROVED QUESTION SELECTION: Balanced distribution with proper filtering
     const questionsQuery = `
       WITH balanced_questions AS (
-        SELECT *, ROW_NUMBER() OVER (PARTITION BY category, difficulty ORDER BY RANDOM()) as rn
+        SELECT *, 
+               ROW_NUMBER() OVER (
+                 PARTITION BY 
+                   CASE WHEN $${queryParams.length + 1} = 'mixed' THEN category ELSE 'all' END,
+                   CASE WHEN $${queryParams.length + 2} = 'mixed' THEN difficulty ELSE 'all' END
+                 ORDER BY RANDOM()
+               ) as rn
         FROM questions 
         WHERE ${whereClause}
       )
@@ -63,12 +113,24 @@ export class QuizService {
         id, question_text, options, correct_answer_id, 
         basic_explanation, category, difficulty, kanda, sarga
       FROM balanced_questions 
-      WHERE rn <= CEIL($${queryParams.length + 1}::float / (4 * 3)) -- Distribute across 4 categories and 3 difficulties
+      WHERE rn <= GREATEST(1, CEIL($${queryParams.length + 3}::float / 
+        CASE 
+          WHEN $${queryParams.length + 1} = 'mixed' THEN 4  -- 4 categories
+          ELSE 1 
+        END /
+        CASE 
+          WHEN $${queryParams.length + 2} = 'mixed' THEN 3  -- 3 difficulties
+          ELSE 1 
+        END
+      ))
       ORDER BY RANDOM()
-      LIMIT $${queryParams.length + 1}
+      LIMIT $${queryParams.length + 3}
     `;
 
+    queryParams.push(options?.category || 'mixed');
+    queryParams.push(options?.difficulty || 'mixed');
     queryParams.push(questionCount);
+    
     const questionsResult = await executeQuery(questionsQuery, queryParams);
 
     if (questionsResult.rows.length < Math.min(questionCount, 5)) {
@@ -94,6 +156,13 @@ export class QuizService {
         title: epic.title,
         language: epic.language || 'sanskrit'
       },
+      block_info: blockInfo ? {
+        id: targetBlockId,
+        name: blockInfo.block_name,
+        difficulty: blockInfo.difficulty_level,
+        sarga_range: `${blockInfo.start_sarga}-${blockInfo.end_sarga}`,
+        learning_objectives: blockInfo.learning_objectives
+      } : null,
       questions
     };
   }
@@ -109,6 +178,73 @@ export class QuizService {
     questionCount = 10
   ): Promise<QuizPackage> {
     return this.generateQuizPackage(epicId, questionCount, { kanda, sarga });
+  }
+
+  /**
+   * Generate quiz for a specific progressive block
+   * PROGRESSIVE LEARNING: Uses educationally structured sarga blocks
+   */
+  async generateBlockQuiz(
+    epicId: string,
+    blockId: number,
+    questionCount = 10,
+    options?: { difficulty?: 'easy' | 'medium' | 'hard' | 'mixed'; category?: string }
+  ): Promise<QuizPackage> {
+    return this.generateQuizPackage(epicId, questionCount, { 
+      blockId, 
+      difficulty: options?.difficulty,
+      category: options?.category as any
+    });
+  }
+
+  /**
+   * Get available quiz blocks for an epic
+   * UI SUPPORT: Enables progressive learning interface
+   */
+  async getAvailableBlocks(epicId: string, difficulty?: string): Promise<any[]> {
+    const whereConditions = ['epic_id = $1', 'is_available = true'];
+    const queryParams = [epicId];
+
+    if (difficulty && difficulty !== 'mixed') {
+      whereConditions.push(`difficulty_level = $${queryParams.length + 1}`);
+      queryParams.push(difficulty);
+    }
+
+    const query = `
+      SELECT 
+        id, block_name, difficulty_level, phase, sequence_order,
+        start_sarga, end_sarga, kanda, learning_objectives,
+        narrative_summary, key_themes, cultural_elements,
+        total_questions, character_questions, event_questions,
+        theme_questions, culture_questions
+      FROM quiz_blocks_with_question_counts
+      WHERE ${whereConditions.join(' AND ')}
+      ORDER BY sequence_order
+    `;
+
+    const result = await executeQuery(query, queryParams);
+    return result.rows;
+  }
+
+  /**
+   * Get next recommended block based on user progress
+   * ADAPTIVE LEARNING: Suggests appropriate next block
+   */
+  async getNextRecommendedBlock(
+    epicId: string, 
+    userId: string | null, 
+    currentDifficulty: 'easy' | 'medium' | 'hard' = 'easy'
+  ): Promise<any> {
+    // If no user ID, return first block of requested difficulty
+    if (!userId) {
+      const blocks = await this.getAvailableBlocks(epicId, currentDifficulty);
+      return blocks[0] || null;
+    }
+
+    // TODO: Implement user progress tracking to suggest next block
+    // For now, return first available block
+    const blocks = await this.getAvailableBlocks(epicId, currentDifficulty);
+    return blocks[0] || null;
   }
 
   /**

@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: Spacing.m,
+    minHeight: '100%', // Ensure container takes full available height
   },
   
   questionContainer: {
@@ -67,6 +68,8 @@ const styles = StyleSheet.create({
   
   optionsContainer: {
     paddingTop: Spacing.l,
+    paddingBottom: Spacing.xl, // Extra bottom padding for scrolling
+    flex: 1, // Allow options to expand and be scrollable
   },
 });
 

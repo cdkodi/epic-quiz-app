@@ -11,6 +11,7 @@ import Joi from 'joi';
 import { validate, schemas, formatError } from '../middleware/validation';
 import { quizService } from '../services/QuizService';
 import { epicService } from '../services/EpicService';
+import { executeQuery } from '../config/database';
 
 const router = Router();
 
@@ -53,15 +54,21 @@ router.get('/',
         });
       }
 
-      // Generate quiz package with balanced question selection
-      // CHAPTER SUPPORT: Check for kanda/sarga filtering
+      // PROGRESSIVE SARGA-BLOCK SYSTEM: Generate quiz with educational structure
       const kanda = req.query.kanda as string;
       const sarga = req.query.sarga ? parseInt(req.query.sarga as string) : undefined;
+      const blockId = req.query.blockId ? parseInt(req.query.blockId as string) : undefined;
       
       const quizPackage = await quizService.generateQuizPackage(
         epicId as string,
         parseInt(count as string) || 10,
-        { kanda, sarga }
+        { 
+          kanda, 
+          sarga, 
+          difficulty: difficulty as any, 
+          category: category as any,
+          blockId 
+        }
       );
 
       // Add metadata for mobile app caching and analytics
@@ -268,6 +275,142 @@ router.post('/submit',
       };
 
       res.status(201).json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+/**
+ * GET /api/v1/quiz/blocks/:epicId
+ * Get available progressive learning blocks for an epic
+ * 
+ * PROGRESSIVE LEARNING: Enables structured story-based progression
+ */
+router.get('/blocks/:epicId',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { epicId } = req.params;
+      const difficulty = req.query.difficulty as string;
+      
+      const blocks = await quizService.getAvailableBlocks(epicId, difficulty);
+      
+      res.json({
+        success: true,
+        data: {
+          epic_id: epicId,
+          blocks,
+          total_blocks: blocks.length
+        },
+        meta: {
+          difficulty_filter: difficulty || 'all',
+          generated_at: new Date().toISOString()
+        }
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+/**
+ * GET /api/v1/quiz/blocks/:epicId/recommended
+ * Get recommended next block based on user progress
+ * 
+ * ADAPTIVE LEARNING: Smart progression recommendations
+ */
+router.get('/blocks/:epicId/recommended',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { epicId } = req.params;
+      const difficulty = (req.query.difficulty as string) || 'easy';
+      const userId = req.user?.id || null;
+      
+      const recommendedBlock = await quizService.getNextRecommendedBlock(
+        epicId, 
+        userId, 
+        difficulty as any
+      );
+      
+      res.json({
+        success: true,
+        data: {
+          recommended_block: recommendedBlock,
+          epic_id: epicId,
+          user_id: userId,
+          difficulty_level: difficulty
+        },
+        meta: {
+          recommendation_type: userId ? 'personalized' : 'default',
+          generated_at: new Date().toISOString()
+        }
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+/**
+ * GET /api/v1/quiz/block/:blockId
+ * Generate quiz for a specific progressive block
+ * 
+ * BLOCK-BASED LEARNING: Structured narrative progression
+ */
+router.get('/block/:blockId',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const blockId = parseInt(req.params.blockId);
+      const count = parseInt(req.query.count as string) || 10;
+      const difficulty = req.query.difficulty as string;
+      const category = req.query.category as string;
+      
+      // Get block info first
+      const blockQuery = `
+        SELECT qb.*, e.title as epic_title
+        FROM quiz_blocks qb
+        JOIN epics e ON qb.epic_id = e.id
+        WHERE qb.id = $1 AND qb.is_available = true
+      `;
+      const blockResult = await executeQuery(blockQuery, [blockId]);
+      
+      if (blockResult.rows.length === 0) {
+        return res.status(404).json({
+          success: false,
+          error: 'Block not found',
+          message: `Quiz block ${blockId} does not exist or is not available`
+        });
+      }
+      
+      const blockInfo = blockResult.rows[0];
+      
+      const quizPackage = await quizService.generateBlockQuiz(
+        blockInfo.epic_id,
+        blockId,
+        count,
+        { difficulty: difficulty as any, category }
+      );
+      
+      res.json({
+        success: true,
+        data: quizPackage,
+        meta: {
+          block: {
+            id: blockInfo.id,
+            name: blockInfo.block_name,
+            difficulty: blockInfo.difficulty_level,
+            phase: blockInfo.phase,
+            narrative_summary: blockInfo.narrative_summary,
+            learning_objectives: blockInfo.learning_objectives,
+            sarga_range: `${blockInfo.start_sarga}-${blockInfo.end_sarga}`
+          },
+          epic: {
+            id: blockInfo.epic_id,
+            title: blockInfo.epic_title
+          },
+          generated_at: new Date().toISOString()
+        }
+      });
     } catch (error) {
       next(error);
     }

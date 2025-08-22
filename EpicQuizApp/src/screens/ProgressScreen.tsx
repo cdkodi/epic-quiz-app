@@ -42,33 +42,41 @@ const ProgressScreen: React.FC = () => {
           <Text style={styles.subtitle}>Track your learning progress</Text>
         </View>
 
-        {/* Quick Stats */}
+        {/* Quick Stats - New User */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>📈 Quick Stats</Text>
           
           <View style={styles.statsRow}>
             <Card style={styles.statCard}>
-              <Text style={styles.statNumber}>127</Text>
+              <Text style={styles.statNumber}>0</Text>
               <Text style={styles.statLabel}>Questions Answered</Text>
             </Card>
             
             <Card style={styles.statCard}>
-              <Text style={styles.statNumber}>78%</Text>
+              <Text style={styles.statNumber}>-</Text>
               <Text style={styles.statLabel}>Average Score</Text>
             </Card>
           </View>
 
           <View style={styles.statsRow}>
             <Card style={styles.statCard}>
-              <Text style={styles.statNumber}>12</Text>
+              <Text style={styles.statNumber}>0</Text>
               <Text style={styles.statLabel}>Quizzes Completed</Text>
             </Card>
             
             <Card style={styles.statCard}>
-              <Text style={styles.statNumber}>5</Text>
+              <Text style={styles.statNumber}>0</Text>
               <Text style={styles.statLabel}>Day Streak</Text>
             </Card>
           </View>
+          
+          {/* New User Encouragement */}
+          <Card style={styles.encouragementCard}>
+            <Text style={styles.encouragementTitle}>🌟 Your Epic Adventure Awaits!</Text>
+            <Text style={styles.encouragementText}>
+              Start your first quiz to begin tracking your progress through ancient wisdom and epic literature.
+            </Text>
+          </Card>
         </View>
 
         {/* Epic Progress */}
@@ -85,18 +93,18 @@ const ProgressScreen: React.FC = () => {
                 <Text style={styles.progressTitle}>Bala Kanda</Text>
                 <Text style={styles.progressSubtitle}>The Beginning - Ramayana</Text>
               </View>
-              <Text style={styles.progressPercentage}>50%</Text>
+              <Text style={styles.progressPercentage}>0%</Text>
             </View>
             
             <View style={styles.progressBarContainer}>
               <View style={styles.progressBar}>
-                <View style={[styles.progressFill, { width: '50%' }]} />
+                <View style={[styles.progressFill, { width: '0%' }]} />
               </View>
             </View>
             
             <View style={styles.progressDetails}>
-              <Text style={styles.progressDetailText}>🎯 Sarga 1 ✓ | Sarga 2 📚 Available</Text>
-              <Text style={styles.progressDetailText}>📊 2 of 77 Sargas unlocked</Text>
+              <Text style={styles.progressDetailText}>🎯 Sarga 1 📚 Ready to start!</Text>
+              <Text style={styles.progressDetailText}>📊 0 of 77 Sargas completed</Text>
             </View>
           </TouchableOpacity>
 
@@ -158,15 +166,15 @@ const ProgressScreen: React.FC = () => {
           </View>
         </View>
 
-        {/* Learning Categories */}
+        {/* Learning Categories - New User */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>📋 Category Breakdown</Text>
           
           {[
-            { name: 'Characters', score: 85, total: 23, icon: '👑' },
-            { name: 'Plot Events', score: 72, total: 31, icon: '⚡' },
-            { name: 'Themes', score: 68, total: 19, icon: '💭' },
-            { name: 'Cultural Context', score: 45, total: 15, icon: '🏛️' }
+            { name: 'Characters', score: 0, total: 0, icon: '👑', description: 'Epic heroes and personalities' },
+            { name: 'Plot Events', score: 0, total: 0, icon: '⚡', description: 'Story events and narrative' },
+            { name: 'Themes', score: 0, total: 0, icon: '💭', description: 'Underlying morals and meanings' },
+            { name: 'Cultural Context', score: 0, total: 0, icon: '🏛️', description: 'Historical and cultural background' }
           ].map((category, index) => (
             <TouchableOpacity 
               key={index}
@@ -177,11 +185,11 @@ const ProgressScreen: React.FC = () => {
               <View style={styles.categoryInfo}>
                 <Text style={styles.categoryName}>{category.name}</Text>
                 <Text style={styles.categoryStats}>
-                  {Math.round(category.total * category.score / 100)}/{category.total} correct
+                  {category.total === 0 ? 'Start quizzes to see progress' : `${category.total}/0 correct`}
                 </Text>
               </View>
               <View style={styles.categoryScore}>
-                <Text style={styles.categoryPercentage}>{category.score}%</Text>
+                <Text style={styles.categoryPercentage}>-</Text>
                 <View style={styles.miniProgressBar}>
                   <View style={[
                     styles.miniProgressFill, 
@@ -191,6 +199,15 @@ const ProgressScreen: React.FC = () => {
               </View>
             </TouchableOpacity>
           ))}
+          
+          {/* New User Explanation */}
+          <Card style={styles.categoryExplanationCard}>
+            <Text style={styles.categoryExplanationTitle}>📚 About Categories</Text>
+            <Text style={styles.categoryExplanationText}>
+              As you complete quizzes, we'll track your performance across different aspects of epic literature. 
+              This helps you identify your strengths and areas for improvement in your learning journey.
+            </Text>
+          </Card>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -265,6 +282,55 @@ const styles = StyleSheet.create({
     ...Typography.caption,
     color: theme.text.secondary,
     textAlign: 'center',
+  },
+
+  // Encouragement Card
+  encouragementCard: {
+    backgroundColor: theme.colors.primarySaffron + '08',
+    borderWidth: 1,
+    borderColor: theme.colors.primarySaffron + '20',
+    padding: Spacing.l,
+    marginTop: Spacing.m,
+  },
+
+  encouragementTitle: {
+    ...Typography.subtitle,
+    color: theme.colors.primarySaffron,
+    fontWeight: '600',
+    marginBottom: Spacing.s,
+    textAlign: 'center',
+  },
+
+  encouragementText: {
+    ...Typography.body,
+    color: theme.text.secondary,
+    textAlign: 'center',
+    lineHeight: 20,
+    fontSize: 14,
+  },
+
+  // Category Explanation Card
+  categoryExplanationCard: {
+    backgroundColor: theme.colors.primarySaffron + '05',
+    borderWidth: 1,
+    borderColor: theme.colors.primarySaffron + '15',
+    padding: Spacing.l,
+    marginTop: Spacing.m,
+  },
+
+  categoryExplanationTitle: {
+    ...Typography.subtitle,
+    color: theme.colors.primarySaffron,
+    fontWeight: '600',
+    marginBottom: Spacing.s,
+    fontSize: 16,
+  },
+
+  categoryExplanationText: {
+    ...Typography.body,
+    color: theme.text.secondary,
+    lineHeight: 20,
+    fontSize: 14,
   },
 
   // Progress Section

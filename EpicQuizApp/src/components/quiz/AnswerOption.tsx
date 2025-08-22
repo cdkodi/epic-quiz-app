@@ -74,12 +74,12 @@ const AnswerOption: React.FC<AnswerOptionProps> = ({
 const styles = StyleSheet.create({
   option: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start', // Changed to flex-start for better multi-line text alignment
     backgroundColor: theme.backgrounds.card,
     borderRadius: BorderRadius.large,
     padding: ComponentSpacing.cardPadding,
     marginBottom: Spacing.m,
-    minHeight: ComponentSpacing.minTouchTarget + 12,
+    minHeight: ComponentSpacing.minTouchTarget,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -89,14 +89,14 @@ const styles = StyleSheet.create({
   
   optionSelected: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start', // Changed to flex-start for consistency
     backgroundColor: theme.colors.softSaffron,
     borderWidth: 2,
     borderColor: theme.colors.primarySaffron,
     borderRadius: BorderRadius.large,
     padding: ComponentSpacing.cardPadding,
     marginBottom: Spacing.m,
-    minHeight: ComponentSpacing.minTouchTarget + 12,
+    minHeight: ComponentSpacing.minTouchTarget,
     shadowColor: theme.colors.primarySaffron,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
@@ -106,12 +106,12 @@ const styles = StyleSheet.create({
   
   optionDisabled: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start', // Changed to flex-start for consistency
     backgroundColor: theme.colors.softGray,
     borderRadius: BorderRadius.large,
     padding: ComponentSpacing.cardPadding,
     marginBottom: Spacing.m,
-    minHeight: ComponentSpacing.minTouchTarget + 12,
+    minHeight: ComponentSpacing.minTouchTarget,
     opacity: 0.6,
   },
   
@@ -123,6 +123,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: Spacing.m,
+    marginTop: 2, // Align with first line of text
+    flexShrink: 0, // Don't shrink the badge
   },
   
   selectedBadge: {
@@ -142,6 +144,8 @@ const styles = StyleSheet.create({
   optionTextContent: {
     flex: 1,
     marginRight: Spacing.s,
+    paddingTop: 2, // Align with letter badge
+    lineHeight: 22, // Better line spacing for readability
   },
   
   optionText: {
@@ -165,6 +169,8 @@ const styles = StyleSheet.create({
     height: 24,
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 2, // Align with first line of text
+    flexShrink: 0, // Don't shrink the indicator
   },
   
   checkmark: {

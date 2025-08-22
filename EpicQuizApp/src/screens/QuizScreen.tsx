@@ -34,7 +34,7 @@ interface QuizScreenProps {
 
 const QuizScreen: React.FC<QuizScreenProps> = ({ route }) => {
   const navigation = useNavigation<QuizScreenNavigationProp>();
-  const { epic } = route.params;
+  const { epic, difficulty, category, blockId } = route.params;
   
   // Quiz state
   const [quizData, setQuizData] = useState<QuizPackage | null>(null);
@@ -45,18 +45,25 @@ const QuizScreen: React.FC<QuizScreenProps> = ({ route }) => {
   const [questionStartTime, setQuestionStartTime] = useState(Date.now());
   const [loading, setLoading] = useState(true);
 
-  // Generate quiz data - Now using real Supabase data!
+  // Generate quiz data - Now using progressive block system!
   useEffect(() => {
     const generateQuiz = async () => {
       setLoading(true);
-      console.log(`📚 Loading real quiz for ${epic.title} (ID: ${epic.id})`);
+      console.log(`📚 Loading quiz for ${epic.title} (ID: ${epic.id})`, { difficulty, category, blockId });
       
       try {
-        // Use real API service powered by Supabase
-        const response = await apiService.generateQuiz(epic.id, 10);
+        // Use progressive block system via API service
+        const response = await apiService.generateQuiz(epic.id, 10, {
+          difficulty,
+          category,
+          blockId
+        });
         
         if (response.success) {
-          console.log(`✅ Successfully loaded ${response.data.questions.length} real questions`);
+          console.log(`✅ Successfully loaded ${response.data.questions.length} questions`);
+          if (response.data.block_info) {
+            console.log(`📚 Using story block: ${response.data.block_info.name} (Sargas ${response.data.block_info.sarga_range})`);
+          }
           setQuizData(response.data);
         } else {
           console.error('API Error:', response.error, response.message);
@@ -83,7 +90,7 @@ const QuizScreen: React.FC<QuizScreenProps> = ({ route }) => {
     };
 
     generateQuiz();
-  }, [epic.id, navigation]);
+  }, [epic.id, difficulty, category, blockId, navigation]);
 
   // Timer effect
   useEffect(() => {
@@ -256,18 +263,22 @@ const QuizScreen: React.FC<QuizScreenProps> = ({ route }) => {
         timeElapsed={timeElapsed}
       />
 
-      {/* Question Card */}
-      <ScrollView 
-        style={styles.questionContainer}
-        contentContainerStyle={styles.questionContentContainer}
-        showsVerticalScrollIndicator={true}
-      >
-        <QuestionCard
-          question={currentQuestion}
-          selectedAnswer={selectedAnswer}
-          onAnswerSelect={handleAnswerSelect}
-        />
-      </ScrollView>
+      {/* Question Card - Fixed height with proper scrolling */}
+      <View style={styles.questionWrapper}>
+        <ScrollView 
+          style={styles.questionContainer}
+          contentContainerStyle={styles.questionContentContainer}
+          showsVerticalScrollIndicator={true}
+          bounces={true}
+          alwaysBounceVertical={true}
+        >
+          <QuestionCard
+            question={currentQuestion}
+            selectedAnswer={selectedAnswer}
+            onAnswerSelect={handleAnswerSelect}
+          />
+        </ScrollView>
+      </View>
 
       {/* Action Button */}
       <View style={styles.actionsContainer}>
@@ -313,6 +324,11 @@ const styles = StyleSheet.create({
     minWidth: 120,
   },
 
+  questionWrapper: {
+    flex: 1,
+    minHeight: 0, // Important for proper scrolling in flex layouts
+  },
+
   questionContainer: {
     flex: 1,
     paddingVertical: Spacing.s,
@@ -320,7 +336,8 @@ const styles = StyleSheet.create({
 
   questionContentContainer: {
     flexGrow: 1,
-    paddingBottom: Spacing.l,
+    paddingBottom: Spacing.xl,
+    minHeight: '100%', // Ensure content takes full height for proper scrolling
   },
 
   actionsContainer: {

@@ -19,8 +19,10 @@
       "package": "com.epicquizapp.app"
     },
     "jsEngine": "hermes",
-    "web": {},
+    "web": {
+      "bundler": "metro"
+    },
     "scheme": "epic-quiz-app",
-    "platforms": ["ios", "android"]
+    "platforms": ["ios", "android", "web"]
   }
 }

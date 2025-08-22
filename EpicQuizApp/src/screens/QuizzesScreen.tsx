@@ -1,5 +1,5 @@
 /**
- * Quizzes Screen - Quick access to quizzes and learning features
+ * Quizzes Screen - Progress-first learning dashboard
  */
 
 import React from 'react';
@@ -15,27 +15,43 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { theme, Typography, ComponentSpacing, Spacing } from '../constants';
-import { Button, Card } from '../components/common';
+import { Button, Card, ProgressBar, EpicImage } from '../components/common';
 
 const QuizzesScreen: React.FC = () => {
   const navigation = useNavigation();
 
-  const handleStartQuiz = (epicId: string) => {
-    Alert.alert('🎯 Start Quiz', `Ready to test your knowledge of ${epicId}?`, [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Begin Quiz', onPress: () => {
-        // Navigate to quiz screen
+  // Mock user progress data - NEW USER EXPERIENCE
+  const userProgress = {
+    currentEpic: 'Ramayana',
+    currentKanda: 'Bala Kanda',
+    currentSarga: 1,
+    totalSargas: 77,
+    completedSargas: 0,
+    overallProgress: 0, // Fresh start
+    lastQuizScore: null,
+    lastQuizTotal: null,
+    achievements: []
+  };
+
+  const handleContinueLearning = () => {
+    Alert.alert('🎯 Start Your Epic Journey', 'Ready to begin your first Ramayana quiz?', [
+      { text: 'Not yet', style: 'cancel' },
+      { text: 'Let\'s begin!', onPress: () => {
         (navigation as any).navigate('Quiz', {
           epic: {
-            id: epicId,
-            title: epicId === 'ramayana' ? 'The Ramayana' : 'Unknown Epic',
-            totalQuestions: 19,
+            id: 'bala_kanda_sarga_1',
+            title: 'The Ramayana - Bala Kanda',
+            totalQuestions: 10,
             estimatedTime: '5-8 min',
             isAvailable: true
           }
         });
       }}
     ]);
+  };
+
+  const handleExploreOtherEpics = () => {
+    Alert.alert('📚 Explore Epics', 'More epic content coming soon!');
   };
 
   return (
@@ -47,103 +63,122 @@ const QuizzesScreen: React.FC = () => {
       >
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>🎯 Ready to Learn?</Text>
-          <Text style={styles.subtitle}>Choose your quiz adventure</Text>
+          <Text style={styles.title}>📚 Your Learning Journey</Text>
+          <Text style={styles.subtitle}>Continue your epic adventure</Text>
         </View>
 
-        {/* Quick Start Section */}
+        {/* Current Progress Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>🚀 Quick Start</Text>
-          
-          <TouchableOpacity 
-            style={styles.quickStartCard}
-            onPress={() => handleStartQuiz('ramayana')}
-          >
-            <View style={styles.quickStartIcon}>
-              <Text style={styles.quickStartEmoji}>🕉️</Text>
-            </View>
-            <View style={styles.quickStartContent}>
-              <Text style={styles.quickStartTitle}>Continue Bala Kanda</Text>
-              <Text style={styles.quickStartSubtitle}>Ready for Sarga 2 questions?</Text>
-            </View>
-            <Text style={styles.quickStartArrow}>→</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Available Quizzes */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>📚 Available Quizzes</Text>
-          
-          <Card style={styles.quizCard}>
-            <View style={styles.quizHeader}>
-              <Text style={styles.quizEmoji}>🕉️</Text>
-              <View style={styles.quizInfo}>
-                <Text style={styles.quizTitle}>Bala Kanda - The Beginning</Text>
-                <Text style={styles.quizDescription}>Origin story and divine narration</Text>
+          <Card style={styles.progressCard}>
+            <View style={styles.progressHeader}>
+              <EpicImage
+                epicId="ramayana"
+                kandaName={userProgress.currentKanda}
+                aspectRatio="square"
+                containerStyle={styles.kandaImage}
+                showFallback={true}
+                fallbackIcon="🕉️"
+              />
+              <View style={styles.progressInfo}>
+                <Text style={styles.progressTitle}>{userProgress.currentEpic}: {userProgress.currentKanda}</Text>
+                <Text style={styles.progressSubtitle}>Ready to start: Sarga {userProgress.currentSarga} of {userProgress.totalSargas}</Text>
               </View>
             </View>
-            <View style={styles.quizStats}>
-              <Text style={styles.statText}>📊 2 Sargas available (Sarga 1 ✓, Sarga 2 📚)</Text>
-              <Text style={styles.statText}>⭐ Foundation level</Text>
+            
+            <View style={styles.progressBarContainer}>
+              <ProgressBar 
+                progress={userProgress.overallProgress} 
+                style={styles.progressBar}
+              />
+              <Text style={styles.progressText}>
+                {userProgress.overallProgress === 0 ? 'Ready to begin!' : `${userProgress.overallProgress.toFixed(1)}% Complete`}
+              </Text>
             </View>
+
             <Button
-              title="Continue to Sarga 2"
-              onPress={() => handleStartQuiz('bala_kanda_sarga_2')}
+              title={userProgress.overallProgress === 0 ? "Start Learning →" : "Continue Learning →"}
+              onPress={handleContinueLearning}
               variant="primary"
-              style={styles.quizButton}
+              style={styles.continueButton}
             />
           </Card>
+        </View>
 
-          {/* Locked Kanda */}
-          <Card style={[styles.quizCard, styles.lockedCard]}>
-            <View style={styles.quizHeader}>
-              <Text style={styles.quizEmoji}>🏰</Text>
-              <View style={styles.quizInfo}>
-                <Text style={[styles.quizTitle, styles.lockedText]}>Ayodhya Kanda - Royal Court</Text>
-                <Text style={[styles.quizDescription, styles.lockedText]}>Rama's coronation and exile decree</Text>
-              </View>
-            </View>
-            <View style={styles.lockedBanner}>
-              <Text style={styles.lockedBannerText}>🔒 Complete all 77 Bala Kanda Sargas first</Text>
-            </View>
-          </Card>
-
-          <Card style={[styles.quizCard, styles.lockedCard]}>
-            <View style={styles.quizHeader}>
-              <Text style={styles.quizEmoji}>🌲</Text>
-              <View style={styles.quizInfo}>
-                <Text style={[styles.quizTitle, styles.lockedText]}>Aranya Kanda - Forest Life</Text>
-                <Text style={[styles.quizDescription, styles.lockedText]}>Exile begins and trials in the forest</Text>
-              </View>
-            </View>
-            <View style={styles.lockedBanner}>
-              <Text style={styles.lockedBannerText}>🚧 Unlock after Ayodhya Kanda</Text>
+        {/* Kanda Showcase Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>📖 Currently Exploring</Text>
+          
+          <Card style={styles.kandaShowcaseCard}>
+            <EpicImage
+              epicId="ramayana"
+              kandaName={userProgress.currentKanda}
+              aspectRatio="wide"
+              containerStyle={styles.showcaseImage}
+              showFallback={true}
+            />
+            
+            <View style={styles.showcaseContent}>
+              <Text style={styles.showcaseTitle}>{userProgress.currentKanda}</Text>
+              <Text style={styles.showcaseSubtitle}>The Childhood Chapter</Text>
+              <Text style={styles.showcaseDescription}>
+                Birth and early life of Rama, his education under sage Vishwamitra, 
+                and the divine marriage to Sita. This foundational chapter introduces 
+                the main characters and sets the stage for the epic journey.
+              </Text>
+              
+              {userProgress.lastQuizScore !== null ? (
+                <View style={styles.lastQuizResult}>
+                  <Text style={styles.resultLabel}>Last Quiz Score:</Text>
+                  <Text style={styles.resultScore}>
+                    {userProgress.lastQuizScore}/{userProgress.lastQuizTotal} correct
+                  </Text>
+                </View>
+              ) : (
+                <View style={styles.lastQuizResult}>
+                  <Text style={styles.resultLabel}>🌟 Your First Epic Adventure</Text>
+                  <Text style={styles.newUserText}>
+                    Begin your journey into ancient wisdom
+                  </Text>
+                </View>
+              )}
             </View>
           </Card>
         </View>
 
-        {/* Quiz Categories */}
+        {/* Explore More Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>🎯 Focus Areas</Text>
+          <Text style={styles.sectionTitle}>📖 Explore More</Text>
           
-          <View style={styles.categoriesGrid}>
-            {[
-              { icon: '👑', title: 'Characters', desc: 'Heroes & villains' },
-              { icon: '⚡', title: 'Events', desc: 'Key moments' },
-              { icon: '💭', title: 'Themes', desc: 'Deep meanings' },
-              { icon: '🏛️', title: 'Culture', desc: 'Traditions & context' }
-            ].map((category, index) => (
-              <TouchableOpacity 
-                key={index}
-                style={styles.categoryCard}
-                onPress={() => Alert.alert(`${category.icon} ${category.title}`, 'Category-specific quizzes coming soon!')}
-              >
-                <Text style={styles.categoryIcon}>{category.icon}</Text>
-                <Text style={styles.categoryTitle}>{category.title}</Text>
-                <Text style={styles.categoryDesc}>{category.desc}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
+          {/* Upcoming Content */}
+          <Card style={styles.exploreCard}>
+            <View style={styles.exploreHeader}>
+              <Text style={styles.exploreEmoji}>🏰</Text>
+              <View style={styles.exploreInfo}>
+                <Text style={styles.exploreTitle}>Ayodhya Kanda - Royal Court</Text>
+                <Text style={styles.exploreDesc}>Coming after Bala Kanda completion</Text>
+              </View>
+            </View>
+            <TouchableOpacity style={styles.previewButton}>
+              <Text style={styles.previewText}>Preview →</Text>
+            </TouchableOpacity>
+          </Card>
+
+          {/* Other Epics */}
+          <Card style={styles.exploreCard}>
+            <View style={styles.exploreHeader}>
+              <Text style={styles.exploreEmoji}>📚</Text>
+              <View style={styles.exploreInfo}>
+                <Text style={styles.exploreTitle}>Other Epic Traditions</Text>
+                <Text style={styles.exploreDesc}>Mahabharata, Iliad, and more</Text>
+              </View>
+            </View>
+            <TouchableOpacity 
+              style={styles.previewButton}
+              onPress={handleExploreOtherEpics}
+            >
+              <Text style={styles.previewText}>Explore →</Text>
+            </TouchableOpacity>
+          </Card>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -174,6 +209,7 @@ const styles = StyleSheet.create({
     ...Typography.h1,
     color: theme.colors.primarySaffron,
     marginBottom: Spacing.s,
+    textAlign: 'center',
   },
   
   subtitle: {
@@ -192,157 +228,187 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.l,
     fontWeight: '600',
   },
-  
-  // Quick Start Styles
-  quickStartCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: theme.colors.primarySaffron + '15',
+
+  // Progress Card Styles
+  progressCard: {
     padding: Spacing.l,
-    borderRadius: 16,
+    backgroundColor: theme.colors.primarySaffron + '08',
     borderWidth: 2,
-    borderColor: theme.colors.primarySaffron + '30',
+    borderColor: theme.colors.primarySaffron + '20',
   },
   
-  quickStartIcon: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: theme.colors.primarySaffron + '20',
+  progressHeader: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    marginBottom: Spacing.m,
+  },
+  
+  kandaImage: {
+    width: 64,
+    height: 64,
+    marginRight: Spacing.m,
+    borderRadius: 12,
+  },
+
+  progressEmoji: {
+    fontSize: 32,
     marginRight: Spacing.m,
   },
   
-  quickStartEmoji: {
-    fontSize: 24,
-  },
-  
-  quickStartContent: {
+  progressInfo: {
     flex: 1,
   },
   
-  quickStartTitle: {
+  progressTitle: {
     ...Typography.h3,
     color: theme.colors.primarySaffron,
     fontWeight: '700',
     marginBottom: Spacing.xs,
   },
   
-  quickStartSubtitle: {
+  progressSubtitle: {
     ...Typography.body,
     color: theme.text.secondary,
+    fontWeight: '500',
   },
   
-  quickStartArrow: {
-    ...Typography.h2,
-    color: theme.colors.primarySaffron,
+  progressBarContainer: {
+    marginBottom: Spacing.l,
   },
   
-  // Quiz Card Styles
-  quizCard: {
-    padding: Spacing.l,
-    marginBottom: Spacing.m,
-  },
-  
-  quizHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: Spacing.m,
-  },
-  
-  quizEmoji: {
-    fontSize: 32,
-    marginRight: Spacing.m,
-  },
-  
-  quizInfo: {
-    flex: 1,
-  },
-  
-  quizTitle: {
-    ...Typography.h3,
-    color: theme.text.primary,
-    fontWeight: '600',
-    marginBottom: Spacing.xs,
-  },
-  
-  quizDescription: {
-    ...Typography.body,
-    color: theme.text.secondary,
-  },
-  
-  quizStats: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: Spacing.m,
-  },
-  
-  statText: {
-    ...Typography.caption,
-    color: theme.text.tertiary,
-  },
-  
-  quizButton: {
-    marginTop: Spacing.s,
-  },
-  
-  // Locked Card Styles
-  lockedCard: {
-    opacity: 0.6,
-  },
-  
-  lockedText: {
-    color: theme.text.tertiary,
-  },
-  
-  lockedBanner: {
-    backgroundColor: theme.colors.lightGray,
-    padding: Spacing.s,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  
-  lockedBannerText: {
-    ...Typography.caption,
-    color: theme.text.tertiary,
-    fontWeight: '600',
-  },
-  
-  // Categories Grid
-  categoriesGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
-  
-  categoryCard: {
-    width: '48%',
-    backgroundColor: theme.backgrounds.secondary,
-    padding: Spacing.m,
-    borderRadius: 12,
-    alignItems: 'center',
-    marginBottom: Spacing.m,
-    borderWidth: 1,
-    borderColor: theme.colors.lightGray,
-  },
-  
-  categoryIcon: {
-    fontSize: 24,
+  progressBar: {
     marginBottom: Spacing.s,
   },
   
-  categoryTitle: {
+  progressText: {
+    ...Typography.caption,
+    color: theme.colors.primarySaffron,
+    fontWeight: '600',
+    textAlign: 'right',
+  },
+  
+  continueButton: {
+    backgroundColor: theme.colors.primarySaffron,
+    paddingVertical: Spacing.m,
+  },
+
+  // Kanda Showcase Card Styles
+  kandaShowcaseCard: {
+    padding: 0, // Remove padding to allow full-width image
+    overflow: 'hidden',
+  },
+  
+  showcaseImage: {
+    height: 200, // Larger image height
+    marginBottom: 0,
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+  },
+  
+  showcaseContent: {
+    padding: Spacing.l,
+  },
+  
+  showcaseTitle: {
+    ...Typography.h2,
+    color: theme.colors.primarySaffron,
+    fontWeight: '700',
+    marginBottom: Spacing.xs,
+    textAlign: 'center',
+  },
+  
+  showcaseSubtitle: {
+    ...Typography.subtitle,
+    color: theme.text.secondary,
+    fontWeight: '500',
+    textAlign: 'center',
+    marginBottom: Spacing.m,
+  },
+  
+  showcaseDescription: {
+    ...Typography.body,
+    color: theme.text.secondary,
+    lineHeight: 22,
+    textAlign: 'center',
+    marginBottom: Spacing.l,
+  },
+  
+  lastQuizResult: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: Spacing.s,
+    paddingTop: Spacing.m,
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.lightGray + '50',
+  },
+  
+  resultLabel: {
+    ...Typography.body,
+    color: theme.text.secondary,
+    fontWeight: '500',
+  },
+  
+  resultScore: {
+    ...Typography.subtitle,
+    color: theme.colors.primarySaffron,
+    fontWeight: '700',
+  },
+
+  newUserText: {
+    ...Typography.caption,
+    color: theme.colors.primarySaffron,
+    fontWeight: '500',
+    fontStyle: 'italic',
+  },
+
+  // Explore Card Styles
+  exploreCard: {
+    padding: Spacing.l,
+    marginBottom: Spacing.m,
+    borderWidth: 1,
+    borderColor: theme.colors.lightGray + '40',
+  },
+  
+  exploreHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: Spacing.m,
+  },
+  
+  exploreEmoji: {
+    fontSize: 28,
+    marginRight: Spacing.m,
+  },
+  
+  exploreInfo: {
+    flex: 1,
+  },
+  
+  exploreTitle: {
     ...Typography.subtitle,
     color: theme.text.primary,
     fontWeight: '600',
     marginBottom: Spacing.xs,
   },
   
-  categoryDesc: {
+  exploreDesc: {
     ...Typography.caption,
     color: theme.text.secondary,
-    textAlign: 'center',
+  },
+  
+  previewButton: {
+    alignSelf: 'flex-end',
+    paddingVertical: Spacing.s,
+    paddingHorizontal: Spacing.m,
+  },
+  
+  previewText: {
+    ...Typography.caption,
+    color: theme.colors.primarySaffron,
+    fontWeight: '600',
   },
 });
 

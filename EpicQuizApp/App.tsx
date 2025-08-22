@@ -3,7 +3,7 @@
  */
 
 import * as React from 'react';
-import { Text } from 'react-native';
+import { Text, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -15,6 +15,10 @@ import QuizScreen from './src/screens/QuizScreen';
 import QuizResultsScreen from './src/screens/QuizResultsScreen';
 import ExplanationScreen from './src/screens/ExplanationScreen';
 import DeepDiveScreen from './src/screens/DeepDiveScreen';
+import WelcomeScreen from './src/screens/WelcomeScreen';
+import OnboardingEpicsScreen from './src/screens/OnboardingEpicsScreen';
+import RamayanaOverviewScreen from './src/screens/RamayanaOverviewScreen';
+import BlockSelectionScreen from './src/screens/BlockSelectionScreen';
 import { theme } from './src/constants';
 
 const Tab = createBottomTabNavigator();
@@ -22,6 +26,49 @@ const Stack = createNativeStackNavigator();
 
 // Root Stack Navigator for quiz flow overlays
 const RootStack = createNativeStackNavigator();
+
+// Home Stack Navigator for Library and Ramayana Overview
+const HomeStack = createNativeStackNavigator();
+
+// Home Stack Component
+const HomeStackNavigator = () => {
+  return (
+    <HomeStack.Navigator
+      screenOptions={{
+        headerShown: true,
+        headerStyle: {
+          backgroundColor: '#ffffff',
+        },
+        headerTintColor: '#333333',
+        headerTitleStyle: {
+          fontWeight: '600',
+          fontSize: 18,
+        },
+        headerShadowVisible: false,
+      }}
+    >
+      <HomeStack.Screen 
+        name="Library" 
+        component={EpicLibraryScreen}
+        options={{
+          title: 'Library',
+          headerRight: () => (
+            <TouchableOpacity style={{ marginRight: 16 }}>
+              <Text style={{ fontSize: 20 }}>⚙️</Text>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <HomeStack.Screen 
+        name="RamayanaOverview" 
+        component={RamayanaOverviewScreen}
+        options={{
+          title: '📖 Ramayana',
+        }}
+      />
+    </HomeStack.Navigator>
+  );
+};
 
 // Tab Navigator Component
 const MainTabs = () => {
@@ -50,8 +97,8 @@ const MainTabs = () => {
       }}
     >
       <Tab.Screen
-        name="Library"
-        component={EpicLibraryScreen}
+        name="Home"
+        component={HomeStackNavigator}
         options={{
           tabBarIcon: ({ color, focused }) => (
             <Text style={{ 
@@ -61,17 +108,8 @@ const MainTabs = () => {
               📚
             </Text>
           ),
-          headerShown: true,
-          headerTitle: '📚 Epic Library',
-          headerStyle: {
-            backgroundColor: '#ffffff',
-          },
-          headerTintColor: '#333333',
-          headerTitleStyle: {
-            fontWeight: '600',
-            fontSize: 18,
-          },
-          headerShadowVisible: false,
+          tabBarLabel: 'Library',
+          headerShown: false, // HomeStack handles headers now
         }}
       />
       
@@ -159,8 +197,74 @@ const MainTabs = () => {
 const App = () => {
   return (
     <NavigationContainer>
-      <RootStack.Navigator screenOptions={{ headerShown: false }}>
+      <RootStack.Navigator 
+        screenOptions={{ headerShown: false }}
+        initialRouteName="Welcome"
+      >
+        {/* Welcome Screen - First time user experience */}
+        <RootStack.Screen 
+          name="Welcome" 
+          component={WelcomeScreen}
+          options={{
+            headerShown: false,
+            gestureEnabled: false,
+          }}
+        />
+        
+        {/* Onboarding Epic Selection */}
+        <RootStack.Screen 
+          name="OnboardingEpics" 
+          component={OnboardingEpicsScreen}
+          options={({ navigation }) => ({
+            headerShown: true,
+            title: '📚 Choose Your Epic',
+            headerStyle: {
+              backgroundColor: '#ffffff',
+            },
+            headerTintColor: '#333333',
+            headerTitleStyle: {
+              fontWeight: '600',
+              fontSize: 18,
+            },
+            headerShadowVisible: false,
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate('MainTabs', { screen: 'Home' })}
+                style={{ marginRight: 16 }}
+              >
+                <Text style={{ 
+                  color: theme.colors.primarySaffron, 
+                  fontWeight: '600',
+                  fontSize: 16 
+                }}>
+                  Skip
+                </Text>
+              </TouchableOpacity>
+            ),
+          })}
+        />
+        
         <RootStack.Screen name="MainTabs" component={MainTabs} />
+        
+        {/* Progressive Learning Flow */}
+        <RootStack.Screen
+          name="BlockSelection"
+          component={BlockSelectionScreen}
+          options={{
+            headerShown: true,
+            title: '📚 Choose Your Path',
+            headerStyle: {
+              backgroundColor: '#ffffff',
+            },
+            headerTintColor: '#333333',
+            headerTitleStyle: {
+              fontWeight: '600',
+              fontSize: 18,
+            },
+            headerShadowVisible: false,
+            presentation: 'card',
+          }}
+        />
         
         {/* Quiz Flow Screens - presented modally */}
         <RootStack.Screen

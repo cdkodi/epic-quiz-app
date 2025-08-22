@@ -129,6 +129,13 @@ export interface QuizPackage {
     title: string;
     language: string;
   };
+  block_info?: {
+    id: number;
+    name: string;
+    difficulty: string;
+    sarga_range: string;
+    learning_objectives: string[];
+  };
   questions: QuizQuestion[];
 }
 

@@ -24,7 +24,7 @@ import { theme, Typography, ComponentSpacing, Spacing } from '../constants';
 import { apiService } from '../services/api';
 
 // Keep mock user progress for now
-import { mockUserProgress } from '../data/mockEpics';
+import { mockUserProgress, mockEpics } from '../data/mockEpics';
 
 type EpicLibraryNavigationProp = NativeStackNavigationProp<RootStackParamList, 'EpicLibrary'>;
 
@@ -34,25 +34,21 @@ const EpicLibraryScreen: React.FC = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Fetch epics from Supabase
+  // Load epics from mock data for Library display
   const fetchEpics = async (showRefresh = false) => {
     if (showRefresh) setRefreshing(true);
-    console.log('📚 Loading real epics from Supabase...');
+    console.log('📚 Loading epics for Library display...');
     
     try {
-      // Use real API service powered by Supabase
-      const response = await apiService.getEpics();
-      
-      if (response.success) {
-        console.log(`✅ Successfully loaded ${response.data.length} epics`);
-        setEpics(response.data || []);
-      } else {
-        console.error('API Error:', response.error, response.message);
-        Alert.alert('Error', response.message || 'Failed to load epics. Please try again.');
-      }
+      // Use mock data to show all 3 epics (Ramayana, Mahabharata, Bhagavad Gita)
+      const libraryEpics = mockEpics.filter(epic => 
+        epic.id === 'ramayana' || epic.id === 'mahabharata' || epic.id === 'bhagavad_gita'
+      );
+      console.log(`✅ Successfully loaded ${libraryEpics.length} epics for Library`);
+      setEpics(libraryEpics);
     } catch (error) {
-      console.error('Failed to fetch epics:', error);
-      Alert.alert('Connection Error', 'Unable to connect to the service. Please check your internet connection and try again.');
+      console.error('Failed to load epics:', error);
+      Alert.alert('Error', 'Failed to load epics. Please try again.');
     } finally {
       setLoading(false);
       if (showRefresh) setRefreshing(false);
@@ -64,12 +60,18 @@ const EpicLibraryScreen: React.FC = () => {
   }, []);
 
   const handleEpicPress = async (epic: Epic) => {
+    if (epic.id === 'ramayana') {
+      // Navigate to Ramayana overview screen for immersive experience
+      navigation.navigate('RamayanaOverview');
+      return;
+    }
+
     if (!epic.isAvailable || epic.totalQuestions === 0) {
       // Show appropriate message for unavailable epics
       if (epic.id === 'mahabharata') {
         Alert.alert(
-          '🔒 Epic Locked',
-          'Complete more Ramayana quizzes to unlock the Mahabharata!',
+          '🚧 Coming Soon',
+          'The Mahabharata will be available in a future update. Complete your Ramayana journey first!',
           [{ text: 'OK', style: 'default' }]
         );
       } else {
@@ -82,21 +84,48 @@ const EpicLibraryScreen: React.FC = () => {
       return;
     }
 
-    // For available epics, show quiz confirmation with real question count
+    // For other available epics, show progressive learning options
     Alert.alert(
-      '🎯 Start Quiz',
-      `Ready to test your knowledge of ${epic.title}?\n\n📊 ${epic.totalQuestions} questions available\n⏱️ Estimated time: ${epic.estimatedTime}`,
+      '🎯 Choose Your Learning Path',
+      `Ready to explore ${epic.title}?\n\n📊 ${epic.totalQuestions} questions available\n⏱️ Estimated time: ${epic.estimatedTime}\n\n🌟 Try our new story-based learning blocks!`,
       [
         { text: 'Cancel', style: 'cancel' },
         {
-          text: 'Start Learning',
+          text: 'Choose Difficulty',
+          style: 'default',
+          onPress: () => showDifficultySelection(epic)
+        },
+        {
+          text: 'Quick Quiz',
           style: 'default',
           onPress: () => {
-            // Navigate to Quiz screen - it will handle the real quiz generation
-            navigation.navigate('Quiz', {
-              epic,
-            });
+            navigation.navigate('Quiz', { epic });
           }
+        }
+      ]
+    );
+  };
+
+  const showDifficultySelection = (epic: Epic) => {
+    Alert.alert(
+      '📚 Select Your Learning Level',
+      'Choose the difficulty that matches your knowledge of the epic:',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: '🌱 Easy (Foundational)',
+          style: 'default',
+          onPress: () => navigation.navigate('BlockSelection', { epic, difficulty: 'easy' })
+        },
+        {
+          text: '🌿 Medium (Development)',
+          style: 'default',
+          onPress: () => navigation.navigate('BlockSelection', { epic, difficulty: 'medium' })
+        },
+        {
+          text: '🌳 Hard (Mastery)',
+          style: 'default',
+          onPress: () => navigation.navigate('BlockSelection', { epic, difficulty: 'hard' })
         }
       ]
     );
@@ -134,85 +163,8 @@ const EpicLibraryScreen: React.FC = () => {
           />
         }
       >
-        {/* Header Section */}
-        <View style={styles.headerSection}>
-          <Text style={styles.subtitle}>Discover Classical Literature</Text>
-        </View>
-
-        {/* Continue Learning Section */}
-        <View style={styles.continueSection}>
-          <TouchableOpacity 
-            style={styles.continueButton}
-            onPress={() => {
-              // Navigate to continue learning
-              Alert.alert(
-                '🎯 Continue Learning',
-                'Pick up where you left off with personalized quiz recommendations.',
-                [
-                  { text: 'Cancel', style: 'cancel' },
-                  { 
-                    text: 'Continue Quiz', 
-                    onPress: () => {
-                      // Navigate to a new quiz
-                      const ramayana = epics.find(e => e.id === 'ramayana');
-                      if (ramayana) {
-                        handleEpicPress(ramayana);
-                      } else {
-                        Alert.alert('Error', 'Ramayana epic not found. Please refresh the app.');
-                      }
-                    }
-                  }
-                ]
-              );
-            }}
-          >
-            <Text style={styles.continueButtonIcon}>🎯</Text>
-            <View style={styles.continueButtonText}>
-              <Text style={styles.continueTitle}>Continue Your Journey</Text>
-              <Text style={styles.continueSubtitle}>Ready for Bala Kanda - Sarga 2?</Text>
-            </View>
-            <Text style={styles.continueArrow}>→</Text>
-          </TouchableOpacity>
-        </View>
-
-
-        {/* Recent Activity Section */}
-        <View style={styles.recentActivitySection}>
-          <Text style={styles.sectionTitle}>🕒 Recent Activity</Text>
-          
-          <TouchableOpacity 
-            style={styles.recentActivityItem}
-            onPress={() => {
-              // Navigate to last quiz results
-              Alert.alert(
-                '📝 Last Quiz Results', 
-                'Review your most recent Ramayana quiz performance and explanations.',
-                [
-                  { text: 'Cancel', style: 'cancel' },
-                  { text: 'Review Answers', onPress: () => {
-                    // This would navigate to the explanation screen with recent quiz data
-                    Alert.alert('Coming Soon', 'Quiz history and review navigation will be available in the next update.');
-                  }}
-                ]
-              );
-            }}
-          >
-            <View style={styles.activityIcon}>
-              <Text style={styles.activityIconText}>📝</Text>
-            </View>
-            <View style={styles.activityContent}>
-              <Text style={styles.activityTitle}>Bala Kanda - Sarga 1 Completed</Text>
-              <Text style={styles.activitySubtitle}>Review your answers and explanations</Text>
-            </View>
-            <View style={styles.activityArrow}>
-              <Text style={styles.activityArrowText}>→</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-
-        {/* Available Epics Section */}
+        {/* Epic Cards - Direct layout like screenshot */}
         <View style={styles.epicsContainer}>
-          <Text style={styles.sectionTitle}>📚 Available Literature</Text>
           {epics.map((epic) => (
             <EpicCard
               key={epic.id}
@@ -221,13 +173,6 @@ const EpicLibraryScreen: React.FC = () => {
               onPress={() => handleEpicPress(epic)}
             />
           ))}
-        </View>
-
-        {/* Recent Achievements Section (placeholder for future) */}
-        <View style={styles.achievementsSection}>
-          <Text style={styles.sectionTitle}>Recent Achievements:</Text>
-          <Text style={styles.achievementText}>🎖️ Characters Master</Text>
-          <Text style={styles.achievementText}>🌟 5-Day Learning Streak</Text>
         </View>
 
         {/* Footer spacing for better scroll experience */}

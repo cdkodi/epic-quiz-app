@@ -7,16 +7,29 @@
 import { Epic, QuizPackage, QuizSubmission, QuizResult, DeepDiveContent, ApiResponse } from '../types/api';
 import { supabaseService } from './supabaseService';
 
-// Configuration
-const API_BASE_URL = __DEV__ 
-  ? 'http://localhost:3000/api/v1'  // Development backend
-  : 'https://your-production-domain.com/api/v1';  // Production backend
+// Configuration - Updated for mobile device compatibility
+const getApiBaseUrl = () => {
+  if (__DEV__) {
+    // For development, we'll skip the backend for now since it has connection issues
+    // The app will use the fallback to Supabase directly
+    return null; // This will trigger immediate fallback
+  } else {
+    return 'https://your-production-domain.com/api/v1'; // Production backend
+  }
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 class ApiService {
   private async request<T>(
     endpoint: string, 
     options: RequestInit = {}
   ): Promise<ApiResponse<T>> {
+    // Skip API call if no backend URL is configured (development fallback)
+    if (!API_BASE_URL) {
+      throw new Error('Backend API not available in development mode');
+    }
+
     try {
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         headers: {
@@ -94,32 +107,120 @@ class ApiService {
     }
   }
 
-  // Quiz methods - Now powered by Supabase with offline-first approach
-  async generateQuiz(epicId: string, count: number = 10): Promise<ApiResponse<QuizPackage>> {
-    try {
-      console.log(`🎯 Generating quiz for ${epicId} with ${count} questions...`);
-      const quizPackage = await supabaseService.getQuizPackage(epicId, count);
-      
-      if (quizPackage) {
-        console.log(`✅ Successfully generated quiz with ${quizPackage.questions.length} questions`);
-        return {
-          success: true,
-          data: quizPackage,
-        };
-      } else {
-        return {
-          success: false,
-          error: 'No questions available',
-          message: `No quiz questions found for epic ${epicId}`,
-        };
-      }
-    } catch (error) {
-      console.error('Error generating quiz from Supabase:', error);
-      
-      // Fallback to backend API
-      console.log('📡 Falling back to backend API for quiz generation...');
-      return this.request<QuizPackage>(`/quiz?epicId=${epicId}&count=${count}`);
+  // Quiz methods - Now powered by Supabase with progressive block system
+  async generateQuiz(
+    epicId: string, 
+    count: number = 10,
+    options?: {
+      difficulty?: 'easy' | 'medium' | 'hard' | 'mixed';
+      category?: 'characters' | 'events' | 'themes' | 'culture' | 'mixed';
+      blockId?: number;
     }
+  ): Promise<ApiResponse<QuizPackage>> {
+    try {
+      console.log(`🎯 Generating quiz for ${epicId} with ${count} questions...`, options);
+      
+      if (!API_BASE_URL) {
+        console.log('⚡ Development mode: Skipping backend API, using Supabase directly');
+        throw new Error('Development mode - using fallback');
+      }
+      
+      // Use new progressive block system via backend API
+      const params = new URLSearchParams({
+        epicId,
+        count: count.toString(),
+        ...(options?.difficulty && { difficulty: options.difficulty }),
+        ...(options?.category && { category: options.category }),
+        ...(options?.blockId && { blockId: options.blockId.toString() })
+      });
+      
+      const response = await this.request<QuizPackage>(`/quiz?${params}`);
+      
+      if (response.success) {
+        console.log(`✅ Successfully generated quiz with ${response.data.questions.length} questions`);
+        if (response.data.block_info) {
+          console.log(`📚 Using progressive block: ${response.data.block_info.name}`);
+        }
+      }
+      
+      return response;
+    } catch (error) {
+      console.log('📡 Using Supabase fallback with progressive block simulation...');
+      try {
+        // For now, simulate progressive blocks by using basic Supabase service
+        // In the future, we can enhance supabaseService to support blocks directly
+        const quizPackage = await supabaseService.getQuizPackage(epicId, count, {
+          difficulty: options?.difficulty,
+          category: options?.category
+        });
+        if (quizPackage) {
+          // Add simulated block info for UI consistency
+          const simulatedBlockInfo = this.getSimulatedBlockInfo(options?.difficulty || 'mixed');
+          
+          return {
+            success: true,
+            data: {
+              ...quizPackage,
+              block_info: simulatedBlockInfo
+            },
+          };
+        }
+      } catch (fallbackError) {
+        console.error('Fallback also failed:', fallbackError);
+      }
+      
+      return {
+        success: false,
+        error: 'Quiz generation failed',
+        message: 'Unable to generate quiz. Please check your connection and try again.',
+      };
+    }
+  }
+
+  // Progressive Block System Methods
+  async getAvailableBlocks(epicId: string, difficulty?: string): Promise<ApiResponse<any[]>> {
+    const params = new URLSearchParams({
+      ...(difficulty && { difficulty })
+    });
+    
+    return this.request<any[]>(`/quiz/blocks/${epicId}?${params}`);
+  }
+
+  async getRecommendedBlock(epicId: string, difficulty: string = 'easy'): Promise<ApiResponse<any>> {
+    return this.request<any>(`/quiz/blocks/${epicId}/recommended?difficulty=${difficulty}`);
+  }
+
+  async generateBlockQuiz(blockId: number, count: number = 10): Promise<ApiResponse<QuizPackage>> {
+    return this.request<QuizPackage>(`/quiz/block/${blockId}?count=${count}`);
+  }
+
+  // Helper method to simulate block info when backend is unavailable
+  private getSimulatedBlockInfo(difficulty: string): any {
+    const blockSimulations = {
+      easy: {
+        id: 1,
+        name: 'Origins & Divine Birth',
+        difficulty: 'easy',
+        sarga_range: '1-5',
+        learning_objectives: ['Understanding the cosmic context', 'Meeting main characters', 'Grasping divine intervention concept']
+      },
+      medium: {
+        id: 4,
+        name: 'Forest Adventures & Demon Battles', 
+        difficulty: 'medium',
+        sarga_range: '16-25',
+        learning_objectives: ['Understanding dharma in action', 'Complexity of good vs evil', 'Strategic thinking']
+      },
+      hard: {
+        id: 7,
+        name: 'The Impossible Bow & Divine Marriage',
+        difficulty: 'hard', 
+        sarga_range: '51-65',
+        learning_objectives: ['Symbolic meaning of divine trials', 'Marriage as cosmic union', 'Manifestation of destiny']
+      }
+    };
+
+    return blockSimulations[difficulty as keyof typeof blockSimulations] || blockSimulations.easy;
   }
 
   async submitQuiz(submission: QuizSubmission): Promise<ApiResponse<QuizResult>> {

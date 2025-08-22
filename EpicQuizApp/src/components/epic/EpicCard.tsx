@@ -5,7 +5,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Epic } from '../../types/api';
-import { Card, ProgressBar, Button } from '../common';
+import { Card, ProgressBar, Button, EpicImage } from '../common';
 import { theme, Typography, ComponentSpacing, Spacing } from '../../constants';
 
 interface EpicCardProps {
@@ -60,16 +60,23 @@ const EpicCard: React.FC<EpicCardProps> = ({ epic, userProgress, onPress }) => {
   };
 
   const getButtonConfig = () => {
-    if (epic.is_available && epic.question_count > 0) {
+    if (epic.id === 'ramayana') {
       return {
-        title: '📖 Start Learning',
+        title: 'Continue',
         variant: 'primary' as const,
         onPress: onPress,
         disabled: false,
       };
-    } else if (!epic.is_available && epic.id === 'mahabharata') {
+    } else if (epic.id === 'mahabharata') {
       return {
-        title: '🔒 Unlock with Ramayana',
+        title: 'Coming Soon',
+        variant: 'disabled' as const,
+        onPress: () => {},
+        disabled: true,
+      };
+    } else if (epic.id === 'bhagavad_gita') {
+      return {
+        title: 'Coming Soon',
         variant: 'disabled' as const,
         onPress: () => {},
         disabled: true,
@@ -89,60 +96,31 @@ const EpicCard: React.FC<EpicCardProps> = ({ epic, userProgress, onPress }) => {
 
   return (
     <Card style={styles.card}>
-      {/* Epic Title with Cultural Icon */}
-      <Text style={styles.title}>
-        {getCultureIcon(epic.culture || '')} {epic.title}
-      </Text>
+      {/* Epic Image Header */}
+      <EpicImage
+        epicId={epic.id}
+        aspectRatio="wide"
+        containerStyle={styles.imageContainer}
+        showFallback={true}
+        fallbackIcon={getCultureIcon(epic.culture || '')}
+      />
 
-      {/* Description */}
-      <Text style={styles.description}>{epic.description}</Text>
+      {/* Epic Title */}
+      <View style={styles.contentContainer}>
+        <Text style={styles.title}>{epic.title}</Text>
 
-      {/* Difficulty Level */}
-      <View style={styles.difficultyContainer}>
-        <Text style={styles.difficulty}>
-          {getDifficultyIcon(epic.difficulty_level || 'beginner')} {getDifficultyLabel(epic.difficulty_level || 'beginner')}
-        </Text>
-      </View>
+        {/* Description */}
+        <Text style={styles.description}>{epic.description}</Text>
 
-      {/* Progress Bar */}
-      <View style={styles.progressContainer}>
-        <ProgressBar
-          progress={completionProgress}
-          showLabel={false}
-          color={epic.is_available ? theme.colors.primaryGreen : theme.colors.lightGray}
+        {/* Action Button */}
+        <Button
+          title={buttonConfig.title}
+          onPress={buttonConfig.onPress}
+          variant={buttonConfig.variant}
+          disabled={buttonConfig.disabled}
+          style={styles.button}
         />
       </View>
-
-      {/* Question Count or Status */}
-      <Text style={styles.questionCount}>
-        {epic.is_available && epic.question_count > 0
-          ? `${epic.question_count} Questions Available`
-          : epic.id === 'mahabharata'
-          ? 'Unlock by mastering Ramayana basics'
-          : 'Future Release'
-        }
-      </Text>
-
-      {/* Progress Stats (only show for available epics with progress) */}
-      {epic.is_available && userProgress && userProgress.completed_questions > 0 && (
-        <View style={styles.statsContainer}>
-          <Text style={styles.statsText}>
-            📚 {userProgress.completed_questions} Questions Answered
-          </Text>
-          <Text style={styles.statsText}>
-            🏆 {userProgress.accuracy_rate}% Accuracy
-          </Text>
-        </View>
-      )}
-
-      {/* Action Button */}
-      <Button
-        title={buttonConfig.title}
-        onPress={buttonConfig.onPress}
-        variant={buttonConfig.variant}
-        disabled={buttonConfig.disabled}
-        style={styles.button}
-      />
     </Card>
   );
 };
@@ -150,6 +128,19 @@ const EpicCard: React.FC<EpicCardProps> = ({ epic, userProgress, onPress }) => {
 const styles = StyleSheet.create({
   card: {
     marginBottom: ComponentSpacing.cardMargin,
+    padding: 0, // Remove default padding since we're adding image
+  },
+
+  imageContainer: {
+    marginBottom: 0,
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+  },
+
+  contentContainer: {
+    padding: ComponentSpacing.cardPadding,
   },
 
   title: {
@@ -162,7 +153,13 @@ const styles = StyleSheet.create({
   description: {
     ...Typography.bodySmall,
     color: theme.text.secondary,
-    marginBottom: Spacing.s,
+    marginBottom: Spacing.m,
+  },
+
+  completionText: {
+    ...Typography.caption,
+    color: theme.text.tertiary,
+    marginBottom: Spacing.l,
   },
 
   difficultyContainer: {

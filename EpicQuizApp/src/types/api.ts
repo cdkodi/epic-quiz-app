@@ -3,6 +3,19 @@
  * Matching backend API structure
  */
 
+// Kanda (chapter/section) information
+export interface Kanda {
+  id: string;
+  name: string;
+  title: string;
+  description?: string;
+  order_index: number;
+  image_url?: string;
+  character_focus?: string[];
+  key_themes?: string[];
+  estimated_reading_time?: string;
+}
+
 // Epic types (matching Supabase schema)
 export interface Epic {
   id: string;
@@ -15,6 +28,9 @@ export interface Epic {
   is_available: boolean;
   difficulty_level?: 'beginner' | 'intermediate' | 'advanced';
   estimated_reading_time?: string;
+  // Image support
+  cover_image_url?: string;
+  kandas?: Kanda[];
   // Legacy aliases for backward compatibility
   totalQuestions: number;
   isAvailable: boolean;
@@ -23,7 +39,31 @@ export interface Epic {
   coverImage?: string;
 }
 
-// Quiz types
+// Progressive Quiz Block types
+export interface QuizBlock {
+  id: number;
+  epic_id: string;
+  block_name: string;
+  difficulty_level: 'easy' | 'medium' | 'hard';
+  phase: 'foundational' | 'development' | 'mastery';
+  start_sarga: number;
+  end_sarga: number;
+  kanda: string;
+  learning_objectives: string[];
+  narrative_summary: string;
+  key_themes: string[];
+  cultural_elements: string[];
+  sequence_order: number;
+  is_available: boolean;
+  prerequisite_blocks?: number[];
+  total_questions?: number;
+  character_questions?: number;
+  event_questions?: number;
+  theme_questions?: number;
+  culture_questions?: number;
+}
+
+// Quiz types - Updated with progressive block support
 export interface QuizPackage {
   id: string;
   epicId: string;
@@ -31,6 +71,14 @@ export interface QuizPackage {
   questions: Question[];
   totalQuestions: number;
   downloadedAt: string;
+  // Progressive block info
+  block_info?: {
+    id: number;
+    name: string;
+    difficulty: string;
+    sarga_range: string;
+    learning_objectives: string[];
+  };
   // Legacy properties
   quiz_id?: string;
   epic?: any;
@@ -45,6 +93,7 @@ export interface QuizPackage {
 export interface Question {
   id: string;
   epicId: string;
+  kandaId?: string; // Which Kanda this question belongs to
   category: 'characters' | 'events' | 'themes' | 'culture';
   difficulty: 'easy' | 'medium' | 'hard';
   questionText: string;

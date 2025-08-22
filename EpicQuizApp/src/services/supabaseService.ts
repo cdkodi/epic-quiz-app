@@ -138,15 +138,37 @@ class SupabaseService {
    * Get quiz package for a specific epic
    * Implements the bulk download strategy for offline-first experience
    */
-  async getQuizPackage(epicId: string, questionCount: number = 10): Promise<QuizPackage | null> {
+  async getQuizPackage(
+    epicId: string, 
+    questionCount: number = 10, 
+    options?: {
+      difficulty?: 'easy' | 'medium' | 'hard' | 'mixed';
+      category?: 'characters' | 'events' | 'themes' | 'culture' | 'mixed';
+    }
+  ): Promise<QuizPackage | null> {
     try {
-      console.log(`Fetching ${questionCount} questions for epic: ${epicId}`);
+      console.log(`Fetching ${questionCount} questions for epic: ${epicId}`, options);
 
-      // Get random questions for the epic with balanced distribution
-      const { data: questions, error: questionsError } = await this.supabase
+      // Build query with difficulty and category filters
+      let query = this.supabase
         .from('questions')
         .select('*')
-        .eq('epic_id', epicId)
+        .eq('epic_id', epicId);
+
+      // Apply difficulty filter
+      if (options?.difficulty && options.difficulty !== 'mixed') {
+        query = query.eq('difficulty', options.difficulty);
+        console.log(`🎯 Filtering by difficulty: ${options.difficulty}`);
+      }
+
+      // Apply category filter  
+      if (options?.category && options.category !== 'mixed') {
+        query = query.eq('category', options.category);
+        console.log(`📚 Filtering by category: ${options.category}`);
+      }
+
+      // Get questions with filters applied
+      const { data: questions, error: questionsError } = await query
         .order('created_at', { ascending: false })
         .limit(questionCount);
 
@@ -238,28 +260,64 @@ class SupabaseService {
 
       // Get related chapter summary if available
       let chapterSummary: DatabaseSummary | null = null;
-      if (question.source_reference && question.source_reference.includes('Sarga')) {
-        // Extract kanda and sarga from source reference
-        const kandaMatch = question.source_reference.match(/(\w+)\s+Kanda/i);
-        const sargaMatch = question.source_reference.match(/Sarga\s+(\d+)/i);
+      
+      // Use direct kanda and sarga fields from questions table (optimized approach)
+      if (question.kanda && question.sarga) {
+        console.log(`📚 Looking for chapter: ${question.kanda}, sarga ${question.sarga}`);
         
-        if (kandaMatch && sargaMatch) {
+        const { data } = await this.supabase
+          .from('chapter_summaries')
+          .select('*')
+          .eq('kanda', question.kanda)
+          .eq('sarga', question.sarga)
+          .single();
+        
+        if (data) {
+          console.log(`✅ Found chapter summary: ${data.title}`);
+          chapterSummary = data;
+        } else {
+          console.log(`❌ No chapter summary found for ${question.kanda}, sarga ${question.sarga}`);
+        }
+      } else if (question.source_reference && question.source_reference.includes('sarga')) {
+        // Fallback: URL parsing only when direct fields are missing
+        console.log(`⚠️ Missing kanda/sarga fields, falling back to URL parsing: ${question.source_reference}`);
+        
+        const urlKandaMatch = question.source_reference.match(/\/(baala|ayodhya|aranya|kishkindha|sundara|yuddha)\//i);
+        const urlSargaMatch = question.source_reference.match(/sarga(\d+)/i);
+        
+        if (urlKandaMatch && urlSargaMatch) {
+          // Map URL kanda names to database kanda names
+          const kandaMapping: Record<string, string> = {
+            'baala': 'bala_kanda',
+            'ayodhya': 'ayodhya_kanda', 
+            'aranya': 'aranya_kanda',
+            'kishkindha': 'kishkindha_kanda',
+            'sundara': 'sundara_kanda',
+            'yuddha': 'yuddha_kanda'
+          };
+          
+          const kandaName = kandaMapping[urlKandaMatch[1].toLowerCase()];
+          const sargaNumber = parseInt(urlSargaMatch[1]);
+          
+          console.log(`📚 Fallback lookup: ${kandaName}, sarga ${sargaNumber}`);
+          
           const { data } = await this.supabase
             .from('chapter_summaries')
             .select('*')
-            .eq('kanda', kandaMatch[1].toLowerCase())
-            .eq('sarga', parseInt(sargaMatch[1]))
+            .eq('kanda', kandaName)
+            .eq('sarga', sargaNumber)
             .single();
           
           chapterSummary = data;
         }
       }
 
+      // Only use authentic database content
       const deepDive: DeepDiveContent = {
         questionId: questionId,
         detailedExplanation: educationalContent?.detailed_explanation || question.basic_explanation,
         historicalBackground: educationalContent?.historical_background || '',
-        culturalSignificance: question.cultural_context || '',
+        culturalSignificance: question.cultural_context || educationalContent?.cultural_significance || '',
         scholarlyNotes: educationalContent?.scholarly_notes || '',
         crossEpicConnections: educationalContent?.cross_epic_connections || [],
         relatedTopics: educationalContent?.related_topics || [],
